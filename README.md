@@ -50,6 +50,8 @@ pnpm test
 pnpm size    # bundle budgets
 ```
 
+Working with Claude Code: the repo ships hooks, skills and a Playwright MCP server. For library docs, also set up Context7 with your own key: `npx ctx7 setup --claude`.
+
 ## License
 
 MIT
