@@ -13,7 +13,9 @@ type Control =
   | 'specular'
   | 'curvature'
   | 'magnify'
-  | 'caustics';
+  | 'caustics'
+  | 'saturation'
+  | 'light';
 
 interface Props {
   /** Which controls to show; all of them by default. */
@@ -22,21 +24,23 @@ interface Props {
   height?: number;
 }
 
-// Starting points: the physical edge-only default, and the whole-surface lens of
-// ybouane/liquidglass (clear glass, round bezel across the panel, magnified interior).
+// Starting points. The default reproduces kube.io's search box: a thin squircle rim that folds
+// the backdrop, lit by a hairline showing a saturated copy of what's behind.
 const LOOKS = {
-  edge: {
-    thickness: 24,
+  searchbox: {
+    thickness: 40,
     bezel: 20,
-    radius: 32,
+    radius: 72,
     curvature: 4,
-    magnify: 0.1,
-    blur: 2,
-    specular: 0.6,
-    caustics: false,
+    magnify: 0,
+    blur: 1,
+    specular: 0.2,
+    saturation: 4,
+    light: -60,
+    caustics: true,
   },
-  // A thick slab with a round edge. Its rim folds the backdrop into a mirrored band, which
-  // reads as the glass's side wall and gives the 3D look of ybouane/liquidglass.
+  // A thick slab with a round edge, like ybouane/liquidglass: a wide folded band reads as the
+  // glass's side wall.
   lens: {
     thickness: 160,
     bezel: 60,
@@ -44,8 +48,23 @@ const LOOKS = {
     curvature: 2,
     magnify: 0.05,
     blur: 0,
-    specular: 0.9,
+    specular: 0.5,
+    saturation: 9,
+    light: -60,
     caustics: true,
+  },
+  // Physically capped: no fold, a softly compressed rim.
+  subtle: {
+    thickness: 24,
+    bezel: 20,
+    radius: 32,
+    curvature: 4,
+    magnify: 0.1,
+    blur: 2,
+    specular: 0.2,
+    saturation: 1,
+    light: -60,
+    caustics: false,
   },
 };
 
@@ -127,6 +146,8 @@ export default function GlassDemo({
     'caustics',
     'blur',
     'specular',
+    'saturation',
+    'light',
   ],
   initialTier,
   height = 360,
@@ -134,15 +155,18 @@ export default function GlassDemo({
   useTokens();
   const [detected, setDetected] = useState<GlassTier | null>(null);
   const [tier, setTier] = useState<GlassTier | 'auto'>(initialTier ?? 'auto');
-  const [thickness, setThickness] = useState(24);
+  const initial = LOOKS.searchbox;
+  const [thickness, setThickness] = useState(initial.thickness);
   const [ior, setIor] = useState(1.5);
-  const [bezel, setBezel] = useState(20);
-  const [radius, setRadius] = useState(32);
-  const [blur, setBlur] = useState(2);
-  const [specular, setSpecular] = useState(0.6);
-  const [curvature, setCurvature] = useState(4);
-  const [magnify, setMagnify] = useState(0.1);
-  const [caustics, setCaustics] = useState(false);
+  const [bezel, setBezel] = useState(initial.bezel);
+  const [radius, setRadius] = useState(initial.radius);
+  const [blur, setBlur] = useState(initial.blur);
+  const [specular, setSpecular] = useState(initial.specular);
+  const [saturation, setSaturation] = useState(initial.saturation);
+  const [light, setLight] = useState(initial.light);
+  const [curvature, setCurvature] = useState(initial.curvature);
+  const [magnify, setMagnify] = useState(initial.magnify);
+  const [caustics, setCaustics] = useState(initial.caustics);
   const applyLook = (look: keyof typeof LOOKS) => {
     const l = LOOKS[look];
     setThickness(l.thickness);
@@ -153,6 +177,8 @@ export default function GlassDemo({
     setCaustics(l.caustics);
     setBlur(l.blur);
     setSpecular(l.specular);
+    setSaturation(l.saturation);
+    setLight(l.light);
   };
   const { offset, handlers } = useDrag();
 
@@ -181,6 +207,8 @@ export default function GlassDemo({
               bezel,
               radius,
               specular,
+              specularSaturation: saturation,
+              lightAngle: light,
               curvature,
               magnify,
               caustics,
@@ -191,8 +219,9 @@ export default function GlassDemo({
             style={{
               transform: `translate(${offset.x}px, ${offset.y}px)`,
               borderRadius: radius,
-              background: tokenVar('tint', active === 'solid' ? 'solid' : 'light'),
-              boxShadow: '0 12px 40px rgb(0 0 0 / 0.25)',
+              background:
+                active === 'solid' ? tokenVar('tint', 'solid') : 'rgb(255 255 255 / 0.05)',
+              boxShadow: '0 4px 16px rgb(0 0 0 / 0.16)',
             }}
           >
             <strong>{active}</strong>
@@ -206,11 +235,12 @@ export default function GlassDemo({
           <label className="gm-demo-control">
             <span>Look</span>
             <select
-              defaultValue="edge"
+              defaultValue="searchbox"
               onChange={(e) => applyLook(e.target.value as keyof typeof LOOKS)}
             >
-              <option value="edge">Edge (physical slab)</option>
-              <option value="lens">Lens (ybouane-like)</option>
+              <option value="searchbox">Search box (kube.io)</option>
+              <option value="lens">Thick lens (ybouane-like)</option>
+              <option value="subtle">Subtle (no fold)</option>
             </select>
           </label>
         )}
@@ -289,13 +319,27 @@ export default function GlassDemo({
         )}
         {controls.includes('specular') && (
           <Slider
-            label="Highlight"
+            label="Rim white"
             value={specular}
             min={0}
             max={1}
             step={0.05}
             onChange={setSpecular}
           />
+        )}
+        {controls.includes('saturation') && (
+          <Slider
+            label="Rim color"
+            value={saturation}
+            min={1}
+            max={12}
+            step={0.5}
+            unit="×"
+            onChange={setSaturation}
+          />
+        )}
+        {controls.includes('light') && (
+          <Slider label="Light" value={light} min={-180} max={180} unit="°" onChange={setLight} />
         )}
       </div>
       {active === 'refract' && detected !== 'refract' && (

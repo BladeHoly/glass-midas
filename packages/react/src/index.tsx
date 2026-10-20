@@ -7,37 +7,22 @@ export function useGlass<T extends HTMLElement>(
   options: GlassOptions = {},
 ): void {
   const handle = useRef<GlassHandle | null>(null);
-  const { tier, radius, bezel, thickness, ior, specular, curvature, magnify, caustics, blur } =
-    options;
+  const { tier, ...live } = options;
+  const latest = useRef(live);
+  latest.current = live;
 
   useEffect(() => {
     if (!ref.current) return;
-    handle.current = createGlass(ref.current, {
-      tier,
-      radius,
-      bezel,
-      thickness,
-      ior,
-      specular,
-      blur,
-    });
+    handle.current = createGlass(ref.current, { tier, ...latest.current });
     return () => handle.current?.destroy();
     // Only the tier forces a new surface; other options go through update() below.
   }, [ref, tier]);
 
+  // Options are plain numbers, strings and booleans, so their JSON is a stable dependency.
+  const key = JSON.stringify(live);
   useEffect(() => {
-    handle.current?.update({
-      radius,
-      bezel,
-      thickness,
-      ior,
-      specular,
-      curvature,
-      magnify,
-      caustics,
-      blur,
-    });
-  }, [radius, bezel, thickness, ior, specular, curvature, magnify, caustics, blur]);
+    handle.current?.update(latest.current);
+  }, [key]);
 }
 
 export type GlassProps = ComponentPropsWithoutRef<'div'> & { glass?: GlassOptions };

@@ -27,6 +27,8 @@ Drag the panel over the stripes and text, and change the material:
     'caustics',
     'blur',
     'specular',
+    'saturation',
+    'light',
   ]}
   initialTier="refract"
 />
@@ -55,31 +57,29 @@ With only a curved rim, the flat middle of the glass shows the backdrop unchange
 reads as glass only at its edges. Two options carry it across the whole component, the way
 [ybouane/liquidglass](https://github.com/ybouane/liquidglass) does:
 
-- **`magnify`** (default `0.1`) samples the whole surface toward its center, so everything behind
-  it looks `1 / (1 − magnify)` times larger, like through a magnifier.
+- **`magnify`** (default `0`) samples the whole surface toward its center, so everything behind it
+  looks `1 / (1 − magnify)` times larger, like through a magnifier.
 - **A bezel as wide as half the smaller side** curves the entire surface. With **`curvature: 2`**
   the profile is a circle: a pillow of glass rather than a slab with rounded edges.
 
-Pick **Lens (ybouane-like)** in the demo above to see both together.
-
-### Keeping the image in one piece
-
-Pure optics overshoots in a thin band at the rim: the shift falls off so fast that neighboring
-pixels sample past each other and the image folds over itself (a caustic). glass-midas caps the
-local magnification at 5×. Where the physical curve is within that limit it's used as is; in the
-caustic band it becomes a smooth, strongly compressed edge, which is what real glass looks like at
-UI scale. Magnification counts toward that limit, so the rim gets less room the more the surface
-magnifies.
+Pick **Thick lens (ybouane-like)** in the demo above to see both together.
 
 ### Caustics: the side wall
 
-Thick glass with a round edge does something the guard prevents: near the rim, light bends so hard
-that the image folds over itself into a compressed, mirrored band of the backdrop. That band reads
-as the **side wall of the glass**, and it's what gives a thick lens its 3D look.
+Near the rim of real glass, light bends so hard that the image folds over itself into a
+compressed, mirrored band of the backdrop. That band reads as the **side wall of the glass** and
+gives it depth. glass-midas renders it by default (`caustics: true`); the default 40 px of glass
+over a 20 px bezel matches the search box in kube.io's liquid glass article, and
+`{ thickness: 160, bezel: 60, curvature: 2 }` gives the wide band of a thick lens.
 
-Turn it on with `caustics: true` and give the glass real thickness, for example
-`{ thickness: 160, bezel: 60, curvature: 2, caustics: true, blur: '0px' }`, the **Lens** look in
-the demo. Keep blur low: frost is applied before the bend and smears the band away.
+Keep blur low: frost is applied before the bend and smears the band away.
+
+### Without caustics
+
+`caustics: false` caps local magnification at 5× instead, so the image never folds. Where the
+physical curve is within that limit it's used as is; the caustic band becomes a smooth, strongly
+compressed edge. Magnification counts toward the limit, so the rim gets less room the more the
+surface magnifies. It's the **Subtle** look in the demo.
 
 ## From optics to pixels
 
@@ -92,26 +92,42 @@ The map is drawn at up to 2× the CSS size on high-density screens.
 The browser does the rest on the GPU:
 
 ```
-backdrop ──► blur ──► saturate ──► feDisplacementMap (map) ──► 0.6px smoothing ──► + rim highlight
+backdrop ──► blur ──► feDisplacementMap (map) ──► + saturated rim ──► + white rim
 ```
 
-Frost comes first so the highlight added at the end stays sharp. The light smoothing hides the
-blocky look of magnified pixels in the compressed rim.
+Frost comes first so the rim light added at the end stays sharp. Without caustics, a 0.6 px
+smoothing after the bend hides the blocky look of magnified pixels.
 
-The blue channel carries the **rim highlight**, shaped by Fresnel reflectance: glass reflects 4%
-of light head-on but most of it at grazing angles, so only the steepest part of the rim lights up
-as a thin line. It's brightest where the rim faces a light at the top left.
+### Rim light
+
+The edge that makes the glass read as a solid object is a **hairline**, about 1.5 px wide and
+centered 1.25 px inside the rim, carried in the map's blue channel. Its brightness is `(n·L)²`, the
+squared alignment between the rim's direction and the light (`lightAngle`, default −60°), so the
+sides facing toward and away from the light glow and the ones across it fade. It's drawn twice:
+
+1. A copy of the bent backdrop with its saturation multiplied by `specularSaturation` (default
+   `4`), shown only through the hairline. The rim glows with the colors behind the glass.
+2. The hairline in white at `specular` opacity (default `0.2`).
+
+This is the recipe of the search box in
+[kube.io's liquid glass article](https://kube.io/blog/liquid-glass-css-svg/), read from its
+filters.
 
 ## Options
 
-| Option      | Default                   | Effect                                                                               |
-| ----------- | ------------------------- | ------------------------------------------------------------------------------------ |
-| `thickness` | `24`                      | Total height of the glass in px. Thicker bends more. `0` turns bending off.          |
-| `ior`       | `1.5`                     | Index of refraction: water `1.33`, glass `1.5`, sapphire `1.77`, diamond `2.42`.     |
-| `bezel`     | `20`                      | Width of the curved rim in px. Narrower rims look harder and more liquid.            |
-| `radius`    | `18`                      | Corner radius in px. Match the element's `border-radius`, or the corners bend wrong. |
-| `specular`  | `0.6`                     | Rim highlight strength, 0 to 1.                                                      |
-| `blur`      | `var(--gm-blur-md, 16px)` | Frost applied after bending. Lower values show more of the refraction.               |
+| Option               | Default | Effect                                                                               |
+| -------------------- | ------- | ------------------------------------------------------------------------------------ |
+| `thickness`          | `40`    | Total height of the glass in px. Thicker bends more. `0` turns bending off.          |
+| `ior`                | `1.5`   | Index of refraction: water `1.33`, glass `1.5`, sapphire `1.77`, diamond `2.42`.     |
+| `bezel`              | `20`    | Width of the curved rim in px. Narrower rims look harder and more liquid.            |
+| `radius`             | `18`    | Corner radius in px. Match the element's `border-radius`, or the corners bend wrong. |
+| `curvature`          | `4`     | Rim profile: `2` circle, `4` squircle.                                               |
+| `magnify`            | `0`     | Magnifies the whole surface, `0` to `0.5`.                                           |
+| `caustics`           | `true`  | Fold the rim into a mirrored band. `false` caps magnification at 5×.                 |
+| `specular`           | `0.2`   | Opacity of the white rim hairline.                                                   |
+| `specularSaturation` | `4`     | Saturation of the backdrop seen through the hairline.                                |
+| `lightAngle`         | `-60`   | Where the rim light comes from, in degrees: `0` right, `-90` top.                    |
+| `blur`               | `1px`   | Frost applied before bending. Keep it low to see the fold.                           |
 
 ```ts
 const glass = createGlass(el, { radius: 28, thickness: 32, ior: 1.5 });

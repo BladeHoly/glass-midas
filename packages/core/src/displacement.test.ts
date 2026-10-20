@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { displacementMap, type LensMap, type LensOptics } from './index.js';
 
-const optics: LensOptics = { radius: 10, bezel: 20, thickness: 24, ior: 1.5, specular: 0.6 };
+const optics: LensOptics = { radius: 10, bezel: 20, thickness: 24, ior: 1.5 };
 
 // Horizontal shift in CSS px at pixel (x, y), as feDisplacementMap applies it.
 function shiftX(map: LensMap, x: number, y = 50): number {
@@ -54,11 +54,18 @@ describe('displacementMap', () => {
     }
   });
 
-  it('lights the rim, brightest on the side facing the light', () => {
-    const map = displacementMap(200, 100, optics)!;
-    const blue = (x: number) => map.data[(50 * 200 + x) * 4 + 2]!;
-    expect(blue(100)).toBe(0);
-    expect(blue(0)).toBeGreaterThan(blue(199)); // light comes from the left
+  it('lights a hairline just inside the rim, as bright as (n·L)²', () => {
+    const map = displacementMap(200, 100, { ...optics, radius: 50 })!;
+    const blue = (x: number, y: number) => map.data[(y * 200 + x) * 4 + 2]!;
+    // Across the top edge: a thin line peaking a pixel in, nothing further inside.
+    const column = [0, 1, 2, 3, 4].map((y) => blue(100, y));
+    expect(Math.max(...column)).toBe(column[1]);
+    expect(column[3]).toBe(0);
+    expect(blue(100, 50)).toBe(0);
+    // Light at −60°: the top faces it at cos 30° (0.75 squared), the sides at cos 60° (0.25).
+    expect(column[1]! / blue(1, 50)).toBeCloseTo(3, 0);
+    // Squared, so the opposite edge glows the same.
+    expect(blue(100, 98)).toBe(column[1]);
   });
 
   it('magnifies the whole surface, not just the rim', () => {
