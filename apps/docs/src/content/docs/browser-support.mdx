@@ -1,0 +1,23 @@
+---
+title: Browser support
+description: Which tier each browser gets.
+---
+
+Every browser gets a working surface; what changes is the [tier](/concepts/tiers/).
+
+| Browser                        | Tier      | Notes                                         |
+| ------------------------------ | --------- | --------------------------------------------- |
+| Chrome, Edge, Opera, Brave     | `refract` | Detected through `navigator.userAgentData`.   |
+| Safari (macOS, iOS)            | `blur`    | Uses `-webkit-backdrop-filter` where needed.  |
+| Firefox                        | `blur`    |                                               |
+| No `backdrop-filter` support   | `solid`   |                                               |
+| `prefers-reduced-transparency` | `solid`   | In any browser that supports the media query. |
+| Server rendering               | `solid`   | Until the surface is created in the browser.  |
+
+## Known limits
+
+- **Chromium on iOS** (Chrome, Edge for iPhone and iPad) runs on WebKit, so it gets `blur`.
+- **Refraction detection is by engine, not by feature.** No reliable feature test exists for SVG
+  filters inside `backdrop-filter`, so glass-midas checks for the Chromium brand.
+- **Safari and Firefox rendering isn't tested in CI yet.** If something looks wrong there,
+  [open an issue](https://github.com/BladeHoly/glass-midas/issues).

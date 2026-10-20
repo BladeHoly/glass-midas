@@ -1,0 +1,50 @@
+---
+title: Installation
+description: Add glass-midas to a project with a package manager or straight from a CDN.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+:::note[Not published yet]
+The packages aren't on npm yet. Until the first release, build them from
+[the repository](https://github.com/BladeHoly/glass-midas).
+:::
+
+## Packages
+
+| Package              | Use it for                                                             |
+| -------------------- | ---------------------------------------------------------------------- |
+| `@glass-midas/core`  | Tokens, tier detection and the glass engine. Works with any framework. |
+| `@glass-midas/react` | The `useGlass` hook and `<Glass>` component.                           |
+
+## With a package manager
+
+<Tabs syncKey="pkg">
+  <TabItem label="pnpm">
+    ```sh pnpm add @glass-midas/core # with React pnpm add @glass-midas/react ```
+  </TabItem>
+  <TabItem label="npm">
+    ```sh npm install @glass-midas/core # with React npm install @glass-midas/react ```
+  </TabItem>
+  <TabItem label="yarn">
+    ```sh yarn add @glass-midas/core # with React yarn add @glass-midas/react ```
+  </TabItem>
+</Tabs>
+
+`@glass-midas/react` depends on the core, so you don't need to install both. It expects React 18 or newer.
+
+## From a CDN
+
+The core has no dependencies, so it runs without a bundler:
+
+```html
+<script type="module">
+  import { createGlass, tokensToCss } from 'https://cdn.jsdelivr.net/npm/@glass-midas/core/+esm';
+</script>
+```
+
+Pin a version in production, for example `@glass-midas/core@0.1.0`.
+
+Next: [Quick start](/getting-started/quick-start/).

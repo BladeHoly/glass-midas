@@ -1,0 +1,76 @@
+---
+title: Tokens and theming
+description: Design tokens as CSS custom properties, and how to theme them.
+sidebar:
+  order: 3
+---
+
+Every visual value in glass-midas is a **token**: blur radii, tints, highlights, corner radii.
+Tokens live in one object, `tokens`, and reach the page as CSS custom properties named
+`--gm-<group>-<name>`:
+
+```ts
+import { tokensToCss } from '@glass-midas/core';
+
+tokensToCss();
+// :root {
+//   --gm-blur-sm: 8px;
+//   --gm-blur-md: 16px;
+//   ...
+// }
+```
+
+Load that CSS once, from a `<style>` tag or written to a stylesheet at build time.
+
+## Using tokens
+
+In CSS, use the variables directly:
+
+```css
+.panel {
+  border-radius: var(--gm-radius-lg);
+  background: var(--gm-tint-light);
+}
+```
+
+In TypeScript, `tokenVar()` builds the same reference and type-checks the name:
+
+```ts
+import { tokenVar } from '@glass-midas/core';
+
+tokenVar('radius', 'lg'); // 'var(--gm-radius-lg)'
+tokenVar('radius', 'xl'); // type error: no such token
+```
+
+## Theming
+
+Themes are plain CSS: override the variables you want to change.
+
+```css
+/* A darker glass for dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gm-tint-light: rgb(30 30 40 / 0.35);
+    --gm-highlight-edge: rgb(255 255 255 / 0.25);
+  }
+}
+
+/* A frostier sidebar */
+.sidebar {
+  --gm-blur-md: 28px;
+}
+```
+
+Because they're custom properties, overrides cascade: scope them to a subtree to theme one part of
+the page.
+
+To generate a whole theme from code, pass your own token set and a selector:
+
+```ts
+import { tokens, tokensToCss } from '@glass-midas/core';
+
+const brand = { ...tokens, tint: { light: 'rgb(255 215 0 / 0.2)', dark: 'rgb(40 30 0 / 0.4)' } };
+tokensToCss('[data-theme="brand"]', brand);
+```
+
+See every token in the [token reference](/reference/tokens/).

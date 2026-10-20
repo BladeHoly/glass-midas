@@ -1,0 +1,55 @@
+---
+title: '@glass-midas/react'
+description: API reference for the React bindings.
+sidebar:
+  order: 3
+  label: react
+---
+
+```ts
+import { Glass, useGlass } from '@glass-midas/react';
+```
+
+Thin wrappers over [`createGlass`](/reference/core/#createglass): they create the surface after
+mount, pass option changes to `update()`, and destroy it on unmount. Requires React 18 or newer.
+
+## Glass
+
+```tsx
+<Glass glass={{ radius: 28, refraction: 32 }} className="panel">
+  …
+</Glass>
+```
+
+A `div` with glass attached and no other styling. It accepts every `div` prop, plus:
+
+| Prop    | Type           | Description                                                 |
+| ------- | -------------- | ----------------------------------------------------------- |
+| `glass` | `GlassOptions` | Options for [`createGlass`](/reference/core/#glassoptions). |
+
+## useGlass
+
+```ts
+function useGlass<T extends HTMLElement>(ref: RefObject<T | null>, options?: GlassOptions): void;
+```
+
+Attaches glass to any element you render:
+
+```tsx
+function Toolbar() {
+  const ref = useRef<HTMLElement>(null);
+  useGlass(ref, { radius: 999, bezel: 12 });
+  return (
+    <nav ref={ref} className="toolbar">
+      …
+    </nav>
+  );
+}
+```
+
+Changes to `radius`, `bezel`, `refraction` and `blur` update the live surface. A change to `tier`
+replaces it.
+
+## Types
+
+`GlassOptions` and `GlassTier` are re-exported from the core.

@@ -45,7 +45,7 @@ Without a bundler:
 
 ```sh
 pnpm install
-pnpm dev     # playground at http://localhost:5173
+pnpm dev     # playground at http://localhost:5173, docs at http://localhost:4321
 pnpm test
 pnpm size    # bundle budgets
 ```

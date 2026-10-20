@@ -1,0 +1,40 @@
+---
+// Generated from the tokens in @glass-midas/core, so this table can't drift from the code.
+import { tokens } from '@glass-midas/core';
+
+const groups = Object.entries(tokens) as [string, Record<string, string>][];
+const isColor = (v: string) => v.startsWith('rgb') || v.startsWith('#');
+---
+
+{
+  groups.map(([group, values]) => (
+    <>
+      <h3 id={`tokens-${group}`}>{group}</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>CSS variable</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(values).map(([name, value]) => (
+            <tr>
+              <td>
+                <code>{`${group}.${name}`}</code>
+              </td>
+              <td>
+                <code>{`--gm-${group}-${name}`}</code>
+              </td>
+              <td>
+                {isColor(value) && <span class="gm-swatch" style={`--swatch: ${value}`} />}
+                <code>{value}</code>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  ))
+}
