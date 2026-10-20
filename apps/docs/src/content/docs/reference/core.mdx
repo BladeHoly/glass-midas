@@ -30,15 +30,19 @@ Turns `el` into a glass surface at the best [tier](/concepts/tiers/) the browser
 
 ### GlassOptions
 
-| Option       | Type        | Default                   | Description                                               |
-| ------------ | ----------- | ------------------------- | --------------------------------------------------------- |
-| `radius`     | `number`    | `18`                      | Corner radius in px. Match the element's `border-radius`. |
-| `bezel`      | `number`    | `16`                      | Width of the refracting rim in px. `refract` only.        |
-| `refraction` | `number`    | `28`                      | Maximum displacement in px. `refract` only.               |
-| `blur`       | `string`    | `var(--gm-blur-md, 16px)` | Any CSS length. Ignored at `solid`.                       |
-| `tier`       | `GlassTier` | detected                  | Forces a tier instead of calling `detectTier()`.          |
+| Option      | Type        | Default                   | Description                                                        |
+| ----------- | ----------- | ------------------------- | ------------------------------------------------------------------ |
+| Option      | Type        | Default                   | Description                                                        |
+| ----------- | ----------- | ------------------------- | ------------------------------------------------------------------ |
+| `radius`    | `number`    | `18`                      | Corner radius in px. Match the element's `border-radius`.          |
+| `bezel`     | `number`    | `20`                      | Width of the curved rim in px. `refract` only.                     |
+| `thickness` | `number`    | `24`                      | Height of the glass in px; thicker bends more. `refract` only.     |
+| `ior`       | `number`    | `1.5`                     | Index of refraction (water `1.33`, glass `1.5`). `refract` only.   |
+| `specular`  | `number`    | `0.6`                     | Rim highlight strength, 0 to 1. `refract` only.                    |
+| `blur`      | `string`    | `var(--gm-blur-md, 16px)` | Any CSS length. Ignored at `solid`.                                |
+| `tier`      | `GlassTier` | detected                  | Forces a tier instead of calling `detectTier()`.                   |
 
-See [Refraction](/concepts/refraction/) for what the refraction options look like.
+See [Refraction](/concepts/refraction/) for the optics behind these options.
 
 ### GlassHandle
 
@@ -103,11 +107,31 @@ Returns `var(--gm-<group>-<name>)`. Both arguments are type-checked against `tok
 function displacementMap(
   width: number,
   height: number,
-  radius: number,
-  bezel: number,
-): ImageData | undefined;
+  optics: LensOptics,
+  density?: number,
+): LensMap | undefined;
+
+interface LensOptics {
+  radius: number;
+  bezel: number;
+  thickness: number;
+  ior: number;
+  specular: number;
+}
+
+interface LensMap {
+  data: Uint8ClampedArray; // RGBA, row by row
+  width: number; // in map pixels
+  height: number;
+  density: number; // map pixels per CSS px
+  scale: number; // feDisplacementMap scale that restores CSS px
+}
 ```
 
-The map behind the `refract` tier, exported for building custom effects. Red encodes horizontal
-displacement, green vertical; `128` means none. Returns `undefined` without a DOM or for a
+The map behind the `refract` tier, exported for building custom effects (for example as a WebGL
+texture). It's a pure function with no DOM access, so it also runs on a server or in a worker.
+
+Red encodes horizontal displacement and green vertical, with `128` meaning none; the strongest
+shift uses the full range, and `scale` converts back to px. Blue holds the rim highlight. The model
+is described on the [Refraction](/concepts/refraction/#the-model) page. Returns `undefined` for a
 zero-sized area.

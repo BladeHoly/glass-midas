@@ -1,13 +1,17 @@
-import { displacementMap } from './displacement.js';
+import { displacementMap, type LensOptics } from './displacement.js';
 import { detectTier, type GlassTier } from './support.js';
 
 export interface GlassOptions {
   /** Corner radius in px; should match the element's border-radius. */
   radius?: number;
-  /** Width of the refracting rim in px. */
+  /** Width of the curved rim in px. */
   bezel?: number;
-  /** feDisplacementMap scale; higher bends more. */
-  refraction?: number;
+  /** Height of the glass in px; more thickness bends more. */
+  thickness?: number;
+  /** Index of refraction: 1.33 water, 1.5 glass. */
+  ior?: number;
+  /** Rim highlight strength, 0 to 1. */
+  specular?: number;
   blur?: string;
   /** Force a tier instead of detecting it. */
   tier?: GlassTier;
@@ -34,6 +38,7 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
   const id = `gm-glass-${++filterCount}`;
   let svg: SVGSVGElement | undefined;
   let observer: ResizeObserver | undefined;
+  let drawn = '';
 
   el.dataset.glassTier = tier;
 
@@ -43,26 +48,44 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
     if (tier === 'solid') return setBackdrop(el, 'none');
     if (tier === 'blur') return setBackdrop(el, tail);
 
-    const { width, height } = el.getBoundingClientRect();
-    const map = displacementMap(
-      Math.round(width),
-      Math.round(height),
-      options.radius ?? 18,
-      options.bezel ?? 16,
-    );
-    if (!map) return setBackdrop(el, tail);
+    const width = el.offsetWidth;
+    const height = el.offsetHeight;
+    const optics: LensOptics = {
+      radius: options.radius ?? 18,
+      bezel: options.bezel ?? 20,
+      thickness: options.thickness ?? 24,
+      ior: options.ior ?? 1.5,
+      specular: options.specular ?? 0.6,
+    };
+    // The map depends only on size and optics, so moving the element never redraws it.
+    const key = JSON.stringify([width, height, optics]);
+    if (key !== drawn && !drawMap(width, height, optics)) return setBackdrop(el, tail);
+    drawn = key;
+    // Frost first, then bend: the rim highlight added by the filter stays crisp.
+    setBackdrop(el, `${tail} url(#${id})`);
+  };
+
+  const drawMap = (width: number, height: number, optics: LensOptics) => {
+    const map = displacementMap(width, height, optics, Math.min(devicePixelRatio || 1, 2));
+    if (!map) return false;
     const canvas = document.createElement('canvas');
     canvas.width = map.width;
     canvas.height = map.height;
-    canvas.getContext('2d')?.putImageData(map, 0, 0);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return false;
+    const image = ctx.createImageData(map.width, map.height);
+    image.data.set(map.data);
+    ctx.putImageData(image, 0, 0);
 
     if (!svg) {
       svg = document.body.appendChild(document.createElementNS(SVG_NS, 'svg'));
       svg.setAttribute('aria-hidden', 'true');
       svg.style.cssText = 'position:absolute;width:0;height:0;pointer-events:none';
     }
-    svg.innerHTML = `<filter id="${id}" x="0" y="0" width="${map.width}" height="${map.height}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feImage href="${canvas.toDataURL()}" width="${map.width}" height="${map.height}" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="${options.refraction ?? 28}" xChannelSelector="R" yChannelSelector="G"/></filter>`;
-    setBackdrop(el, `url(#${id}) ${tail}`);
+    // Bend the backdrop, soften the nearest-pixel sampling of the compressed rim, then lay
+    // the rim highlight (blue channel) over it as white.
+    svg.innerHTML = `<filter id="${id}" x="0" y="0" width="${width}" height="${height}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feImage href="${canvas.toDataURL()}" width="${width}" height="${height}" preserveAspectRatio="none" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="${map.scale}" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="0.6" result="bent"/><feColorMatrix in="map" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0" result="rim"/><feComposite in="rim" in2="bent"/></filter>`;
+    return true;
   };
 
   render();

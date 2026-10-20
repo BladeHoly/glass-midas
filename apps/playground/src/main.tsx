@@ -19,11 +19,11 @@ const tier = (new URLSearchParams(location.search).get('tier') ?? undefined) as
   GlassTier | undefined;
 
 function App() {
-  const [refraction, setRefraction] = useState(28);
+  const [thickness, setThickness] = useState(24);
   return (
     <main style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', gap: 24 }}>
       <Glass
-        glass={{ radius: 28, refraction, tier }}
+        glass={{ radius: 28, thickness, tier }}
         style={{
           width: 360,
           padding: 32,
@@ -34,13 +34,13 @@ function App() {
       >
         <h1 style={{ margin: 0 }}>glass-midas</h1>
         <label>
-          Refraction {refraction}
+          Thickness {thickness}px
           <input
             type="range"
             min={0}
             max={80}
-            value={refraction}
-            onChange={(e) => setRefraction(Number(e.target.value))}
+            value={thickness}
+            onChange={(e) => setThickness(Number(e.target.value))}
             style={{ width: '100%' }}
           />
         </label>

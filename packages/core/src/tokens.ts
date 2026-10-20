@@ -1,11 +1,14 @@
 /** Design tokens. Every token is exposed as a CSS custom property `--gm-<group>-<name>`. */
 export const tokens = {
   blur: { sm: '8px', md: '16px', lg: '28px' },
-  refraction: { subtle: '12', md: '28', strong: '48' },
+  /** Glass height in px for the refract tier; thicker glass bends more. */
+  thickness: { thin: '12px', md: '24px', thick: '40px' },
   saturation: { md: '160%', lg: '200%' },
   tint: {
     light: 'rgb(255 255 255 / 0.18)',
     dark: 'rgb(20 20 28 / 0.32)',
+    /** Opaque enough to read text on with no backdrop effect, for the solid tier. */
+    solid: 'rgb(28 28 36 / 0.88)',
   },
   highlight: { edge: 'rgb(255 255 255 / 0.55)', glow: 'rgb(255 255 255 / 0.12)' },
   radius: { sm: '10px', md: '18px', lg: '28px', pill: '999px' },
