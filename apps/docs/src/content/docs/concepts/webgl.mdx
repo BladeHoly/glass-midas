@@ -1,0 +1,78 @@
+---
+title: WebGL renderer
+description: '@glass-midas/webgl — the same optics in floating point, in every browser, with dispersion.'
+sidebar:
+  order: 4
+---
+
+import WebGLDemo from '../../../components/WebGLDemo';
+
+`@glass-midas/webgl` renders glass on the GPU instead of through an SVG filter. It uses the same
+optical model and rim light as the core, so a surface looks the same in both. It adds three things
+the SVG path can't do:
+
+- **Every browser.** It doesn't depend on `backdrop-filter: url()`, so Safari and Firefox get real
+  refraction instead of the `blur` tier.
+- **Floating-point optics.** The bend is computed per pixel from a 16-bit profile, so thick glass
+  folds smoothly instead of showing 8-bit steps.
+- **Dispersion.** Red, green and blue bend by slightly different amounts, like real glass.
+
+The trade-off: WebGL can't read what the browser paints behind an element, so you tell it what's
+there.
+
+<WebGLDemo client:only="react" />
+
+The backdrop above is a canvas animated every frame; the glass refracts it live. Drag the panel.
+
+## Usage
+
+```ts
+import { createWebGLGlass } from '@glass-midas/webgl';
+
+const glass = createWebGLGlass(document.querySelector('.search'), {
+  backdrop: document.querySelector('.hero-image'), // <img>, <video> or <canvas>
+  radius: 28,
+});
+```
+
+The glass draws into a canvas it inserts behind the element's own content, so text and controls
+inside stay real DOM. All [core options](/reference/core/#glassoptions) work, plus:
+
+| Option     | Default           | Description                                                                            |
+| ---------- | ----------------- | -------------------------------------------------------------------------------------- |
+| `backdrop` | required          | What's behind the glass: an image, video or canvas element, or a custom backdrop.      |
+| `blur`     | `1`               | Frost radius in px (a number here), applied before the bend.                           |
+| `chroma`   | `0`               | Dispersion: red bends `1 − chroma`×, blue `1 + chroma`× as far. Real glass is ~`0.01`. |
+| `tint`     | `[1, 1, 1, 0.05]` | `[r, g, b, amount]`, each 0 to 1.                                                      |
+
+### Backdrops
+
+- **Image, video or canvas element**: the glass reads its position on screen and its CSS
+  `object-fit` (`cover`, `contain` or `fill`, centered) every frame, so scrolling and layout
+  changes stay aligned. Videos and canvases are re-uploaded every frame.
+- **Custom**: `{ source, rect(), fit?, live? }`, for a source that isn't on screen as an element.
+- **Arbitrary HTML**: `captureBackdrop(node)` from `@glass-midas/webgl/capture` snapshots it with
+  the optional `html-to-image` package. It's a still image; capture again after the content changes.
+
+```ts
+import { captureBackdrop } from '@glass-midas/webgl/capture';
+
+const backdrop = await captureBackdrop(document.querySelector('main'), { exclude: [searchEl] });
+createWebGLGlass(searchEl, { backdrop });
+```
+
+## Fallbacks
+
+`createWebGLGlass` returns the core's SVG surface instead, with the same options, when:
+
+- WebGL isn't available;
+- the backdrop is cross-origin without CORS headers, since WebGL can't read its pixels;
+- the user prefers reduced transparency.
+
+`handle.tier` tells you which one you got: `'webgl'`, or the core tier it fell back to.
+
+## Cost
+
+Each surface is its own WebGL context, and browsers cap live contexts at around 16 per page, so
+use WebGL for a few hero surfaces and the core for the rest. A surface redraws only when
+something changes: it moves, resizes, gets new options, or its backdrop is live.

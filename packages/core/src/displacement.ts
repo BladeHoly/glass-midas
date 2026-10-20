@@ -47,10 +47,10 @@ const STEPS = 256;
 const MIN_STRETCH = 0.2;
 
 /**
- * Displacement (px, inward) across the bezel, from the rim (index 0) to where the glass
- * turns flat (index STEPS).
+ * Displacement (px, inward) across the bezel in 257 steps, from the rim (index 0) to where the
+ * glass turns flat (index 256). Shared by the SVG map and the WebGL renderer.
  */
-function profile(
+export function lensProfile(
   bezel: number,
   thickness: number,
   ior: number,
@@ -100,7 +100,7 @@ export function displacementMap(
   // corners instead of meeting at a diagonal seam when the corners are sharp.
   const rn = Math.min(Math.max(r, bezel), width / 2, height / 2);
   const magnify = Math.min(Math.max(optics.magnify ?? 0, 0), 0.5);
-  const shift = profile(
+  const shift = lensProfile(
     bezel,
     optics.thickness,
     optics.ior,
