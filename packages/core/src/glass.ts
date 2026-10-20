@@ -61,7 +61,8 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
     const key = JSON.stringify([width, height, optics]);
     if (key !== drawn && !drawMap(width, height, optics)) return setBackdrop(el, tail);
     drawn = key;
-    setBackdrop(el, `url(#${id}) ${tail}`);
+    // Frost first, then bend: the rim highlight added by the filter stays crisp.
+    setBackdrop(el, `${tail} url(#${id})`);
   };
 
   const drawMap = (width: number, height: number, optics: LensOptics) => {
@@ -81,8 +82,9 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       svg.setAttribute('aria-hidden', 'true');
       svg.style.cssText = 'position:absolute;width:0;height:0;pointer-events:none';
     }
-    // Bend the backdrop, then lay the rim highlight (blue channel) over it as white.
-    svg.innerHTML = `<filter id="${id}" x="0" y="0" width="${width}" height="${height}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feImage href="${canvas.toDataURL()}" width="${width}" height="${height}" preserveAspectRatio="none" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="${map.scale}" xChannelSelector="R" yChannelSelector="G" result="bent"/><feColorMatrix in="map" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0" result="rim"/><feComposite in="rim" in2="bent"/></filter>`;
+    // Bend the backdrop, soften the nearest-pixel sampling of the compressed rim, then lay
+    // the rim highlight (blue channel) over it as white.
+    svg.innerHTML = `<filter id="${id}" x="0" y="0" width="${width}" height="${height}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feImage href="${canvas.toDataURL()}" width="${width}" height="${height}" preserveAspectRatio="none" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="${map.scale}" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="0.6" result="bent"/><feColorMatrix in="map" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0" result="rim"/><feComposite in="rim" in2="bent"/></filter>`;
     return true;
   };
 

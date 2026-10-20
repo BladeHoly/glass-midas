@@ -66,7 +66,7 @@ that date.
   deepens dark ones instead of just adding white.
 - Metaball merging of several shapes via smooth-min of SDFs (l.84-109); a nice later feature.
 
-### ybouane/liquidglass (no license file: ideas only, don't copy code)
+### ybouane/liquidglass (MIT, declared only in package.json; no LICENSE file)
 
 `src/shaders.ts` (WebGL; captures HTML to a texture in `HtmlCapture.ts`)
 
@@ -90,7 +90,7 @@ that date.
 - B = specular `(edge·0.24 + (1 − Nz)²·5.5)`, A = smoothstep AA mask. Cache key includes every
   optic parameter. Has unit tests for optics (`optics.test.ts`).
 
-### sohumsuthar/liquid-glass (MIT): mostly CSS
+### sohumsuthar/liquid-glass (MIT)
 
 `css/liquid-glass-core.css`
 
@@ -187,3 +187,41 @@ rises from the rim to a flat top of height `H`. View and light rays are vertical
   a frame? gentpan pre-decodes through `<img>.decode()`.
 - Core budget: the Snell table, quadrant mirroring and the B channel should fit in ~1 KB more.
   Three-pass CA adds filter nodes, not much code.
+
+## Reconciliation with Fable's read (same day)
+
+Fable read the same sources independently (`refraction-notes-fable.md`). Where we differ, Fable was
+right:
+
+- **ybouane is MIT.** I missed it because it's declared only in `package.json`; there's no
+  LICENSE file.
+- **sohumsuthar has real optics, not just CSS.** I read only its stylesheet. `lib/glass-optics.mjs`
+  and `PHYSICS.md` use the squircle + Snell model with BK7 (n = 1.5168) and a slab thickness term
+  `t = 0.35·B + f(x)`. They also scale the shift by Fresnel transmittance, which isn't physics.
+- **The physical model folds.** The sampled position `U(d) = d + D(d)` must keep increasing
+  inward. The pure Snell curve drops too fast after its peak: with thickness 24 and bezel 20, my
+  first implementation reached `dU/dd = −0.84`. The image folded over itself, which showed up as
+  loops in the corners of the grid screenshot. liquefy-ui is the only reference that guards it.
+- **Corner seam.** With radius < bezel (our defaults were 18 < 20), the analytic normal jumps
+  across the corner diagonal. Using `max(radius, bezel)` for the direction removes it.
+- **Highlight order.** A highlight added inside `url()` gets smeared by the `blur()` after it.
+
+### What shipped
+
+- Height: squircle rim with `rise = min(thickness, bezel)`, plus a flat slab `thickness − rise`
+  under it.
+- Shift: `(slab + h) · tan(θ1 − θ2)`, n from `ior`, tabulated in 256 steps across the bezel.
+- **Fold guard** (from liquefy-ui and Fable): one sweep from the flat interior outward,
+  `D[i] = min(D[i], D[i+1] + (1 − 0.2)·B/256`, which caps magnification at 5×. Verified
+  numerically, and by a unit test that the sampled position always increases.
+- Bend direction from a rounded rectangle with radius `max(r, bezel)`.
+- Rim highlight in the blue channel = Fresnel reflectance (unpolarized, minus the 4% base) × a
+  light lobe. Filter order is now `blur() saturate() url()`, and the url graph is displace →
+  `feGaussianBlur σ 0.6` → add highlight.
+
+### Still open
+
+- Firefox via `filter:` on a backdrop-blurred layer (both reads flag it). Needs a real Gecko check.
+- Chromatic aberration: physically < 0.1 px, so off for now. If added, use two passes (Fable
+  §3.9) and label it as an exaggeration.
+- Quadrant mirroring, an LRU cache and attribute-only filter updates instead of `innerHTML`.
