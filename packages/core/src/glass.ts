@@ -16,6 +16,8 @@ export interface GlassOptions {
   curvature?: number;
   /** Magnification of the whole surface, 0 to 0.5. */
   magnify?: number;
+  /** Let the rim fold the image into a mirrored band, as thick glass does. */
+  caustics?: boolean;
   blur?: string;
   /** Force a tier instead of detecting it. */
   tier?: GlassTier;
@@ -62,6 +64,7 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       specular: options.specular ?? 0.6,
       curvature: options.curvature ?? 4,
       magnify: options.magnify ?? 0.1,
+      caustics: options.caustics ?? false,
     };
     // The map depends only on size and optics, so moving the element never redraws it.
     const key = JSON.stringify([width, height, optics]);

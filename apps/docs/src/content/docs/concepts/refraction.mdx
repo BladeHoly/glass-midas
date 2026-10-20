@@ -24,6 +24,7 @@ Drag the panel over the stripes and text, and change the material:
     'radius',
     'curvature',
     'magnify',
+    'caustics',
     'blur',
     'specular',
   ]}
@@ -70,12 +71,23 @@ caustic band it becomes a smooth, strongly compressed edge, which is what real g
 UI scale. Magnification counts toward that limit, so the rim gets less room the more the surface
 magnifies.
 
+### Caustics: the side wall
+
+Thick glass with a round edge does something the guard prevents: near the rim, light bends so hard
+that the image folds over itself into a compressed, mirrored band of the backdrop. That band reads
+as the **side wall of the glass**, and it's what gives a thick lens its 3D look.
+
+Turn it on with `caustics: true` and give the glass real thickness, for example
+`{ thickness: 160, bezel: 60, curvature: 2, caustics: true, blur: '0px' }`, the **Lens** look in
+the demo. Keep blur low: frost is applied before the bend and smears the band away.
+
 ## From optics to pixels
 
 `displacementMap()` evaluates the model across the bezel once, then looks it up for every pixel and
 stores the result in an image: red for horizontal shift, green for vertical, with 128 meaning
-none. The strongest shift is stretched to the full 8-bit range, a precision of well under a tenth
-of a pixel. The map is drawn at up to 2× the CSS size on high-density screens.
+none. The strongest shift is stretched to the full 8-bit range: under a tenth of a pixel per step
+for thin glass, but over a pixel for thick glass with caustics, which can show as faint banding.
+The map is drawn at up to 2× the CSS size on high-density screens.
 
 The browser does the rest on the GPU:
 
