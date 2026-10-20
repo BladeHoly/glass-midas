@@ -1,0 +1,113 @@
+---
+title: '@glass-midas/core'
+description: API reference for the framework-agnostic core.
+sidebar:
+  order: 2
+  label: core
+---
+
+```ts
+import {
+  createGlass,
+  detectTier,
+  tokens,
+  tokensToCss,
+  tokenVar,
+  displacementMap,
+} from '@glass-midas/core';
+```
+
+All exports are safe to import during server rendering; anything that needs the DOM checks for it first.
+
+## createGlass
+
+```ts
+function createGlass(el: HTMLElement, options?: GlassOptions): GlassHandle;
+```
+
+Turns `el` into a glass surface at the best [tier](/concepts/tiers/) the browser supports, and sets
+`data-glass-tier` on it.
+
+### GlassOptions
+
+| Option       | Type        | Default                   | Description                                               |
+| ------------ | ----------- | ------------------------- | --------------------------------------------------------- |
+| `radius`     | `number`    | `18`                      | Corner radius in px. Match the element's `border-radius`. |
+| `bezel`      | `number`    | `16`                      | Width of the refracting rim in px. `refract` only.        |
+| `refraction` | `number`    | `28`                      | Maximum displacement in px. `refract` only.               |
+| `blur`       | `string`    | `var(--gm-blur-md, 16px)` | Any CSS length. Ignored at `solid`.                       |
+| `tier`       | `GlassTier` | detected                  | Forces a tier instead of calling `detectTier()`.          |
+
+See [Refraction](/concepts/refraction/) for what the refraction options look like.
+
+### GlassHandle
+
+| Member            | Description                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| `tier`            | The tier in use. Fixed for the surface's lifetime.                                    |
+| `update(options)` | Merges new options and re-renders. `tier` can't change; create a new surface instead. |
+| `destroy()`       | Removes the effect, its SVG filter, its resize observer and `data-glass-tier`.        |
+
+## detectTier
+
+```ts
+function detectTier(env?: SupportEnv | null): GlassTier;
+type GlassTier = 'refract' | 'blur' | 'solid';
+```
+
+Returns the best tier for the current browser. The decision order is on the
+[Tiers](/concepts/tiers/#how-the-tier-is-chosen) page.
+
+Without an argument it inspects the real browser. Pass `null` to describe an environment with no
+browser (always `solid`), or a `SupportEnv` to test the logic:
+
+```ts
+interface SupportEnv {
+  supports(property: string, value: string): boolean; // like CSS.supports
+  matchMedia(query: string): { matches: boolean };
+  isChromium: boolean;
+}
+
+detectTier({ supports: () => true, matchMedia: () => ({ matches: false }), isChromium: false });
+// 'blur'
+```
+
+## tokens
+
+```ts
+const tokens: Tokens;
+```
+
+The default design tokens, grouped by kind. Listed in the [token reference](/reference/tokens/).
+
+## tokensToCss
+
+```ts
+function tokensToCss(selector?: string, source?: Tokens): string;
+```
+
+Serializes tokens as one CSS rule of custom properties. `selector` defaults to `:root`, `source` to
+`tokens`.
+
+## tokenVar
+
+```ts
+function tokenVar(group: TokenGroup, name: string): string;
+```
+
+Returns `var(--gm-<group>-<name>)`. Both arguments are type-checked against `tokens`.
+
+## displacementMap
+
+```ts
+function displacementMap(
+  width: number,
+  height: number,
+  radius: number,
+  bezel: number,
+): ImageData | undefined;
+```
+
+The map behind the `refract` tier, exported for building custom effects. Red encodes horizontal
+displacement, green vertical; `128` means none. Returns `undefined` without a DOM or for a
+zero-sized area.

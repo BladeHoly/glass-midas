@@ -1,0 +1,49 @@
+---
+title: Refraction
+description: How the refract tier bends the backdrop with an SVG displacement map.
+sidebar:
+  order: 2
+---
+
+import GlassDemo from '../../../components/GlassDemo';
+
+Real glass bends light most at its curved rim and barely at all in the flat middle. The `refract`
+tier imitates that.
+
+<GlassDemo client:load controls={['refraction', 'bezel', 'radius', 'blur']} initialTier="refract" />
+
+## How it works
+
+1. **A displacement map is drawn for the element's shape.** `displacementMap()` paints a canvas the
+   size of the element. Pixels in the flat center are neutral gray. Near the edge, within the
+   **bezel**, the red and green channels shift to encode which way, and how far, to push the
+   backdrop: red for horizontal, green for vertical. The push grows quadratically toward the rim.
+2. **The map becomes an SVG filter.** It's loaded with `<feImage>` and applied with
+   `<feDisplacementMap>`. `refraction` is the filter's `scale`, the maximum displacement in pixels.
+3. **The filter runs on the backdrop.** The element gets
+   `backdrop-filter: url(#filter) blur(…) saturate(…)`, so the page behind it is bent, then
+   blurred, then saturated.
+4. **The map follows the element.** A `ResizeObserver` redraws it whenever the element's size
+   changes.
+
+## The options
+
+| Option       | Default                   | Effect                                                                                           |
+| ------------ | ------------------------- | ------------------------------------------------------------------------------------------------ |
+| `refraction` | `28`                      | How far the rim bends the backdrop. `0` turns bending off.                                       |
+| `bezel`      | `16`                      | Width of the bending rim, in px. Wider feels thicker.                                            |
+| `radius`     | `18`                      | Corner radius of the map, in px. Match the element's `border-radius`, or the corners bend wrong. |
+| `blur`       | `var(--gm-blur-md, 16px)` | Blur applied after bending. Lower values show more refraction.                                   |
+
+Change them on a live surface with `update()`:
+
+```ts
+const glass = createGlass(el, { radius: 28 });
+glass.update({ refraction: 48, bezel: 24 });
+```
+
+## Cost
+
+The map is redrawn on the CPU when the element is created or resized, which costs more for large
+elements. Scrolling and animating content _behind_ the glass is handled by the browser's
+compositor. Keep refracting surfaces moderate in size and number, and avoid animating their size.

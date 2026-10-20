@@ -1,0 +1,62 @@
+---
+title: Tiers
+description: How glass-midas picks between real refraction, frosted blur and a solid surface.
+sidebar:
+  order: 1
+---
+
+import GlassDemo from '../../../components/GlassDemo';
+
+Browsers differ a lot in what they can draw behind an element. Instead of one effect that breaks
+in half of them, glass-midas renders every surface at one of three **tiers**, best first:
+
+| Tier      | What it draws                                                        | Who gets it                                                           |
+| --------- | -------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `refract` | The backdrop bent at the edges like a lens, plus blur and saturation | Chromium browsers (Chrome, Edge, Opera, Brave)                        |
+| `blur`    | Frosted glass: blur and saturation, no bending                       | Safari, Firefox                                                       |
+| `solid`   | No backdrop effect; the surface relies on its tint                   | No `backdrop-filter` support, or the user asked for less transparency |
+
+Switch tiers in the demo to compare them:
+
+<GlassDemo client:load controls={['tier']} />
+
+## How the tier is chosen
+
+`detectTier()` runs these checks in order and stops at the first match:
+
+1. **No browser** (server rendering) → `solid`.
+2. **`prefers-reduced-transparency: reduce`** → `solid`. The user's accessibility setting always wins.
+3. **No `backdrop-filter`** support (prefixed or not) → `solid`.
+4. **Chromium** → `refract`. It's the only engine that renders SVG filters inside `backdrop-filter`.
+5. Anything else → `blur`.
+
+`createGlass` calls `detectTier()` for you and records the result on the element as
+`data-glass-tier`, so you can style per tier:
+
+```css
+.panel[data-glass-tier='solid'] {
+  background: var(--gm-tint-dark); /* more opaque, so text stays readable */
+}
+```
+
+## Forcing a tier
+
+Pass `tier` to skip detection, for example to test fallbacks in one browser:
+
+```ts
+createGlass(el, { tier: 'blur' });
+```
+
+Forcing `refract` outside Chromium doesn't make it work there; the browser silently ignores the
+filter and you get blur only.
+
+A surface keeps its tier for life. To change it, destroy the surface and create a new one
+(in React, change the component's `key`).
+
+## Design for all three
+
+Every surface must look intentional, and keep text readable, at every tier:
+
+- **Don't rely on refraction** for meaning; most of your users may see `blur`.
+- **Give the surface a tint.** At `solid` the tint is all there is.
+- **Check contrast at `solid`** over both light and dark backgrounds.

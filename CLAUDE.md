@@ -6,6 +6,7 @@ Open-source (MIT) Liquid Glass **style system** — tokens plus headless primiti
 
 - `packages/core`: framework-agnostic engine. `tokens.ts` (design tokens → `--gm-<group>-<name>` custom properties), `support.ts` (tier detection), `glass.ts` (`createGlass(el, options)` → `{ tier, update, destroy }`), `displacement.ts` (refraction map). Zero runtime dependencies.
 - `packages/react`: thin bindings only (`useGlass`, `<Glass>`). No logic that belongs in core.
+- `apps/docs`: documentation site (Astro + Starlight, MDX in `src/content/docs`). `GlassDemo.tsx` is the interactive demo; `TokenTable.astro` is generated from `tokens`. Uses TypeScript 6 locally because `astro check` doesn't support TS 7 yet. Not hosted yet.
 - `apps/playground`: Vite + React demo for manual and Playwright review. `?tier=blur|solid|refract` forces a tier.
 - `references/`: the user's inspiration links. Read-only.
 - `scripts/size.mjs`: gzipped bundle-size check against each package's `sizeBudget`.
@@ -21,7 +22,7 @@ Open-source (MIT) Liquid Glass **style system** — tokens plus headless primiti
 
 ## Commands
 
-`pnpm build` · `pnpm test` · `pnpm typecheck` · `pnpm size` · `pnpm dev` · `pnpm format`
+`pnpm build` · `pnpm test` · `pnpm typecheck` · `pnpm size` · `pnpm dev` · `pnpm format` · docs: `pnpm --filter @glass-midas/docs dev`
 
 TypeScript is 7.x (native compiler); packages build with plain `tsc`, so avoid tools that need the TS JS API.
 
