@@ -101,3 +101,8 @@
     linear-gradient(var(--swatch), var(--swatch)),
     repeating-conic-gradient(#999 0 25%, #eee 0 50%) 0 0 / 8px 8px;
 }
+.gm-demo-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

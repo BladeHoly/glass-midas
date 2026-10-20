@@ -7,7 +7,8 @@ export function useGlass<T extends HTMLElement>(
   options: GlassOptions = {},
 ): void {
   const handle = useRef<GlassHandle | null>(null);
-  const { tier, radius, bezel, thickness, ior, specular, curvature, magnify, blur } = options;
+  const { tier, radius, bezel, thickness, ior, specular, curvature, magnify, caustics, blur } =
+    options;
 
   useEffect(() => {
     if (!ref.current) return;
@@ -25,8 +26,18 @@ export function useGlass<T extends HTMLElement>(
   }, [ref, tier]);
 
   useEffect(() => {
-    handle.current?.update({ radius, bezel, thickness, ior, specular, curvature, magnify, blur });
-  }, [radius, bezel, thickness, ior, specular, curvature, magnify, blur]);
+    handle.current?.update({
+      radius,
+      bezel,
+      thickness,
+      ior,
+      specular,
+      curvature,
+      magnify,
+      caustics,
+      blur,
+    });
+  }, [radius, bezel, thickness, ior, specular, curvature, magnify, caustics, blur]);
 }
 
 export type GlassProps = ComponentPropsWithoutRef<'div'> & { glass?: GlassOptions };

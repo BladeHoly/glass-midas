@@ -12,7 +12,8 @@ type Control =
   | 'blur'
   | 'specular'
   | 'curvature'
-  | 'magnify';
+  | 'magnify'
+  | 'caustics';
 
 interface Props {
   /** Which controls to show; all of them by default. */
@@ -32,15 +33,19 @@ const LOOKS = {
     magnify: 0.1,
     blur: 2,
     specular: 0.6,
+    caustics: false,
   },
+  // A thick slab with a round edge. Its rim folds the backdrop into a mirrored band, which
+  // reads as the glass's side wall and gives the 3D look of ybouane/liquidglass.
   lens: {
-    thickness: 60,
-    bezel: 72,
+    thickness: 160,
+    bezel: 60,
     radius: 72,
     curvature: 2,
-    magnify: 0.15,
+    magnify: 0.05,
     blur: 0,
-    specular: 0.8,
+    specular: 0.9,
+    caustics: true,
   },
 };
 
@@ -119,6 +124,7 @@ export default function GlassDemo({
     'radius',
     'curvature',
     'magnify',
+    'caustics',
     'blur',
     'specular',
   ],
@@ -136,6 +142,7 @@ export default function GlassDemo({
   const [specular, setSpecular] = useState(0.6);
   const [curvature, setCurvature] = useState(4);
   const [magnify, setMagnify] = useState(0.1);
+  const [caustics, setCaustics] = useState(false);
   const applyLook = (look: keyof typeof LOOKS) => {
     const l = LOOKS[look];
     setThickness(l.thickness);
@@ -143,6 +150,7 @@ export default function GlassDemo({
     setRadius(l.radius);
     setCurvature(l.curvature);
     setMagnify(l.magnify);
+    setCaustics(l.caustics);
     setBlur(l.blur);
     setSpecular(l.specular);
   };
@@ -175,6 +183,7 @@ export default function GlassDemo({
               specular,
               curvature,
               magnify,
+              caustics,
               blur: `${blur}px`,
             }}
             className="gm-demo-panel"
@@ -221,7 +230,7 @@ export default function GlassDemo({
             label="Thickness"
             value={thickness}
             min={0}
-            max={80}
+            max={240}
             unit="px"
             onChange={setThickness}
           />
@@ -264,6 +273,16 @@ export default function GlassDemo({
             step={0.01}
             onChange={setMagnify}
           />
+        )}
+        {controls.includes('caustics') && (
+          <label className="gm-demo-control gm-demo-toggle">
+            <input
+              type="checkbox"
+              checked={caustics}
+              onChange={(e) => setCaustics(e.target.checked)}
+            />
+            <span>Caustics (fold the rim)</span>
+          </label>
         )}
         {controls.includes('blur') && (
           <Slider label="Blur" value={blur} min={0} max={30} unit="px" onChange={setBlur} />

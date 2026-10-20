@@ -84,6 +84,16 @@ describe('displacementMap', () => {
     }
   });
 
+  it('folds the rim into a mirrored band with caustics', () => {
+    const thick = { ...optics, thickness: 120, bezel: 40, curvature: 2 };
+    const guarded = row(thick);
+    const folded = row({ ...thick, caustics: true });
+    // Without the guard, thick glass bends much further and the sampled position runs backward.
+    expect(Math.max(...folded)).toBeGreaterThan(2 * Math.max(...guarded));
+    const steps = folded.slice(1, 40).map((v, x) => x + 1 + v - (x + folded[x]!));
+    expect(Math.min(...steps)).toBeLessThan(0);
+  });
+
   it('curves the whole surface when the bezel spans it', () => {
     const r = row({ ...optics, curvature: 2, bezel: 50, thickness: 50 });
     // Every column between the rim and the center bends a little.

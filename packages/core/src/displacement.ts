@@ -21,6 +21,11 @@ export interface LensOptics {
   curvature?: number;
   /** Magnification of the whole surface, 0 to 0.5: content appears 1 / (1 − magnify) larger. */
   magnify?: number;
+  /**
+   * Let the rim fold the image over itself, as thick real glass does: a band of stretched,
+   * mirrored backdrop along the edge. Off by default, which caps magnification at 5×.
+   */
+  caustics?: boolean;
 }
 
 export interface LensMap {
@@ -48,11 +53,18 @@ const LY = -Math.SQRT1_2;
  * Displacement (px, inward) and rim reflectance across the bezel, from the rim (index 0)
  * to where the glass turns flat (index STEPS).
  */
-function profile(bezel: number, thickness: number, ior: number, k: number, magnify: number) {
+function profile(
+  bezel: number,
+  thickness: number,
+  ior: number,
+  k: number,
+  magnify: number,
+  caustics: boolean,
+) {
   const rise = Math.min(thickness, bezel); // height of the curved part
   const slab = thickness - rise; // flat glass underneath it
   // Magnifying the surface already compresses the sampled image; leave the rim less room.
-  const room = ((1 - magnify - MIN_STRETCH) * bezel) / STEPS;
+  const room = caustics ? Infinity : ((1 - magnify - MIN_STRETCH) * bezel) / STEPS;
   const shift = new Float32Array(STEPS + 1);
   const shine = new Float32Array(STEPS + 1);
   for (let i = STEPS - 1; i >= 0; i--) {
@@ -102,6 +114,7 @@ export function displacementMap(
     optics.ior,
     optics.curvature ?? 4,
     magnify,
+    optics.caustics ?? false,
   );
   let unit = 0;
 
