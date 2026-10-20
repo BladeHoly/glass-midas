@@ -2,7 +2,17 @@ import { detectTier, tokensToCss, tokenVar, type GlassTier } from '@glass-midas/
 import { Glass } from '@glass-midas/react';
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 
-type Control = 'tier' | 'thickness' | 'ior' | 'bezel' | 'radius' | 'blur' | 'specular';
+type Control =
+  | 'look'
+  | 'tier'
+  | 'thickness'
+  | 'ior'
+  | 'bezel'
+  | 'radius'
+  | 'blur'
+  | 'specular'
+  | 'curvature'
+  | 'magnify';
 
 interface Props {
   /** Which controls to show; all of them by default. */
@@ -10,6 +20,29 @@ interface Props {
   initialTier?: GlassTier;
   height?: number;
 }
+
+// Starting points: the physical edge-only default, and the whole-surface lens of
+// ybouane/liquidglass (clear glass, round bezel across the panel, magnified interior).
+const LOOKS = {
+  edge: {
+    thickness: 24,
+    bezel: 20,
+    radius: 32,
+    curvature: 4,
+    magnify: 0.1,
+    blur: 2,
+    specular: 0.6,
+  },
+  lens: {
+    thickness: 60,
+    bezel: 72,
+    radius: 72,
+    curvature: 2,
+    magnify: 0.15,
+    blur: 0,
+    specular: 0.8,
+  },
+};
 
 const MATERIALS = [
   { label: 'Water', ior: 1.33 },
@@ -77,7 +110,18 @@ function Slider(props: {
 }
 
 export default function GlassDemo({
-  controls = ['tier', 'thickness', 'ior', 'bezel', 'radius', 'blur', 'specular'],
+  controls = [
+    'look',
+    'tier',
+    'thickness',
+    'ior',
+    'bezel',
+    'radius',
+    'curvature',
+    'magnify',
+    'blur',
+    'specular',
+  ],
   initialTier,
   height = 360,
 }: Props) {
@@ -90,6 +134,18 @@ export default function GlassDemo({
   const [radius, setRadius] = useState(32);
   const [blur, setBlur] = useState(2);
   const [specular, setSpecular] = useState(0.6);
+  const [curvature, setCurvature] = useState(4);
+  const [magnify, setMagnify] = useState(0.1);
+  const applyLook = (look: keyof typeof LOOKS) => {
+    const l = LOOKS[look];
+    setThickness(l.thickness);
+    setBezel(l.bezel);
+    setRadius(l.radius);
+    setCurvature(l.curvature);
+    setMagnify(l.magnify);
+    setBlur(l.blur);
+    setSpecular(l.specular);
+  };
   const { offset, handlers } = useDrag();
 
   // Detection needs the browser, so it runs after hydration.
@@ -110,7 +166,17 @@ export default function GlassDemo({
           <Glass
             // The tier is fixed for a surface's lifetime, so a new tier means a new surface.
             key={active}
-            glass={{ tier: forced, thickness, ior, bezel, radius, specular, blur: `${blur}px` }}
+            glass={{
+              tier: forced,
+              thickness,
+              ior,
+              bezel,
+              radius,
+              specular,
+              curvature,
+              magnify,
+              blur: `${blur}px`,
+            }}
             className="gm-demo-panel"
             {...handlers}
             style={{
@@ -127,6 +193,18 @@ export default function GlassDemo({
       </div>
 
       <div className="gm-demo-controls">
+        {controls.includes('look') && (
+          <label className="gm-demo-control">
+            <span>Look</span>
+            <select
+              defaultValue="edge"
+              onChange={(e) => applyLook(e.target.value as keyof typeof LOOKS)}
+            >
+              <option value="edge">Edge (physical slab)</option>
+              <option value="lens">Lens (ybouane-like)</option>
+            </select>
+          </label>
+        )}
         {controls.includes('tier') && (
           <label className="gm-demo-control">
             <span>Tier</span>
@@ -163,10 +241,29 @@ export default function GlassDemo({
           </label>
         )}
         {controls.includes('bezel') && (
-          <Slider label="Bezel" value={bezel} min={2} max={60} unit="px" onChange={setBezel} />
+          <Slider label="Bezel" value={bezel} min={2} max={80} unit="px" onChange={setBezel} />
         )}
         {controls.includes('radius') && (
           <Slider label="Radius" value={radius} min={0} max={80} unit="px" onChange={setRadius} />
+        )}
+        {controls.includes('curvature') && (
+          <label className="gm-demo-control">
+            <span>Profile</span>
+            <select value={curvature} onChange={(e) => setCurvature(Number(e.target.value))}>
+              <option value={2}>Circle (2)</option>
+              <option value={4}>Squircle (4)</option>
+            </select>
+          </label>
+        )}
+        {controls.includes('magnify') && (
+          <Slider
+            label="Magnify"
+            value={magnify}
+            min={0}
+            max={0.5}
+            step={0.01}
+            onChange={setMagnify}
+          />
         )}
         {controls.includes('blur') && (
           <Slider label="Blur" value={blur} min={0} max={30} unit="px" onChange={setBlur} />
