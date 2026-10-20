@@ -61,10 +61,41 @@ describe('displacementMap', () => {
     expect(blue(0)).toBeGreaterThan(blue(199)); // light comes from the left
   });
 
+  it('magnifies the whole surface, not just the rim', () => {
+    const r = row({ ...optics, magnify: 0.2 });
+    // 50 px left of center samples 0.2 · 50 = 10 px closer to it.
+    expect(r[50]).toBeCloseTo(10, 0);
+    expect(r[150]).toBeCloseTo(-10, 0);
+    expect(r[100]).toBeCloseTo(0, 0);
+  });
+
+  it('never folds, even magnified with a round, whole-surface bezel', () => {
+    for (const o of [
+      { ...optics, magnify: 0.3 },
+      { ...optics, curvature: 2, bezel: 50, thickness: 50, magnify: 0.2 },
+      { ...optics, curvature: 2, bezel: 50, thickness: 80, magnify: 0.5 },
+    ]) {
+      const r = row(o);
+      // Strong magnification widens each 8-bit step; allow half a step of rounding.
+      const step = displacementMap(200, 100, o)!.scale / 255;
+      for (let x = 1; x < 100; x++) {
+        expect(x + r[x]! - (x - 1 + r[x - 1]!)).toBeGreaterThan(Math.min(0.1, -step / 2));
+      }
+    }
+  });
+
+  it('curves the whole surface when the bezel spans it', () => {
+    const r = row({ ...optics, curvature: 2, bezel: 50, thickness: 50 });
+    // Every column between the rim and the center bends a little.
+    for (let x = 2; x < 95; x++) expect(r[x]).toBeGreaterThan(0);
+  });
+
   it('renders at higher density without changing the optics', () => {
     const map = displacementMap(200, 100, optics, 2)!;
     expect(map.width).toBe(400);
-    expect(map.scale).toBeCloseTo(displacementMap(200, 100, optics)!.scale, 5);
+    // Pixel centers sit closer to the edge at higher density, so the peak differs slightly.
+    const base = displacementMap(200, 100, optics)!.scale;
+    expect(Math.abs(map.scale - base) / base).toBeLessThan(0.05);
   });
 
   it('is undefined for an empty box', () => {

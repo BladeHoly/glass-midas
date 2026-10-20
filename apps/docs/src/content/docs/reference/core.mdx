@@ -39,6 +39,8 @@ Turns `el` into a glass surface at the best [tier](/concepts/tiers/) the browser
 | `thickness` | `number`    | `24`                      | Height of the glass in px; thicker bends more. `refract` only.     |
 | `ior`       | `number`    | `1.5`                     | Index of refraction (water `1.33`, glass `1.5`). `refract` only.   |
 | `specular`  | `number`    | `0.6`                     | Rim highlight strength, 0 to 1. `refract` only.                    |
+| `curvature` | `number`    | `4`                       | Rim profile exponent: `2` circle, `4` squircle. `refract` only.    |
+| `magnify`   | `number`    | `0.1`                     | Magnifies the whole surface, `0` to `0.5`. `refract` only.         |
 | `blur`      | `string`    | `var(--gm-blur-md, 16px)` | Any CSS length. Ignored at `solid`.                                |
 | `tier`      | `GlassTier` | detected                  | Forces a tier instead of calling `detectTier()`.                   |
 
@@ -117,6 +119,8 @@ interface LensOptics {
   thickness: number;
   ior: number;
   specular: number;
+  curvature?: number; // default 4
+  magnify?: number; // default 0
 }
 
 interface LensMap {

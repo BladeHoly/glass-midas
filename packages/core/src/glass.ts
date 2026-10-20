@@ -12,6 +12,10 @@ export interface GlassOptions {
   ior?: number;
   /** Rim highlight strength, 0 to 1. */
   specular?: number;
+  /** Rim profile exponent: 2 is a circle, 4 a squircle with a flatter top. */
+  curvature?: number;
+  /** Magnification of the whole surface, 0 to 0.5. */
+  magnify?: number;
   blur?: string;
   /** Force a tier instead of detecting it. */
   tier?: GlassTier;
@@ -56,6 +60,8 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       thickness: options.thickness ?? 24,
       ior: options.ior ?? 1.5,
       specular: options.specular ?? 0.6,
+      curvature: options.curvature ?? 4,
+      magnify: options.magnify ?? 0.1,
     };
     // The map depends only on size and optics, so moving the element never redraws it.
     const key = JSON.stringify([width, height, optics]);

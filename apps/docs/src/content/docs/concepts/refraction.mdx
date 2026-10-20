@@ -16,7 +16,17 @@ Drag the panel over the stripes and text, and change the material:
 
 <GlassDemo
   client:load
-  controls={['thickness', 'ior', 'bezel', 'radius', 'blur', 'specular']}
+  controls={[
+    'look',
+    'thickness',
+    'ior',
+    'bezel',
+    'radius',
+    'curvature',
+    'magnify',
+    'blur',
+    'specular',
+  ]}
   initialTier="refract"
 />
 
@@ -38,13 +48,27 @@ where the glass turns flat):
 Bending is strongest near the rim and fades to zero where the glass turns flat. In the corners the
 same profile runs along the distance to the rounded rectangle, bending radially.
 
+### The whole surface is a lens
+
+With only a curved rim, the flat middle of the glass shows the backdrop unchanged, and the material
+reads as glass only at its edges. Two options carry it across the whole component, the way
+[ybouane/liquidglass](https://github.com/ybouane/liquidglass) does:
+
+- **`magnify`** (default `0.1`) samples the whole surface toward its center, so everything behind
+  it looks `1 / (1 − magnify)` times larger, like through a magnifier.
+- **A bezel as wide as half the smaller side** curves the entire surface. With **`curvature: 2`**
+  the profile is a circle: a pillow of glass rather than a slab with rounded edges.
+
+Pick **Lens (ybouane-like)** in the demo above to see both together.
+
 ### Keeping the image in one piece
 
 Pure optics overshoots in a thin band at the rim: the shift falls off so fast that neighboring
 pixels sample past each other and the image folds over itself (a caustic). glass-midas caps the
 local magnification at 5×. Where the physical curve is within that limit it's used as is; in the
 caustic band it becomes a smooth, strongly compressed edge, which is what real glass looks like at
-UI scale.
+UI scale. Magnification counts toward that limit, so the rim gets less room the more the surface
+magnifies.
 
 ## From optics to pixels
 
