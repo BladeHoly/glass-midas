@@ -29,7 +29,7 @@ TypeScript is 7.x (native compiler); packages build with plain `tsc`, so avoid t
 
 - Hooks: Prettier runs after every edit; on stop, typecheck + tests run for the packages that changed and failures come back to fix.
 - Skills: `new-component`, `glass-review` (Playwright: screenshots per tier, FPS, budgets), `release` (manual only: `/release`).
-- MCP: Context7 for current library docs (use it for Vite, Turborepo, Changesets, React, Vitest APIs instead of memory), Playwright for the browser.
+- MCP: Playwright for the browser (project `.mcp.json`). Context7 for current library docs (use it for Vite, Turborepo, Changesets, React, Vitest APIs instead of memory) is configured per user with their own API key: `npx ctx7 setup --claude`. Don't add it to `.mcp.json`; a keyless project entry would override the user's.
 - Plugins: `frontend-design`, `typescript-lsp`.
 
 ## Git
