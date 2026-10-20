@@ -16,7 +16,7 @@ mount, pass option changes to `update()`, and destroy it on unmount. Requires Re
 ## Glass
 
 ```tsx
-<Glass glass={{ radius: 28, refraction: 32 }} className="panel">
+<Glass glass={{ radius: 28, thickness: 32 }} className="panel">
   …
 </Glass>
 ```
@@ -47,7 +47,7 @@ function Toolbar() {
 }
 ```
 
-Changes to `radius`, `bezel`, `refraction` and `blur` update the live surface. A change to `tier`
+Changes to `radius`, `bezel`, `thickness`, `ior`, `specular` and `blur` update the live surface. A change to `tier`
 replaces it.
 
 ## Types

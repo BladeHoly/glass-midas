@@ -1,49 +1,84 @@
 ---
 title: Refraction
-description: How the refract tier bends the backdrop with an SVG displacement map.
+description: The optics behind the refract tier — a squircle bezel, Snell's law and a displacement map.
 sidebar:
   order: 2
 ---
 
 import GlassDemo from '../../../components/GlassDemo';
 
-Real glass bends light most at its curved rim and barely at all in the flat middle. The `refract`
-tier imitates that.
+The `refract` tier models a real piece of glass resting on the page: flat on the bottom, flat on
+top, with a curved rim, the **bezel**, where the two meet. Light passing through the flat middle
+goes straight down. Light hitting the bezel bends, so what you see near the edge comes from
+further inside, squeezed toward the rim.
 
-<GlassDemo client:load controls={['refraction', 'bezel', 'radius', 'blur']} initialTier="refract" />
+Drag the panel over the stripes and text, and change the material:
 
-## How it works
+<GlassDemo
+  client:load
+  controls={['thickness', 'ior', 'bezel', 'radius', 'blur', 'specular']}
+  initialTier="refract"
+/>
 
-1. **A displacement map is drawn for the element's shape.** `displacementMap()` paints a canvas the
-   size of the element. Pixels in the flat center are neutral gray. Near the edge, within the
-   **bezel**, the red and green channels shift to encode which way, and how far, to push the
-   backdrop: red for horizontal, green for vertical. The push grows quadratically toward the rim.
-2. **The map becomes an SVG filter.** It's loaded with `<feImage>` and applied with
-   `<feDisplacementMap>`. `refraction` is the filter's `scale`, the maximum displacement in pixels.
-3. **The filter runs on the backdrop.** The element gets
-   `backdrop-filter: url(#filter) blur(…) saturate(…)`, so the page behind it is bent, then
-   blurred, then saturated.
-4. **The map follows the element.** A `ResizeObserver` redraws it whenever the element's size
-   changes.
+## The model
 
-## The options
+For a point at distance `s` across the bezel (0 at the rim, 1 where the glass turns flat):
 
-| Option       | Default                   | Effect                                                                                           |
-| ------------ | ------------------------- | ------------------------------------------------------------------------------------------------ |
-| `refraction` | `28`                      | How far the rim bends the backdrop. `0` turns bending off.                                       |
-| `bezel`      | `16`                      | Width of the bending rim, in px. Wider feels thicker.                                            |
-| `radius`     | `18`                      | Corner radius of the map, in px. Match the element's `border-radius`, or the corners bend wrong. |
-| `blur`       | `var(--gm-blur-md, 16px)` | Blur applied after bending. Lower values show more refraction.                                   |
+1. **Surface height** follows a convex squircle, which gives the steep, liquid-looking edge:
+   `h(s) = thickness · (1 − (1 − s)⁴)^¼`.
+2. **Incidence:** a vertical view ray meets the surface at angle `θ₁ = atan(h′(s))` from its normal.
+3. **Snell's law:** inside the glass it travels at `θ₂ = asin(sin θ₁ / n)`, where `n` is the
+   index of refraction.
+4. **Displacement:** the ray now leans by `θ₁ − θ₂` and crosses the glass's height before reaching
+   the page, so it lands `h(s) · tan(θ₁ − θ₂)` px further in, toward the center.
 
-Change them on a live surface with `update()`:
+The result is zero at the very rim (no glass height) and zero in the flat middle (no bend), with a
+sharp peak just inside the edge. With the bezel as tall as it is wide, the peak is about
+`0.42 × thickness`.
+
+In the corners the same profile runs along the distance to the rounded rectangle, bending
+radially.
+
+## From optics to pixels
+
+`displacementMap()` evaluates the model for every pixel and stores the result in an image: red for
+horizontal shift, green for vertical, with 128 meaning none. The strongest shift is stretched to the
+full 8-bit range, so precision stays below a third of a pixel for normal sizes. The map is drawn
+at up to 2× the CSS size on high-density screens.
+
+The browser does the rest on the GPU:
+
+```
+backdrop ──► feDisplacementMap (map, scale) ──► + rim highlight ──► blur ──► saturate
+```
+
+The blue channel carries the **rim highlight**: a crisp line plus a soft glow, brightest where the
+rim faces a light at the top left.
+
+## Options
+
+| Option      | Default                   | Effect                                                                               |
+| ----------- | ------------------------- | ------------------------------------------------------------------------------------ |
+| `thickness` | `24`                      | Height of the glass in px. Thicker glass bends more. `0` turns bending off.          |
+| `ior`       | `1.5`                     | Index of refraction: water `1.33`, glass `1.5`, sapphire `1.77`, diamond `2.42`.     |
+| `bezel`     | `20`                      | Width of the curved rim in px. Narrower rims look harder and more liquid.            |
+| `radius`    | `18`                      | Corner radius in px. Match the element's `border-radius`, or the corners bend wrong. |
+| `specular`  | `0.6`                     | Rim highlight strength, 0 to 1.                                                      |
+| `blur`      | `var(--gm-blur-md, 16px)` | Frost applied after bending. Lower values show more of the refraction.               |
 
 ```ts
-const glass = createGlass(el, { radius: 28 });
-glass.update({ refraction: 48, bezel: 24 });
+const glass = createGlass(el, { radius: 28, thickness: 32, ior: 1.5 });
+glass.update({ ior: 1.33 }); // turn it into water
 ```
 
 ## Cost
 
-The map is redrawn on the CPU when the element is created or resized, which costs more for large
-elements. Scrolling and animating content _behind_ the glass is handled by the browser's
-compositor. Keep refracting surfaces moderate in size and number, and avoid animating their size.
+The map is computed on the CPU when the surface is created and whenever its size or optics change.
+**Moving it costs nothing extra**: the map depends only on size, so dragging or scrolling glass
+just moves the filter with the element. Avoid animating its size or optics every frame.
+
+## Further reading
+
+The model follows the convex-squircle approach several open-source implementations converged on.
+The comparison and derivation are in the repository's
+[research notes](https://github.com/BladeHoly/glass-midas/tree/main/research).

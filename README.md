@@ -28,7 +28,7 @@ const glass = createGlass(document.querySelector('.panel')!, { radius: 28 });
 ```tsx
 import { Glass } from '@glass-midas/react';
 
-<Glass glass={{ radius: 28, refraction: 32 }} className="panel">
+<Glass glass={{ radius: 28, thickness: 32 }} className="panel">
   …
 </Glass>;
 ```

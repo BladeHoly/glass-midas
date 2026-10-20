@@ -7,18 +7,26 @@ export function useGlass<T extends HTMLElement>(
   options: GlassOptions = {},
 ): void {
   const handle = useRef<GlassHandle | null>(null);
-  const { tier, radius, bezel, refraction, blur } = options;
+  const { tier, radius, bezel, thickness, ior, specular, blur } = options;
 
   useEffect(() => {
     if (!ref.current) return;
-    handle.current = createGlass(ref.current, { tier, radius, bezel, refraction, blur });
+    handle.current = createGlass(ref.current, {
+      tier,
+      radius,
+      bezel,
+      thickness,
+      ior,
+      specular,
+      blur,
+    });
     return () => handle.current?.destroy();
     // Only the tier forces a new surface; other options go through update() below.
   }, [ref, tier]);
 
   useEffect(() => {
-    handle.current?.update({ radius, bezel, refraction, blur });
-  }, [radius, bezel, refraction, blur]);
+    handle.current?.update({ radius, bezel, thickness, ior, specular, blur });
+  }, [radius, bezel, thickness, ior, specular, blur]);
 }
 
 export type GlassProps = ComponentPropsWithoutRef<'div'> & { glass?: GlassOptions };

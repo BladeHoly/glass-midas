@@ -1,8 +1,8 @@
 import { detectTier, tokensToCss, tokenVar, type GlassTier } from '@glass-midas/core';
 import { Glass } from '@glass-midas/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type PointerEvent } from 'react';
 
-type Control = 'tier' | 'refraction' | 'bezel' | 'radius' | 'blur';
+type Control = 'tier' | 'thickness' | 'ior' | 'bezel' | 'radius' | 'blur' | 'specular';
 
 interface Props {
   /** Which controls to show; all of them by default. */
@@ -10,6 +10,13 @@ interface Props {
   initialTier?: GlassTier;
   height?: number;
 }
+
+const MATERIALS = [
+  { label: 'Water', ior: 1.33 },
+  { label: 'Glass', ior: 1.5 },
+  { label: 'Sapphire', ior: 1.77 },
+  { label: 'Diamond', ior: 2.42 },
+];
 
 function useTokens() {
   useEffect(() => {
@@ -21,11 +28,34 @@ function useTokens() {
   }, []);
 }
 
+/** Lets the panel be dragged around the stage; moving glass never redraws its map. */
+function useDrag() {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const start = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null);
+  return {
+    offset,
+    handlers: {
+      onPointerDown(e: PointerEvent<HTMLElement>) {
+        e.currentTarget.setPointerCapture(e.pointerId);
+        start.current = { x: e.clientX, y: e.clientY, ox: offset.x, oy: offset.y };
+      },
+      onPointerMove(e: PointerEvent<HTMLElement>) {
+        const s = start.current;
+        if (s) setOffset({ x: s.ox + e.clientX - s.x, y: s.oy + e.clientY - s.y });
+      },
+      onPointerUp() {
+        start.current = null;
+      },
+    },
+  };
+}
+
 function Slider(props: {
   label: string;
   value: number;
   min: number;
   max: number;
+  step?: number;
   unit?: string;
   onChange: (v: number) => void;
 }) {
@@ -38,6 +68,7 @@ function Slider(props: {
         type="range"
         min={props.min}
         max={props.max}
+        step={props.step ?? 1}
         value={props.value}
         onChange={(e) => props.onChange(Number(e.target.value))}
       />
@@ -46,17 +77,20 @@ function Slider(props: {
 }
 
 export default function GlassDemo({
-  controls = ['tier', 'refraction', 'bezel', 'radius', 'blur'],
+  controls = ['tier', 'thickness', 'ior', 'bezel', 'radius', 'blur', 'specular'],
   initialTier,
-  height = 320,
+  height = 360,
 }: Props) {
   useTokens();
   const [detected, setDetected] = useState<GlassTier | null>(null);
   const [tier, setTier] = useState<GlassTier | 'auto'>(initialTier ?? 'auto');
-  const [refraction, setRefraction] = useState(32);
-  const [bezel, setBezel] = useState(18);
-  const [radius, setRadius] = useState(28);
-  const [blur, setBlur] = useState(6);
+  const [thickness, setThickness] = useState(24);
+  const [ior, setIor] = useState(1.5);
+  const [bezel, setBezel] = useState(20);
+  const [radius, setRadius] = useState(32);
+  const [blur, setBlur] = useState(2);
+  const [specular, setSpecular] = useState(0.6);
+  const { offset, handlers } = useDrag();
 
   // Detection needs the browser, so it runs after hydration.
   useEffect(() => setDetected(detectTier()), []);
@@ -76,16 +110,18 @@ export default function GlassDemo({
           <Glass
             // The tier is fixed for a surface's lifetime, so a new tier means a new surface.
             key={active}
-            glass={{ tier: forced, refraction, bezel, radius, blur: `${blur}px` }}
+            glass={{ tier: forced, thickness, ior, bezel, radius, specular, blur: `${blur}px` }}
             className="gm-demo-panel"
+            {...handlers}
             style={{
+              transform: `translate(${offset.x}px, ${offset.y}px)`,
               borderRadius: radius,
-              background: active === 'solid' ? tokenVar('tint', 'dark') : tokenVar('tint', 'light'),
-              boxShadow: `inset 0 1px 0 ${tokenVar('highlight', 'edge')}, 0 12px 40px rgb(0 0 0 / 0.25)`,
+              background: tokenVar('tint', active === 'solid' ? 'solid' : 'light'),
+              boxShadow: '0 12px 40px rgb(0 0 0 / 0.25)',
             }}
           >
             <strong>{active}</strong>
-            <small>{forced ? 'forced' : 'detected for this browser'}</small>
+            <small>{forced ? 'forced' : 'detected for this browser'} · drag me</small>
           </Glass>
         )}
       </div>
@@ -102,8 +138,29 @@ export default function GlassDemo({
             </select>
           </label>
         )}
-        {controls.includes('refraction') && (
-          <Slider label="Refraction" value={refraction} min={0} max={80} onChange={setRefraction} />
+        {controls.includes('thickness') && (
+          <Slider
+            label="Thickness"
+            value={thickness}
+            min={0}
+            max={80}
+            unit="px"
+            onChange={setThickness}
+          />
+        )}
+        {controls.includes('ior') && (
+          <label className="gm-demo-control">
+            <span>
+              Material <output>n = {ior}</output>
+            </span>
+            <select value={ior} onChange={(e) => setIor(Number(e.target.value))}>
+              {MATERIALS.map((m) => (
+                <option key={m.label} value={m.ior}>
+                  {m.label} ({m.ior})
+                </option>
+              ))}
+            </select>
+          </label>
         )}
         {controls.includes('bezel') && (
           <Slider label="Bezel" value={bezel} min={2} max={60} unit="px" onChange={setBezel} />
@@ -113,6 +170,16 @@ export default function GlassDemo({
         )}
         {controls.includes('blur') && (
           <Slider label="Blur" value={blur} min={0} max={30} unit="px" onChange={setBlur} />
+        )}
+        {controls.includes('specular') && (
+          <Slider
+            label="Highlight"
+            value={specular}
+            min={0}
+            max={1}
+            step={0.05}
+            onChange={setSpecular}
+          />
         )}
       </div>
       {active === 'refract' && detected !== 'refract' && (
