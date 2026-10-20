@@ -1,0 +1,45 @@
+{
+  "name": "@glass-midas/react",
+  "version": "0.0.0",
+  "description": "React bindings for @glass-midas/core",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BladeHoly/glass-midas.git",
+    "directory": "packages/react"
+  },
+  "sizeBudget": {
+    "dist/index.js": 1024
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit",
+    "size": "node ../../scripts/size.mjs"
+  },
+  "dependencies": {
+    "@glass-midas/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "react": "^19.3.1"
+  }
+}
