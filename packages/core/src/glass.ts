@@ -6,18 +6,23 @@ export interface GlassOptions {
   radius?: number;
   /** Width of the curved rim in px. */
   bezel?: number;
-  /** Height of the glass in px; more thickness bends more. */
+  /** Total height of the glass in px; more thickness bends more. */
   thickness?: number;
   /** Index of refraction: 1.33 water, 1.5 glass. */
   ior?: number;
-  /** Rim highlight strength, 0 to 1. */
+  /** Opacity of the white rim hairline, 0 to 1. */
   specular?: number;
+  /** Saturation of the backdrop seen through the rim hairline; 1 leaves it as is. */
+  specularSaturation?: number;
+  /** Direction the rim light comes from, in degrees: 0 from the right, −90 from the top. */
+  lightAngle?: number;
   /** Rim profile exponent: 2 is a circle, 4 a squircle with a flatter top. */
   curvature?: number;
   /** Magnification of the whole surface, 0 to 0.5. */
   magnify?: number;
   /** Let the rim fold the image into a mirrored band, as thick glass does. */
   caustics?: boolean;
+  /** Frost as a CSS length. Defaults to 1px for refraction, the blur-md token otherwise. */
   blur?: string;
   /** Force a tier instead of detecting it. */
   tier?: GlassTier;
@@ -49,32 +54,46 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
   el.dataset.glassTier = tier;
 
   const render = () => {
-    const blur = options.blur ?? 'var(--gm-blur-md, 16px)';
-    const tail = `blur(${blur}) saturate(var(--gm-saturation-md, 160%))`;
     if (tier === 'solid') return setBackdrop(el, 'none');
-    if (tier === 'blur') return setBackdrop(el, tail);
+    if (tier === 'blur') {
+      const blur = options.blur ?? 'var(--gm-blur-md, 16px)';
+      return setBackdrop(el, `blur(${blur}) saturate(var(--gm-saturation-md, 160%))`);
+    }
+    // Refraction carries the look, so the frost stays light, as in kube.io's search box.
+    const tail = `blur(${options.blur ?? '1px'})`;
 
     const width = el.offsetWidth;
     const height = el.offsetHeight;
+    // Defaults reproduce the search box from kube.io's liquid glass article.
     const optics: LensOptics = {
       radius: options.radius ?? 18,
       bezel: options.bezel ?? 20,
-      thickness: options.thickness ?? 24,
+      thickness: options.thickness ?? 40,
       ior: options.ior ?? 1.5,
-      specular: options.specular ?? 0.6,
       curvature: options.curvature ?? 4,
-      magnify: options.magnify ?? 0.1,
-      caustics: options.caustics ?? false,
+      magnify: options.magnify ?? 0,
+      caustics: options.caustics ?? true,
+      lightAngle: options.lightAngle ?? -60,
     };
+    const specular = options.specular ?? 0.2;
+    const saturation = options.specularSaturation ?? 4;
     // The map depends only on size and optics, so moving the element never redraws it.
-    const key = JSON.stringify([width, height, optics]);
-    if (key !== drawn && !drawMap(width, height, optics)) return setBackdrop(el, tail);
+    const key = JSON.stringify([width, height, optics, specular, saturation]);
+    if (key !== drawn && !drawMap(width, height, optics, specular, saturation)) {
+      return setBackdrop(el, tail);
+    }
     drawn = key;
-    // Frost first, then bend: the rim highlight added by the filter stays crisp.
+    // Frost first, then bend: the rim light added by the filter stays crisp.
     setBackdrop(el, `${tail} url(#${id})`);
   };
 
-  const drawMap = (width: number, height: number, optics: LensOptics) => {
+  const drawMap = (
+    width: number,
+    height: number,
+    optics: LensOptics,
+    specular: number,
+    saturation: number,
+  ) => {
     const map = displacementMap(width, height, optics, Math.min(devicePixelRatio || 1, 2));
     if (!map) return false;
     const canvas = document.createElement('canvas');
@@ -91,9 +110,25 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       svg.setAttribute('aria-hidden', 'true');
       svg.style.cssText = 'position:absolute;width:0;height:0;pointer-events:none';
     }
-    // Bend the backdrop, soften the nearest-pixel sampling of the compressed rim, then lay
-    // the rim highlight (blue channel) over it as white.
-    svg.innerHTML = `<filter id="${id}" x="0" y="0" width="${width}" height="${height}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB"><feImage href="${canvas.toDataURL()}" width="${width}" height="${height}" preserveAspectRatio="none" result="map"/><feDisplacementMap in="SourceGraphic" in2="map" scale="${map.scale}" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="0.6" result="bent"/><feColorMatrix in="map" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0" result="rim"/><feComposite in="rim" in2="bent"/></filter>`;
+    // Bend the backdrop (smoothing magnified pixels unless the rim folds on purpose), then
+    // light the rim: a saturated copy of the bent backdrop masked by the hairline in the blue
+    // channel, plus the hairline itself in white at the specular opacity.
+    const bend = `<feDisplacementMap in="SourceGraphic" in2="map" scale="${map.scale}" xChannelSelector="R" yChannelSelector="G" result="bent"/>`;
+    const smooth = optics.caustics
+      ? ''
+      : '<feGaussianBlur in="bent" stdDeviation="0.6" result="bent"/>';
+    svg.innerHTML =
+      `<filter id="${id}" x="0" y="0" width="${width}" height="${height}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">` +
+      `<feImage href="${canvas.toDataURL()}" width="${width}" height="${height}" preserveAspectRatio="none" result="map"/>` +
+      bend +
+      smooth +
+      `<feColorMatrix in="map" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0" result="rim"/>` +
+      `<feColorMatrix in="bent" type="saturate" values="${saturation}" result="vivid"/>` +
+      `<feComposite in="vivid" in2="rim" operator="in" result="vividRim"/>` +
+      `<feComposite in="vividRim" in2="bent" result="lit"/>` +
+      `<feComponentTransfer in="rim" result="line"><feFuncA type="linear" slope="${specular}"/></feComponentTransfer>` +
+      `<feComposite in="line" in2="lit"/>` +
+      `</filter>`;
     return true;
   };
 
