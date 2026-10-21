@@ -93,6 +93,49 @@
     background: var(--gm-chip-fill-on);
     box-shadow: var(--gm-rim);
   }
+  /* Primary: the one action a surface is for. The ink as its fill, so it leads without glass. */
+  :where(.gm-chip-primary) {
+    background: var(--gm-chip-primary, var(--gm-ink));
+    color: var(--gm-ink-inverse);
+    font-weight: 600;
+  }
+  :where(.gm-chip-primary:hover) {
+    background: var(
+      --gm-chip-primary-hover,
+      color-mix(in srgb, var(--gm-chip-primary, var(--gm-ink)) 86%, transparent)
+    );
+  }
+  :where(.gm-chip:disabled, .gm-chip[aria-disabled='true']) {
+    opacity: 0.5;
+    cursor: default;
+  }
+  /* Busy: a spinner where the label was, at the same size, while the action runs. */
+  :where(.gm-chip[aria-busy='true']) {
+    position: relative;
+    color: transparent;
+    pointer-events: none;
+  }
+  :where(.gm-chip[aria-busy='true'])::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 1.1em;
+    height: 1.1em;
+    margin: auto;
+    border: 2px solid var(--gm-ink);
+    border-right-color: transparent;
+    border-radius: var(--gm-radius-pill, 999px);
+    animation: gm-spin 0.7s linear infinite;
+  }
+  :where(.gm-chip-primary[aria-busy='true'])::after {
+    border-color: var(--gm-ink-inverse);
+    border-right-color: transparent;
+  }
+  @keyframes gm-spin {
+    to {
+      rotate: 1turn;
+    }
+  }
   /* Icon only: a circle. */
   :where(.gm-chip-round) {
     width: 2.5em;

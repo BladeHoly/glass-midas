@@ -1,0 +1,28 @@
+---
+title: Create account
+description: Three fields checked as you go, then a code by email to confirm the address.
+order: 2
+template: sign-up
+---
+
+Name, email and a password: nothing that can wait until later. Each field is checked once it's
+left, and an error clears as soon as the field is right. The password's rules tick off as they're
+met. Then a code by email proves the address. It checks itself as soon as the last box is filled,
+with no button to press.
+
+<Template name="sign-up" />
+
+## Try it
+
+- Leave a field empty and move on: its error shows under it. Fix it and the error goes.
+- An email ending in `@taken.example` is already in use in the demo.
+- In the code step, `000000` is wrong; any other code works.
+
+## Details that matter
+
+- **No "confirm password" field.** The eye button shows what was typed, which is kinder.
+- **Rules that help, not hurt.** Length is what matters; a number or a symbol is suggested, not
+  forced.
+- **No terms checkbox.** A line under the button says what creating the account agrees to.
+- **The code is one real input** ([`gm-otp`](/components/otp/)), so phones offer it from the
+  email or message.

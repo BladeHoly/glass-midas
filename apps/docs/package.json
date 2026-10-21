@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "dev": "node scripts/templates.mjs && astro dev",
+    "build": "node scripts/templates.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "typecheck": "astro check"
   },
@@ -27,6 +27,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "pagefind": "^1.5.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "@glass-midas/templates": "workspace:*"
   }
 }

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <link rel="stylesheet" href="split-sign-in.css" />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+    ></script>
+    <script type="module" src="split-sign-in.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-resonance" aria-hidden="true"></div>
+    <div class="split">
+      <!-- The panel: frosted glass over the art, docked to one side. -->
+      <gm-surface class="split-panel" material="frost" radius="32">
+        <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+
+        <main class="split-main">
+          <form class="auth-form auth-step" id="step-sign-in" aria-labelledby="title" novalidate>
+            <div>
+              <h1 id="title" class="on-display" tabindex="-1">Welcome back</h1>
+              <p class="auth-lede">Sign in to your Ondine account.</p>
+            </div>
+            <p class="auth-alert" id="alert" role="alert"></p>
+            <div class="gm-field">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                class="gm-input"
+                type="email"
+                name="email"
+                autocomplete="username webauthn"
+                inputmode="email"
+                required
+                aria-describedby="email-error"
+              />
+              <p class="gm-field-error" id="email-error"></p>
+            </div>
+            <div class="gm-field">
+              <label for="password">Password</label>
+              <div class="gm-input-group">
+                <input
+                  id="password"
+                  class="gm-input"
+                  type="password"
+                  name="password"
+                  autocomplete="current-password"
+                  required
+                  aria-describedby="password-error"
+                />
+                <button
+                  class="gm-chip gm-chip-plain gm-chip-round"
+                  type="button"
+                  data-action="reveal"
+                  aria-label="Show password"
+                  aria-pressed="false"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+              <p class="gm-field-error" id="password-error"></p>
+            </div>
+            <div class="auth-row">
+              <label class="gm-check-label">
+                <input type="checkbox" class="gm-check" name="remember" checked />
+                <span>Keep me signed in</span>
+              </label>
+              <a href="reset-password.html">Forgot it?</a>
+            </div>
+            <button class="gm-chip gm-chip-primary" type="submit">Sign in</button>
+            <p class="auth-or">or</p>
+            <button class="gm-chip" type="button" data-action="passkey">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="8" cy="8" r="4" />
+                <path d="M10.8 10.8 20 20M16 16l2-2M18.5 18.5l2-2" />
+              </svg>
+              Sign in with a passkey
+            </button>
+            <p class="auth-switch">New to Ondine? <a href="sign-up.html">Create an account</a></p>
+          </form>
+
+          <section class="auth-step auth-done" id="step-done" aria-labelledby="done-title" hidden>
+            <span class="on-sigil" aria-hidden="true"></span>
+            <h1 id="done-title" tabindex="-1">You're in</h1>
+            <p>Taking you to your account…</p>
+          </section>
+        </main>
+
+        <p class="on-sr-only" role="status" id="status"></p>
+        <footer class="split-foot">
+          <a href="#">Help</a>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </footer>
+      </gm-surface>
+
+      <!-- The art, and what it is. -->
+      <figure class="split-art">
+        <figcaption>
+          <span class="split-quote">Every piece carries its own resonance.</span>
+          <span class="on-muted">Drawn from the frequencies each speaker was tuned to.</span>
+        </figcaption>
+      </figure>
+    </div>
+  </body>
+</html>

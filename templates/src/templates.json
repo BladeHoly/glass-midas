@@ -1,0 +1,34 @@
+[
+  {
+    "name": "sign-in",
+    "title": "Sign in",
+    "group": "Auth",
+    "description": "Email first, then a password, a passkey or a link by email.",
+    "shared": ["tokens.css", "ondine.css", "auth.css", "auth.js", "AuthKit.tsx"],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
+  },
+  {
+    "name": "sign-up",
+    "title": "Create account",
+    "group": "Auth",
+    "description": "Three fields checked as you go, then a code by email to confirm the address.",
+    "shared": ["tokens.css", "ondine.css", "auth.css", "auth.js", "AuthKit.tsx"],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
+  },
+  {
+    "name": "reset-password",
+    "title": "Reset password",
+    "group": "Auth",
+    "description": "The email, a code sent to it, then a new password.",
+    "shared": ["tokens.css", "ondine.css", "auth.css", "auth.js", "AuthKit.tsx"],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
+  },
+  {
+    "name": "split-sign-in",
+    "title": "Split sign in",
+    "group": "Auth",
+    "description": "Email and password together on a frosted panel, beside the art.",
+    "shared": ["tokens.css", "ondine.css", "auth.css", "auth.js", "AuthKit.tsx"],
+    "art": ["sigil.svg", "resonance-dark.webp", "resonance-light.webp"]
+  }
+]
