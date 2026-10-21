@@ -12,6 +12,7 @@ import { GmSegmented } from './segmented.js';
 import { GmSurface } from './surface.js';
 import { GmTabs } from './tabs.js';
 import { GmTip } from './tip.js';
+import { GmToast } from './toast.js';
 
 // Importing the package registers every element. Pair it with the stylesheet:
 // import '@glass-midas/components/styles.css'.
@@ -28,6 +29,7 @@ define('gm-segmented', GmSegmented);
 define('gm-popover', GmPopover);
 define('gm-menu', GmMenu);
 define('gm-dialog', GmDialog);
+define('gm-toast', GmToast);
 
 export { define, glassOptions, GlassElement } from './base.js';
 export { Droplet, boxOf, type Box } from './droplet.js';
@@ -45,7 +47,9 @@ export {
   GmPopover,
   GmMenu,
   GmDialog,
+  GmToast,
 };
+export { toast, type ToastOptions } from './toast.js';
 export type { CalloutType } from './callout.js';
 export type { NavigateDetail } from './nav.js';
 export type { SearchResult, SearchSource } from './search.js';

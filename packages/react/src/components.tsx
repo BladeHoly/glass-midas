@@ -226,6 +226,9 @@ export const GlassScrollbar = wrap<{ scroller?: (y: number) => void }, GmScrollb
   ['scroller'],
 );
 
+/** Shows a toast: a function, so it needs no component. */
+export { toast, type ToastOptions } from '@glass-midas/components';
+
 export type {
   CalloutType,
   MenuSelectDetail,
