@@ -1,0 +1,120 @@
+---
+title: Table
+description: A native table that sorts, selects rows and becomes cards on a phone.
+order: 6.7
+element: gm-table
+attributes:
+  - name: density
+    type: '"compact" | "regular" | "relaxed"'
+    default: '"regular"'
+    description: Row height, 40, 48 or 56px. Compact for scanning many rows, relaxed for reading each one.
+  - name: stack
+    description: Under 40rem, each row becomes a card with every cell labeled by its column.
+  - name: pin
+    description: Pins the first column while the table scrolls sideways.
+  - name: (on a th) data-sort="key"
+    description: Makes the header a button that sorts by its column.
+  - name: (on a td) data-value
+    description: What the column sorts by, when it isn't the text ("$1,450" sorts by 1450).
+  - name: (on checkboxes) data-select, data-select-all
+    description: Row checkboxes (with a value) and the header one that checks them all.
+properties:
+  - name: selected
+    type: string[]
+    description: The values of the checked rows.
+events:
+  - name: gm-sort
+    description: A header was clicked. `detail` is `{ key, direction }`. Cancel it to sort your own way, like a server or React state; the header still shows the order.
+  - name: gm-selection
+    description: The selection changed, by a click or because rows went away. `detail` is `{ values }`.
+methods:
+  - name: sort(key, direction?)
+    description: Sorts by a column, as a click on its header would.
+  - name: clearSelection()
+    description: Unchecks every row.
+---
+
+`<gm-table>` wraps a native `<table>`, so it reads as a table to screen readers and copies as
+one. It adds sorting, row selection and a phone layout. It isn't glass: a table is content, so it
+sits on a plain fill inside the page, with hairlines between rows and the numbers lined up.
+
+<Demo
+  busy
+  column
+  height="20rem"
+  html={`<div style="width: 100%; padding: 0.5rem 0.75rem; border-radius: 20px; background: rgb(14 12 24 / 0.72)">
+<gm-table stack>
+<table>
+<thead><tr>
+<th><input type="checkbox" class="gm-check" data-select-all aria-label="Select all orders"></th>
+<th data-sort="order">Order</th><th data-sort="customer">Customer</th><th>Status</th><th data-sort="total" class="gm-num">Total</th>
+</tr></thead>
+<tbody>
+<tr><td><input type="checkbox" class="gm-check" data-select value="1042" aria-label="Select order 1042"></td><td>#1042</td><td>Ada Moreau</td><td><span class="gm-badge" data-tone="success">Paid</span></td><td class="gm-num" data-value="1450">$1,450.00</td></tr>
+<tr><td><input type="checkbox" class="gm-check" data-select value="1041" aria-label="Select order 1041"></td><td>#1041</td><td>Lio Hart</td><td><span class="gm-badge" data-tone="warning">Pending</span></td><td class="gm-num" data-value="98">$98.00</td></tr>
+<tr><td><input type="checkbox" class="gm-check" data-select value="1040" aria-label="Select order 1040"></td><td>#1040</td><td>Mira Sol</td><td><span class="gm-badge" data-tone="danger">Refunded</span></td><td class="gm-num" data-value="320">$320.00</td></tr>
+</tbody>
+</table>
+</gm-table>
+</div>`}
+/>
+
+## Usage
+
+```html
+<gm-table stack>
+  <table>
+    <thead>
+      <tr>
+        <th><input type="checkbox" class="gm-check" data-select-all aria-label="Select all" /></th>
+        <th data-sort="name">Name</th>
+        <th data-sort="total" class="gm-num">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <input type="checkbox" class="gm-check" data-select value="42" aria-label="Select Ada" />
+        </td>
+        <td>Ada</td>
+        <td class="gm-num" data-value="1450">$1,450.00</td>
+      </tr>
+    </tbody>
+  </table>
+</gm-table>
+```
+
+```js
+const table = document.querySelector('gm-table');
+table.addEventListener('gm-selection', (e) => {
+  bulkBar.hidden = !e.detail.values.length;
+  count.textContent = `${e.detail.values.length} selected`;
+});
+```
+
+Load `css/table.css` and, for the checkboxes, `css/check.css`. Add `class="gm-num"` to number
+columns to line them up on the right.
+
+### In React
+
+`GlassTable` from `@glass-midas/react/data`. Rows are React's, so with `onSort` the table leaves
+them alone: sort your data in the handler.
+
+```tsx
+<GlassTable
+  stack
+  onSort={({ key, direction }) => setSort({ key, direction })}
+  onSelectionChange={({ values }) => setSelected(values)}
+>
+  <table>…</table>
+</GlassTable>
+```
+
+## Best practices
+
+- **Sorting, filtering, selection and the actions on a selection are one system.** Show how many
+  rows an action affects. Ask before destructive actions, or offer undo.
+- **Pick the density for the task:** compact for scanning many rows, relaxed for reading each one.
+- **Say when there's nothing:** an empty table needs a sentence and a way out, like "No orders
+  match. Clear the filters."
+- **Label every row checkbox** with what it selects: "Select order 1042".

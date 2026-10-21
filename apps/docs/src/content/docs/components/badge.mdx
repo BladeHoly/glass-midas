@@ -1,0 +1,63 @@
+---
+title: Badge and avatar
+label: Badge
+description: A short status in color, and a person as a picture or initials. CSS only.
+order: 6.8
+element: .gm-badge
+attributes:
+  - name: class="gm-badge"
+    description: A status. Its word carries the meaning; the color backs it up.
+  - name: data-tone
+    type: '"info" | "success" | "warning" | "danger"'
+    description: The status color. Without it, a neutral gray.
+  - name: class="gm-avatar"
+    description: A circle with an image or initials inside.
+  - name: (on an avatar) data-size
+    type: '"sm" | "lg"'
+    description: 1.5rem or 3rem instead of 2rem.
+  - name: class="gm-avatar-group"
+    description: A few avatars, overlapped.
+---
+
+A badge is a status in one word, with a dot and a tint of its color. Color only where it means
+something: done, waiting, wrong. An avatar is a person, as a picture or their initials.
+
+<Demo
+  busy
+  height="10rem"
+  html={`<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; padding: 1rem 1.2rem; border-radius: 20px; background: rgb(14 12 24 / 0.72)">
+<span class="gm-badge" data-tone="success">Paid</span>
+<span class="gm-badge" data-tone="warning">Pending</span>
+<span class="gm-badge" data-tone="danger">Refunded</span>
+<span class="gm-badge" data-tone="info">Shipped</span>
+<span class="gm-badge">Draft</span>
+<span class="gm-avatar-group"><span class="gm-avatar">AM</span><span class="gm-avatar">LH</span><span class="gm-avatar">MS</span></span>
+</div>`}
+/>
+
+## Usage
+
+```html
+<span class="gm-badge" data-tone="success">Paid</span>
+
+<span class="gm-avatar" aria-hidden="true">AM</span> Ada Moreau
+<span class="gm-avatar"><img src="ada.jpg" alt="Ada Moreau" /></span>
+```
+
+Both are in `css/badge.css`, along with skeletons and pagination.
+
+## Theming
+
+| Property           | Use                                                |
+| ------------------ | -------------------------------------------------- |
+| `--gm-status-*`    | The tones: `info`, `success`, `warning`, `danger`. |
+| `--gm-badge-tone`  | One badge's color, for a tone of your own.         |
+| `--gm-avatar-size` | An avatar's size.                                  |
+| `--gm-avatar-fill` | The fill behind initials.                          |
+
+## Best practices
+
+- **The word first.** A badge must read without its color, for people who don't see it.
+- **Few tones.** If everything is colored, nothing stands out.
+- **Initials next to a name are decoration:** hide them from screen readers with
+  `aria-hidden="true"`. A picture standing alone needs its `alt`.

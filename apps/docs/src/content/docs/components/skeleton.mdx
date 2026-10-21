@@ -1,0 +1,58 @@
+---
+title: Skeleton and pagination
+label: Skeleton
+description: Shapes that hold the place of content while it loads, and chips to move between pages. CSS only.
+order: 6.9
+element: .gm-skeleton
+attributes:
+  - name: class="gm-skeleton"
+    description: A block that shimmers where content will be. Size it like the content.
+  - name: class="gm-skeleton-text", "gm-skeleton-round"
+    description: A line of text, or a circle (for an avatar).
+  - name: class="gm-pagination"
+    description: On a nav of page chips; aria-current="page" marks the current one.
+---
+
+A skeleton stands where content will appear, in its shape, so the page doesn't jump when the
+content arrives. Pagination moves between pages: chips, with the current page on.
+
+<Demo
+  busy
+  column
+  height="14rem"
+  html={`<div style="display: grid; gap: 0.8rem; width: min(100%, 26rem); padding: 1rem 1.2rem; border-radius: 20px; background: rgb(14 12 24 / 0.72)" aria-busy="true">
+<div style="display: flex; align-items: center; gap: 0.75rem"><span class="gm-skeleton gm-skeleton-round" style="width: 2rem; height: 2rem"></span><span class="gm-skeleton gm-skeleton-text" style="width: 60%"></span></div>
+<span class="gm-skeleton gm-skeleton-text"></span>
+<span class="gm-skeleton gm-skeleton-text" style="width: 80%"></span>
+<nav class="gm-pagination" aria-label="Pages">
+<a class="gm-chip gm-chip-plain" href="#" aria-label="Previous page">‹</a>
+<a class="gm-chip" href="#" aria-current="page">1</a><a class="gm-chip gm-chip-plain" href="#">2</a><a class="gm-chip gm-chip-plain" href="#">3</a>
+<span class="gm-pagination-gap">…</span><a class="gm-chip gm-chip-plain" href="#">12</a>
+<a class="gm-chip gm-chip-plain" href="#" aria-label="Next page">›</a>
+</nav>
+</div>`}
+/>
+
+## Usage
+
+```html
+<div aria-busy="true" aria-label="Loading orders">
+  <span class="gm-skeleton gm-skeleton-text" style="width: 60%"></span>
+  <span class="gm-skeleton gm-skeleton-text"></span>
+</div>
+
+<nav class="gm-pagination" aria-label="Pages">
+  <a class="gm-chip gm-chip-plain" href="?page=1" aria-label="Previous page">‹</a>
+  <a class="gm-chip" href="?page=2" aria-current="page">2</a>
+  <a class="gm-chip gm-chip-plain" href="?page=3">3</a>
+</nav>
+```
+
+The current page is a chip that's on: `aria-current="page"` gives it the fill and the rim.
+
+## Best practices
+
+- **Shape skeletons like the content**: the same number of lines and the same widths, roughly.
+- **Mark what's loading** with `aria-busy="true"` on its container, and swap it in at once.
+- **Skip skeletons for quick loads.** Under about 300ms, a flash of skeleton is worse than a pause.
+- **Say where you are:** "21–40 of 214" next to the pages.

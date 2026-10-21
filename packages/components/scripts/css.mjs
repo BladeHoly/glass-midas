@@ -19,6 +19,8 @@ const SHEETS = [
   'check',
   'select',
   'otp',
+  'table',
+  'badge',
   'nav',
   'search',
   'scrollbar',

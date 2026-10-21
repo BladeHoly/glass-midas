@@ -9,7 +9,8 @@
     "./dist/surfaces.js",
     "./dist/navigation.js",
     "./dist/overlays.js",
-    "./dist/forms.js"
+    "./dist/forms.js",
+    "./dist/data.js"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -38,6 +39,10 @@
     "./forms": {
       "types": "./dist/forms.d.ts",
       "default": "./dist/forms.js"
+    },
+    "./data": {
+      "types": "./dist/data.d.ts",
+      "default": "./dist/data.js"
     }
   },
   "files": [
@@ -53,7 +58,8 @@
     "dist/surfaces.js": 1024,
     "dist/navigation.js": 1024,
     "dist/overlays.js": 1024,
-    "dist/forms.js": 1024
+    "dist/forms.js": 1024,
+    "dist/data.js": 1024
   },
   "scripts": {
     "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json",
