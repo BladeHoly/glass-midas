@@ -1,5 +1,13 @@
 # @glass-midas/webgl
 
+## 0.1.1
+
+### Patch Changes
+
+- faa6441: Code comments describe the glass on their own terms instead of naming the projects that inspired it; those are credited in the repository's README.
+- Updated dependencies [faa6441]
+  - @glass-midas/core@0.1.1
+
 ## 0.1.0
 
 Initial release: the core's optics rendered with WebGL, in every browser with WebGL.

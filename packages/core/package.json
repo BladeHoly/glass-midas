@@ -1,6 +1,6 @@
 {
   "name": "@glass-midas/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Framework-agnostic Liquid Glass engine, tokens and primitives",
   "license": "MIT",
   "type": "module",

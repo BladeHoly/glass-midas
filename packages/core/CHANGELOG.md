@@ -1,5 +1,11 @@
 # @glass-midas/core
 
+## 0.1.1
+
+### Patch Changes
+
+- faa6441: Code comments describe the glass on their own terms instead of naming the projects that inspired it; those are credited in the repository's README.
+
 ## 0.1.0
 
 Initial release: the engine of glass-midas, a Liquid Glass style system for the web.
