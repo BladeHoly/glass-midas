@@ -68,13 +68,13 @@ Working with Claude Code: the repo ships hooks, skills and a Playwright MCP serv
 
 ## Credits
 
-glass-midas stands on the work of others, and owes them its look:
+glass-midas learned from the work of others:
 
-- **[Liquid Glass in CSS and SVG](https://kube.io/blog/liquid-glass-css-svg/)** on kube.io, whose search box set the bar for the rim: the convex squircle bezel under Snell's law, and the hairline lit with a saturated copy of the backdrop. The default glass follows that recipe.
+- **[Liquid Glass in CSS and SVG](https://kube.io/blog/liquid-glass-css-svg/)** on kube.io, whose search box set the bar for the rim: the convex squircle bezel under Snell's law, and the hairline lit with a saturated copy of the backdrop. Our default glass aims for that look.
 - **[ybouane/liquidglass](https://github.com/ybouane/liquidglass)** (MIT), whose thick, rounded glass showed what makes Liquid Glass read as a solid object: the whole surface acting as a lens, and the folded band at the rim that becomes its side wall.
 - **[Astryx](https://astryx.atmeta.com/)**, whose documentation shaped ours: component pages with an overview, a live demo and the API, and docs made for agents too.
 
-We also studied [gentpan/liquidglass](https://github.com/gentpan/liquidglass), [ptu14/liquid-glass](https://github.com/ptu14/liquid-glass), [sohumsuthar/liquid-glass](https://github.com/sohumsuthar/liquid-glass), [liquefy-ui](https://github.com/liquefy-ui/liquefy-ui), [moekoelueker/open-glass-ui](https://github.com/moekoelueker/open-glass-ui) and [batch-ly's glass](https://batch-ly.com/glass/). How each one models the glass, and how glass-midas compares, is in [`research/`](research/). The code and docs speak only of the glass itself; this section is where the credit lives.
+We also studied [gentpan/liquidglass](https://github.com/gentpan/liquidglass), [ptu14/liquid-glass](https://github.com/ptu14/liquid-glass), [sohumsuthar/liquid-glass](https://github.com/sohumsuthar/liquid-glass), [liquefy-ui](https://github.com/liquefy-ui/liquefy-ui), [moekoelueker/open-glass-ui](https://github.com/moekoelueker/open-glass-ui) and [batch-ly's glass](https://batch-ly.com/glass/). How each one models the glass, and how glass-midas compares, is in [`research/`](research/). Everything here is our own implementation; these projects shaped what we aimed for, and `research/` shows how we got there. The code and docs speak only of the glass itself; this section is where the credit lives.
 
 ## License
 
