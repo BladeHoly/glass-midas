@@ -5,6 +5,7 @@ import { GmCode } from './code.js';
 import { GmNav } from './nav.js';
 import { GmScrollbar } from './scrollbar.js';
 import { GmSearch } from './search.js';
+import { GmSegmented } from './segmented.js';
 import { GmSurface } from './surface.js';
 import { GmTabs } from './tabs.js';
 import { GmTip } from './tip.js';
@@ -20,11 +21,24 @@ define('gm-nav', GmNav);
 define('gm-search', GmSearch);
 define('gm-scrollbar', GmScrollbar);
 define('gm-tip', GmTip);
+define('gm-segmented', GmSegmented);
 
 export { define, glassOptions, GlassElement } from './base.js';
 export { Droplet, boxOf, type Box } from './droplet.js';
-export { GmSurface, GmButton, GmCallout, GmCode, GmTabs, GmNav, GmSearch, GmScrollbar, GmTip };
+export {
+  GmSurface,
+  GmButton,
+  GmCallout,
+  GmCode,
+  GmTabs,
+  GmNav,
+  GmSearch,
+  GmScrollbar,
+  GmTip,
+  GmSegmented,
+};
 export type { CalloutType } from './callout.js';
 export type { NavigateDetail } from './nav.js';
 export type { SearchResult, SearchSource } from './search.js';
 export type { TabsChangeDetail } from './tabs.js';
+export type { SegmentedChangeDetail } from './segmented.js';

@@ -3,10 +3,12 @@ import type {
   CalloutType,
   GmScrollbar,
   GmSearch,
+  GmSegmented,
   GmTip,
   NavigateDetail,
   SearchResult,
   SearchSource,
+  SegmentedChangeDetail,
   TabsChangeDetail,
 } from '@glass-midas/components';
 import type { GlassTier } from '@glass-midas/core';
@@ -158,6 +160,17 @@ export const GlassSearch = wrap<
   GmSearch
 >('gm-search', ['source'], { onSelect: 'gm-select' });
 
+/** `<gm-segmented>`: one choice among a few. Put buttons with a `value` inside. */
+export const GlassSegmented = wrap<
+  {
+    value?: string;
+    label?: string;
+    /** The user chose another option. */
+    onChange?: (e: CustomEvent<SegmentedChangeDetail>) => void;
+  },
+  GmSegmented
+>('gm-segmented', [], { onChange: 'gm-change' });
+
 /** `<gm-tip>`: a tip on frosted glass, inline or anchored to an element, with a close button. */
 export const GlassTip = wrap<
   {
@@ -180,4 +193,11 @@ export const GlassScrollbar = wrap<{ scroller?: (y: number) => void }, GmScrollb
   ['scroller'],
 );
 
-export type { CalloutType, NavigateDetail, SearchResult, SearchSource, TabsChangeDetail };
+export type {
+  CalloutType,
+  NavigateDetail,
+  SearchResult,
+  SearchSource,
+  SegmentedChangeDetail,
+  TabsChangeDetail,
+};

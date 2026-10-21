@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   glassOptions,
   type GmSearch,
+  type GmSegmented,
   type GmTabs,
   type GmTip,
   type SearchResult,
@@ -186,6 +187,54 @@ describe('gm-nav', () => {
     links[1]!.click();
     expect(links[1]!.getAttribute('aria-current')).toBe('true');
     expect(links[0]!.hasAttribute('aria-current')).toBe(false);
+  });
+});
+
+describe('gm-segmented', () => {
+  const seg = (value = 'voice') =>
+    mount<GmSegmented>(
+      `<gm-segmented label="Mode" value="${value}"><button value="chat">Chat</button><button value="voice">Voice</button><button value="video">Video</button></gm-segmented>`,
+    );
+  const radios = (el: HTMLElement) => [...el.querySelectorAll<HTMLButtonElement>('[role="radio"]')];
+
+  it('is a labelled radio group starting on its value', () => {
+    const el = seg();
+    expect(el.getAttribute('role')).toBe('radiogroup');
+    expect(el.getAttribute('aria-label')).toBe('Mode');
+    expect(radios(el).map((r) => r.getAttribute('aria-checked'))).toEqual([
+      'false',
+      'true',
+      'false',
+    ]);
+    expect(radios(el).map((r) => r.tabIndex)).toEqual([-1, 0, -1]);
+    expect(el.value).toBe('voice');
+  });
+
+  it('fires gm-change when the user picks another option', () => {
+    const el = seg();
+    const changes: unknown[] = [];
+    el.addEventListener('gm-change', (e) => changes.push((e as CustomEvent).detail));
+    radios(el)[2]!.click();
+    radios(el)[2]!.click();
+    expect(changes).toEqual([{ value: 'video', index: 2 }]);
+    expect(el.getAttribute('value')).toBe('video');
+  });
+
+  it('moves with the arrow keys, wrapping', () => {
+    const el = seg('chat');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+    expect(el.value).toBe('video');
+    el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    expect(el.value).toBe('chat');
+  });
+
+  it('follows a value set from outside, without gm-change', () => {
+    const el = seg();
+    const changed = vi.fn();
+    el.addEventListener('gm-change', changed);
+    el.value = 'chat';
+    expect(radios(el)[0]!.getAttribute('aria-checked')).toBe('true');
+    expect(changed).not.toHaveBeenCalled();
   });
 });
 
