@@ -1,10 +1,13 @@
 import '@glass-midas/components';
 import type {
   CalloutType,
+  GmMenu,
+  GmPopover,
   GmScrollbar,
   GmSearch,
   GmSegmented,
   GmTip,
+  MenuSelectDetail,
   NavigateDetail,
   SearchResult,
   SearchSource,
@@ -171,6 +174,24 @@ export const GlassSegmented = wrap<
   GmSegmented
 >('gm-segmented', [], { onChange: 'gm-change' });
 
+interface Floating {
+  /** The id of the element to float next to, when no `popovertarget` names this one. */
+  anchor?: string;
+  placement?: 'bottom' | 'top';
+}
+
+/** `<gm-popover>`: frosted glass next to the button whose `popovertarget` is its `id`. */
+export const GlassPopover = wrap<Floating, GmPopover>('gm-popover');
+
+/** `<gm-menu>`: a popover of actions. Put buttons (with a `value`) or links inside. */
+export const GlassMenu = wrap<
+  Floating & {
+    /** An item was picked. Call `preventDefault()` to keep the menu open. */
+    onSelect?: (e: CustomEvent<MenuSelectDetail>) => void;
+  },
+  GmMenu
+>('gm-menu', [], { onSelect: 'gm-select' });
+
 /** `<gm-tip>`: a tip on frosted glass, inline or anchored to an element, with a close button. */
 export const GlassTip = wrap<
   {
@@ -195,6 +216,7 @@ export const GlassScrollbar = wrap<{ scroller?: (y: number) => void }, GmScrollb
 
 export type {
   CalloutType,
+  MenuSelectDetail,
   NavigateDetail,
   SearchResult,
   SearchSource,

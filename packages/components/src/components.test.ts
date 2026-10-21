@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   glassOptions,
+  type GmMenu,
   type GmSearch,
   type GmSegmented,
   type GmTabs,
@@ -235,6 +236,52 @@ describe('gm-segmented', () => {
     el.value = 'chat';
     expect(radios(el)[0]!.getAttribute('aria-checked')).toBe('true');
     expect(changed).not.toHaveBeenCalled();
+  });
+});
+
+describe('gm-menu', () => {
+  const menu = () =>
+    mount<GmMenu>(
+      '<gm-menu id="actions"><button value="rename">Rename</button><hr><button value="delete">Delete</button><a href="#help">Help</a></gm-menu><button popovertarget="actions" id="opener">More</button>',
+    );
+  const items = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[role="menuitem"]')];
+
+  it('is a frosted popover menu of items, with separators', () => {
+    const el = menu();
+    expect(el.getAttribute('popover')).toBe('auto');
+    expect(el.getAttribute('material')).toBe('frost');
+    expect(el.getAttribute('role')).toBe('menu');
+    expect(items(el)).toHaveLength(3);
+    expect(items(el).every((i) => i.tabIndex === -1)).toBe(true);
+    expect(el.querySelector('hr')!.getAttribute('role')).toBe('separator');
+    expect(el.opener).toBe(document.getElementById('opener'));
+  });
+
+  it('fires gm-select with the value and label of the item', () => {
+    const el = menu();
+    const picked: unknown[] = [];
+    el.addEventListener('gm-select', (e) => {
+      picked.push((e as CustomEvent).detail);
+      e.preventDefault(); // keep it open: happy-dom has no popover to close
+    });
+    items(el)[1]!.click();
+    items(el)[2]!.click();
+    expect(picked).toEqual([
+      { value: 'delete', label: 'Delete' },
+      { value: 'Help', label: 'Help' },
+    ]);
+  });
+
+  it('moves focus through the items with the arrow keys, wrapping', () => {
+    const el = menu();
+    const key = (k: string) =>
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true }));
+    key('ArrowDown');
+    expect(document.activeElement).toBe(items(el)[0]);
+    key('ArrowUp');
+    expect(document.activeElement).toBe(items(el)[2]);
+    key('Home');
+    expect(document.activeElement).toBe(items(el)[0]);
   });
 });
 

@@ -905,3 +905,9 @@ gm-nav a[aria-current] {
 :root[data-theme='light'] .theme .sun {
   display: block;
 }
+
+/* Menu links are items, not prose links: they keep the menu's ink. */
+gm-menu > a {
+  color: inherit;
+  text-decoration: none;
+}

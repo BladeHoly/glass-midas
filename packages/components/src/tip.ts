@@ -1,3 +1,4 @@
+import { anchorTo, follow } from './anchor.js';
 import { GlassElement } from './base.js';
 
 const stored = (key: string) => {
@@ -25,11 +26,7 @@ export class GmTip extends GlassElement {
   static glassDefaults = { radius: 22, bezel: 16, thickness: 30 };
 
   #card: HTMLDivElement | undefined;
-  #frame = 0;
-  #place = () => {
-    cancelAnimationFrame(this.#frame);
-    this.#frame = requestAnimationFrame(() => this.#position());
-  };
+  #stop: (() => void) | undefined;
 
   protected get glassTarget(): HTMLElement {
     return this.#card ?? this;
@@ -68,18 +65,14 @@ export class GmTip extends GlassElement {
       arrow.className = 'gm-tip-arrow';
       arrow.setAttribute('aria-hidden', 'true');
       this.append(arrow, card);
-      addEventListener('scroll', this.#place, { passive: true, capture: true });
-      addEventListener('resize', this.#place);
-      this.#place();
+      this.#stop = follow(() => this.#position());
     } else {
       this.append(card);
     }
   }
 
   protected teardown() {
-    cancelAnimationFrame(this.#frame);
-    removeEventListener('scroll', this.#place, { capture: true });
-    removeEventListener('resize', this.#place);
+    this.#stop?.();
     // Put the content back as it was written, so a reconnect builds the tip again.
     const card = this.#card;
     if (card) {
@@ -112,27 +105,14 @@ export class GmTip extends GlassElement {
       } catch {}
     }
     this.hidden = false;
-    if (this.hasAttribute('anchor')) this.#place();
+    if (this.hasAttribute('anchor')) this.#position();
   }
 
-  // Next to the anchor, centered on it but kept inside the viewport, the arrow on its middle.
+  // Next to the anchor, flipped when its side has no room, the arrow on the anchor's center.
   #position() {
     const target = document.getElementById(this.getAttribute('anchor') ?? '');
     if (!target || this.hidden) return;
-    const gap = 12;
-    const margin = 8;
-    const a = target.getBoundingClientRect();
-    const width = this.offsetWidth;
-    const height = this.offsetHeight;
-    const above = this.getAttribute('placement') === 'top';
-    const center = a.left + a.width / 2;
-    // Kept inside the viewport; a tip wider than it stays on the left margin rather than off it.
-    const left = Math.max(Math.min(center - width / 2, innerWidth - width - margin), margin);
-    const top = above ? a.top - height - gap : a.bottom + gap;
-    // Fixed is how an anchored tip works, not a style: inline, so no page rule can undo it.
-    this.style.position = 'fixed';
-    this.style.left = `${left}px`;
-    this.style.top = `${top}px`;
-    this.style.setProperty('--gm-tip-arrow', `${center - left}px`);
+    const x = anchorTo(this, target, this.getAttribute('placement') === 'top');
+    this.style.setProperty('--gm-tip-arrow', `${x}px`);
   }
 }

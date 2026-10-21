@@ -1,0 +1,76 @@
+---
+title: Popover
+description: Frosted glass that floats next to the button that opens it, on the browser's popover API.
+order: 5.6
+element: gm-popover
+attributes:
+  - name: id
+    type: string
+    description: What a button's popovertarget points at to open it.
+  - name: anchor
+    type: string
+    description: The id of the element to float next to, when no popovertarget names this popover.
+  - name: placement
+    type: "'bottom' | 'top'"
+    default: bottom
+    description: The side it prefers; it flips when there's no room.
+  - name: popover
+    type: "'auto' | 'manual'"
+    default: auto
+    description: auto closes on Escape and on a click outside; manual only closes when told to.
+  - name: material
+    type: "'clear' | 'frost'"
+    default: frost
+    description: It floats over anything, so it's frosted by default.
+properties:
+  - name: opener
+    type: HTMLElement | null
+    description: The element it floats next to.
+methods:
+  - name: open()
+    description: Opens it.
+  - name: close()
+    description: Closes it, returning focus to its button if focus was inside.
+---
+
+`<gm-popover>` floats a panel of frosted glass next to the button that opens it. It's built on
+the browser's popover API, so it lives in the top layer, above everything, and a plain
+`popovertarget` on a button opens it: no script needed. Escape and a click outside close it.
+
+<Demo
+  busy
+  height="17rem"
+  column
+  html={`<div style="display: grid; justify-items: center; padding-bottom: 9rem">
+<gm-button><button popovertarget="demo-share">Share</button></gm-button>
+</div>
+<gm-popover id="demo-share" style="width: 16rem">
+<strong>Share this page</strong>
+<p style="margin: 0.3rem 0 0.75rem; color: var(--gm-ink-muted)">Anyone with the link can view it.</p>
+<button class="gm-chip" aria-pressed="true" style="width: 100%">Copy link</button>
+</gm-popover>`}
+/>
+
+## Usage
+
+```html
+<button popovertarget="share">Share</button>
+
+<gm-popover id="share">…</gm-popover>
+```
+
+It sits below its button, centered on it and kept inside the window, and goes above when there's
+no room below. To open it from code, call `open()`; to float it next to an element that isn't its
+button, give it `anchor="that-id"`.
+
+## Anatomy
+
+- **The host** is the glass, with the `popover` attribute. The browser hides it while closed.
+- Whatever you put inside: text, chips, a form.
+
+## Best practices
+
+- **One popover at a time.** Opening another closes the first, as `auto` popovers do.
+- **For a list of actions, use a [menu](/components/menu/)**: it adds the roles and arrow keys.
+- **Put controls inside as [chips](/components/chip/)**, not glass: glass inside glass can't see
+  the page.
