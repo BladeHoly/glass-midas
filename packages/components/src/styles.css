@@ -1,0 +1,315 @@
+/*
+ * @glass-midas/components styles. Everything goes through custom properties: the core tokens
+ * (--gm-<group>-<name>, from tokensToCss) and a few component ones below, which a theme
+ * overrides the same way. Selectors use :where() so any class of yours wins.
+ */
+
+:where(:root) {
+  --gm-ink: rgb(255 255 255 / 0.94);
+  --gm-ink-muted: rgb(255 255 255 / 0.66);
+  --gm-rim: inset 0 0 0 0.5px var(--gm-highlight-edge, rgb(255 255 255 / 0.55));
+  --gm-lift: 0 8px 28px rgb(0 0 0 / 0.18);
+  --gm-focus: 0 0 0 2px rgb(255 255 255 / 0.85);
+  --gm-callout-note: rgb(120 170 255);
+  --gm-callout-tip: rgb(90 210 150);
+  --gm-callout-caution: rgb(255 196 90);
+  --gm-callout-danger: rgb(255 110 110);
+}
+
+/* Every surface: a light tint, the hairline rim and a soft lift. */
+:where(
+  gm-surface,
+  gm-callout,
+  gm-code,
+  .gm-tablist,
+  gm-nav,
+  .gm-search-field,
+  .gm-search-results,
+  gm-scrollbar
+) {
+  background: var(--gm-tint-light, rgb(255 255 255 / 0.18));
+  box-shadow: var(--gm-rim), var(--gm-lift);
+  color: var(--gm-ink);
+}
+
+/* No backdrop effect: an opaque tint keeps text legible. */
+:where([data-glass-tier='solid']) {
+  background: var(--gm-tint-solid, rgb(28 28 36 / 0.88));
+}
+
+:where(gm-surface) {
+  display: block;
+  border-radius: var(--gm-radius-lg, 28px);
+  padding: 1.5rem;
+}
+
+/* Droplet: the moving marker under the selected tab or current link. */
+:where(.gm-droplet) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  border-radius: var(--gm-radius-pill, 999px);
+  background: var(--gm-highlight-glow, rgb(255 255 255 / 0.12));
+  box-shadow: var(--gm-rim);
+  pointer-events: none;
+  transform-origin: center;
+}
+
+/* Callout */
+:where(gm-callout) {
+  --gm-accent: var(--gm-callout-note);
+  display: block;
+  border-radius: var(--gm-radius-md, 18px);
+  padding: 1rem 1.25rem;
+  margin-block: 1.25rem;
+  box-shadow:
+    var(--gm-rim),
+    inset 3px 0 0 var(--gm-accent),
+    var(--gm-lift);
+}
+:where(gm-callout[type='tip']) {
+  --gm-accent: var(--gm-callout-tip);
+}
+:where(gm-callout[type='caution']) {
+  --gm-accent: var(--gm-callout-caution);
+}
+:where(gm-callout[type='danger']) {
+  --gm-accent: var(--gm-callout-danger);
+}
+:where(.gm-callout-heading) {
+  margin: 0 0 0.35rem;
+  font-weight: 600;
+  color: var(--gm-accent);
+}
+:where(gm-callout > :last-child) {
+  margin-bottom: 0;
+}
+
+/* Code block */
+:where(gm-code) {
+  position: relative;
+  display: block;
+  border-radius: var(--gm-radius-md, 18px);
+  margin-block: 1.25rem;
+}
+:where(gm-code pre) {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  background: none !important;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+:where(.gm-copy) {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  border: 0;
+  border-radius: var(--gm-radius-pill, 999px);
+  background: var(--gm-highlight-glow, rgb(255 255 255 / 0.12));
+  box-shadow: var(--gm-rim);
+  color: var(--gm-ink-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+:where(gm-code:hover .gm-copy, .gm-copy:focus-visible) {
+  opacity: 1;
+}
+@media (hover: none) {
+  :where(.gm-copy) {
+    opacity: 1;
+  }
+}
+
+/* Tabs */
+:where(gm-tabs) {
+  display: block;
+  margin-block: 1.25rem;
+}
+:where(gm-tab) {
+  display: block;
+}
+:where(gm-tab[hidden]) {
+  display: none;
+}
+:where(.gm-tablist) {
+  position: relative;
+  display: inline-flex;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--gm-radius-pill, 999px);
+}
+:where(.gm-tab-button) {
+  position: relative;
+  z-index: 1;
+  padding: 0.4rem 0.95rem;
+  border: 0;
+  border-radius: var(--gm-radius-pill, 999px);
+  background: none;
+  color: var(--gm-ink-muted);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+:where(.gm-tab-button[aria-selected='true']) {
+  color: var(--gm-ink);
+}
+
+/* Nav */
+:where(gm-nav) {
+  position: relative;
+  display: flex;
+  gap: 0.125rem;
+  padding: 0.375rem;
+  border-radius: var(--gm-radius-lg, 28px);
+}
+:where(gm-nav[orientation='vertical']) {
+  flex-direction: column;
+}
+:where(gm-nav a) {
+  position: relative;
+  z-index: 1;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--gm-radius-pill, 999px);
+  color: var(--gm-ink-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+:where(gm-nav a[aria-current]) {
+  color: var(--gm-ink);
+}
+
+/* Search */
+:where(gm-search) {
+  position: relative;
+  display: block;
+}
+:where(.gm-search-field) {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-radius: var(--gm-radius-pill, 999px);
+}
+:where(.gm-search-field svg) {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.7;
+}
+:where(.gm-search-field input) {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+:where(.gm-search-field input)::placeholder {
+  color: var(--gm-ink-muted);
+}
+:where(.gm-search-field input)::-webkit-search-cancel-button {
+  display: none;
+}
+:where(.gm-search-field:focus-within) {
+  box-shadow: var(--gm-rim), var(--gm-focus), var(--gm-lift);
+}
+:where(.gm-search-field kbd) {
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--gm-radius-sm, 10px);
+  box-shadow: var(--gm-rim);
+  color: var(--gm-ink-muted);
+  font: inherit;
+  font-size: 0.7rem;
+}
+:where(.gm-search-results) {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: min(60vh, 26rem);
+  overflow-y: auto;
+  padding: 0.375rem;
+  border-radius: 24px;
+}
+:where(.gm-search-results[hidden]) {
+  display: none;
+}
+:where(.gm-search-result) {
+  display: flex;
+  flex-direction: column;
+  padding: 0.55rem 0.85rem;
+  border-radius: var(--gm-radius-md, 18px);
+  cursor: pointer;
+}
+:where(.gm-search-result[aria-selected='true']) {
+  background: var(--gm-highlight-glow, rgb(255 255 255 / 0.12));
+  box-shadow: var(--gm-rim);
+}
+:where(.gm-search-result small) {
+  color: var(--gm-ink-muted);
+}
+:where(.gm-search-empty) {
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  color: var(--gm-ink-muted);
+}
+
+/* Scrollbar: the glass thumb takes over from the native bar with a mouse. */
+:where(gm-scrollbar) {
+  position: fixed;
+  top: 0;
+  right: 4px;
+  z-index: 100;
+  width: 10px;
+  border-radius: var(--gm-radius-pill, 999px);
+  cursor: grab;
+  touch-action: none;
+  transition: width 0.2s;
+}
+:where(gm-scrollbar:hover, gm-scrollbar[dragging]) {
+  width: 14px;
+}
+:where(gm-scrollbar[dragging]) {
+  cursor: grabbing;
+}
+:where(gm-scrollbar[hidden]) {
+  display: none;
+}
+@media (pointer: coarse) {
+  :where(gm-scrollbar) {
+    display: none;
+  }
+}
+@media (pointer: fine) {
+  :where(html:has(gm-scrollbar)) {
+    scrollbar-width: none;
+  }
+  :where(html:has(gm-scrollbar))::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+:where(gm-nav a, .gm-tab-button, .gm-copy):focus-visible {
+  outline: 0;
+  box-shadow: var(--gm-focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.gm-copy, .gm-tab-button, gm-nav a, gm-scrollbar) {
+    transition: none;
+  }
+}

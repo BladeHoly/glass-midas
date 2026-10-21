@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@glass-midas/components": "workspace:^",
     "@glass-midas/core": "workspace:^",
     "@glass-midas/react": "workspace:^",
     "react": "^19.3.1",
