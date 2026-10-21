@@ -1,0 +1,49 @@
+---
+title: Toggle
+description: An on/off switch for inside glass, on the native checkbox, with no script.
+order: 6.1
+element: .gm-toggle
+attributes:
+  - name: class="gm-toggle"
+    description: Makes a checkbox a switch.
+  - name: role="switch"
+    description: Tells screen readers it's a switch rather than a checkbox. Add it.
+  - name: checked, disabled, name, value
+    description: As on any checkbox; it takes part in forms.
+---
+
+A toggle switches one setting on or off. It's the native checkbox with a class, so forms,
+keyboard and screen readers work as they always do, and there's nothing to load. Like a
+[chip](/components/chip/), it sits inside glass rather than being glass: a light track, the
+accent when it's on, and a white knob that stretches while it's held.
+
+<Demo
+  busy
+  height="11rem"
+  html={`<gm-surface material="frost" radius="22" style="display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.1rem; border-radius: 22px">
+<label for="demo-wifi">Wi-Fi</label>
+<input id="demo-wifi" type="checkbox" class="gm-toggle" role="switch" checked>
+</gm-surface>`}
+/>
+
+## Usage
+
+```html
+<label>
+  Wi-Fi
+  <input type="checkbox" class="gm-toggle" role="switch" checked />
+</label>
+```
+
+## Theming
+
+| Property               | Use                               |
+| ---------------------- | --------------------------------- |
+| `--gm-toggle-on`       | The track when it's on.           |
+| `--gm-knob`            | The knob, here and on the slider. |
+| `--gm-chip-fill-hover` | The track when it's off.          |
+
+## Best practices
+
+- **Always label it**, with a `<label>` or `aria-label`.
+- **It acts at once.** A setting that waits for a Save button is a checkbox, not a switch.

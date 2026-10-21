@@ -324,6 +324,17 @@ describe('gm-dialog', () => {
   });
 });
 
+describe('gm-slider', () => {
+  it('paints the fill up to the value, and follows the input', () => {
+    const el = mount('<gm-slider><input type="range" min="0" max="200" value="50"></gm-slider>');
+    expect(el.style.getPropertyValue('--gm-fill')).toBe('25%');
+    const input = el.querySelector('input')!;
+    input.value = '150';
+    input.dispatchEvent(new Event('input'));
+    expect(el.style.getPropertyValue('--gm-fill')).toBe('75%');
+  });
+});
+
 describe('toast', () => {
   afterEach(() => vi.useRealTimers());
 

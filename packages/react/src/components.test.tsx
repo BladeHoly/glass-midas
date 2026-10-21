@@ -6,6 +6,7 @@ import {
   GlassCode,
   GlassNav,
   GlassSearch,
+  GlassSlider,
   GlassSurface,
   GlassTab,
   GlassTabs,
@@ -88,6 +89,19 @@ describe('glass components for React', () => {
     act(() => host.querySelectorAll<HTMLButtonElement>('.gm-tab-button')[1]!.click());
     expect(onChange).toHaveBeenCalledOnce();
     expect((onChange.mock.calls[0]![0] as CustomEvent).detail).toEqual({ index: 1, label: 'npm' });
+  });
+
+  it('repaints a controlled slider after each render', () => {
+    const slider = (value: number) => (
+      <GlassSlider>
+        <input type="range" value={value} onChange={() => {}} />
+      </GlassSlider>
+    );
+    const host = render(slider(20));
+    const el = host.querySelector<HTMLElement>('gm-slider')!;
+    expect(el.style.getPropertyValue('--gm-fill')).toBe('20%');
+    act(() => root!.render(slider(80)));
+    expect(el.style.getPropertyValue('--gm-fill')).toBe('80%');
   });
 
   it('leaves out false flags', () => {
