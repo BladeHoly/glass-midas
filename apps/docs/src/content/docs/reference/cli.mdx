@@ -1,0 +1,71 @@
+---
+title: CLI
+description: The glass-midas docs from the terminal — list components, read any page as Markdown, find pages, set up a project.
+order: 4
+---
+
+`@glass-midas/cli` brings these docs to the terminal, for you or for a coding agent working in
+your project. It reads the published site, so it's always current, and prints Markdown.
+
+```sh
+npx @glass-midas/cli list
+```
+
+Or install it, and call it `glass-midas`:
+
+<Tabs syncKey="pkg">
+  <Tab label="pnpm">
+
+```sh
+pnpm add -D @glass-midas/cli
+```
+
+  </Tab>
+  <Tab label="npm">
+
+```sh
+npm install -D @glass-midas/cli
+```
+
+  </Tab>
+  <Tab label="yarn">
+
+```sh
+yarn add -D @glass-midas/cli
+```
+
+  </Tab>
+</Tabs>
+
+## Commands
+
+| Command                                         | Prints                                                                      |
+| ----------------------------------------------- | --------------------------------------------------------------------------- |
+| `glass-midas list [components\|all\|<section>]` | The components, every page, or one section, with what each is for.          |
+| `glass-midas docs <name>`                       | A page as Markdown. `<name>` is a component, its element or a path.         |
+| `glass-midas find <words>`                      | Pages that mention every word: by name and description first, then by text. |
+| `glass-midas setup [html\|react\|astro]`        | How to install and load glass-midas in this project. Works offline.         |
+
+`list` and `find` take `--json` for scripts and agents. `docs` accepts `search`, `gm-search`,
+`Search` and `components/search` alike; an unknown name suggests close ones.
+
+`setup` picks the package manager from the project's lockfile, and the kind of project from its
+dependencies when you don't name one.
+
+```sh
+glass-midas docs gm-tabs        # the tabs page, attributes and all
+glass-midas find frost          # every page that covers frost glass
+glass-midas setup react         # install, load once, use
+```
+
+## For agents
+
+Point your agent at the CLI, or straight at the site:
+
+- [`/llms.txt`](/llms.txt): what glass-midas is, and every page.
+- [`/llms-full.txt`](/llms-full.txt): every page in one file.
+- Any page plus `.md`, like [`/components/search.md`](/components/search.md).
+- [`/docs.json`](/docs.json): the page index the CLI reads.
+
+Set `GLASS_MIDAS_DOCS` to read another copy of the docs, such as a local build:
+`GLASS_MIDAS_DOCS=http://localhost:4321/ glass-midas list`.

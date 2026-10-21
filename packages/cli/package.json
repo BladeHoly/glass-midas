@@ -1,0 +1,36 @@
+{
+  "name": "@glass-midas/cli",
+  "version": "0.0.0",
+  "description": "The glass-midas docs from the terminal: list components, read any page as Markdown, find pages, set up a project",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "glass-midas": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/commands.d.ts",
+      "default": "./dist/commands.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BladeHoly/glass-midas.git",
+    "directory": "packages/cli"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5"
+  }
+}
