@@ -1,0 +1,90 @@
+---
+title: Segmented
+description: One choice among a few, on a glass bar with a droplet under the chosen one.
+order: 4.5
+element: gm-segmented
+attributes:
+  - name: value
+    type: string
+    description: The chosen option's value. Changing it moves the choice.
+  - name: label
+    type: string
+    description: Accessible name of the group.
+  - name: value (on each option)
+    type: string
+    description: What the option stands for. Any element with a value inside becomes an option.
+  - name: radius, bezel, thickness, material, variant, tier
+    description: Glass options. Defaults are radius 999, bezel 14, thickness 28.
+properties:
+  - name: value
+    type: string
+    description: Reads and sets the choice. Setting it doesn't fire gm-change.
+events:
+  - name: gm-change
+    type: 'CustomEvent<{ value, index }>'
+    description: The user chose another option.
+---
+
+`<gm-segmented>` is a small switch between a few options: a mode, a view, a range. A droplet of
+glass slides under the chosen one. Unlike [tabs](/components/tabs/), it shows nothing itself; it
+holds a value and tells you when it changes.
+
+<Playground
+  element="gm-segmented"
+  busy
+  height="12rem"
+  attrs={{ label: 'Mode', value: 'chat' }}
+  inner={`<button value="chat">Chat</button>
+<button value="voice">Voice</button>
+<button value="video">Video</button>`}
+  controls={[
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'tier', options: ['auto', 'refract', 'blur', 'solid'], value: 'auto', omit: 'auto' },
+    { name: 'thickness', min: 0, max: 120, value: 28, omit: 28 },
+    { name: 'bezel', min: 2, max: 60, value: 14, omit: 14 },
+  ]}
+/>
+
+## Usage
+
+```html
+<gm-segmented label="Mode" value="chat">
+  <button value="chat">Chat</button>
+  <button value="voice">Voice</button>
+</gm-segmented>
+```
+
+```ts
+const mode = document.querySelector('gm-segmented');
+mode.addEventListener('gm-change', (e) => console.log(e.detail.value)); // 'voice'
+mode.value = 'chat'; // moves the choice, no event
+```
+
+Options can hold an icon next to their text. An option with only an icon needs an `aria-label`.
+
+## Anatomy
+
+- **The host** is the glass bar, with `role="radiogroup"`.
+- **Each option** (any child with a `value`) gets `role="radio"` and the class `.gm-segment`.
+- **`.gm-droplet`** is the glass under the chosen option.
+
+The arrow keys, Home and End move the choice, and only the chosen option is in the tab order.
+
+## Best practices
+
+- **Two to four options.** More than that is a menu.
+- **Short labels, all the same kind:** modes, views or ranges, not a mix.
+- **Use [tabs](/components/tabs/)** when the choice switches between panels of content.
+
+## Examples
+
+### With icons
+
+<Demo
+  busy
+  height="11rem"
+  html={`<gm-segmented label="Mode" value="chat" material="frost">
+<button value="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01"/></svg>Chat</button>
+<button value="voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4"/></svg>Voice</button>
+</gm-segmented>`}
+/>

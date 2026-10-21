@@ -105,7 +105,7 @@ describe('gm-code', () => {
     const el = mount('<gm-code label-copied="Listo"><pre>pnpm add x</pre></gm-code>');
     const button = el.querySelector<HTMLButtonElement>('.gm-copy')!;
     button.click();
-    await vi.waitFor(() => expect(button.textContent).toBe('Listo'));
+    await vi.waitFor(() => expect(button.getAttribute('aria-label')).toBe('Listo'));
     expect(writeText).toHaveBeenCalledWith('pnpm add x');
   });
 });

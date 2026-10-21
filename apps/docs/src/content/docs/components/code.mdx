@@ -7,11 +7,11 @@ attributes:
   - name: label-copy
     type: string
     default: Copy
-    description: The button's text.
+    description: The copy button's accessible name and tooltip.
   - name: label-copied
     type: string
     default: Copied
-    description: The button's text right after copying.
+    description: Its name right after copying, while it shows a check.
   - name: variant
     type: "'full' | 'lite'"
     default: lite
@@ -21,7 +21,7 @@ methods:
     description: Copies the code and confirms on the button.
 ---
 
-`<gm-code>` wraps a `<pre>` and adds a copy button. Every code block on this site is one.
+`<gm-code>` wraps a `<pre>` and adds a copy button: an icon that turns into a check once copied. Every code block on this site is one.
 
 <Playground
   element="gm-code"
@@ -48,5 +48,5 @@ can't reach the clipboard, the button selects the code so it can be copied by ha
 
 ## Best practices
 
-- **Translate the button** with `label-copy` and `label-copied`.
+- **Translate the button's name** with `label-copy` and `label-copied`; screen readers read it.
 - **Keep the background of highlighted code transparent**, so the glass shows through.
