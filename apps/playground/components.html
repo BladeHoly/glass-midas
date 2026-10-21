@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>glass-midas components</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: system-ui, sans-serif;
+        color: white;
+        background: url('https://picsum.photos/id/1015/1600/1000') center / cover fixed;
+      }
+      main {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 6rem 1rem 50vh;
+      }
+      gm-nav {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+      }
+      gm-search {
+        margin-bottom: 2rem;
+      }
+      section {
+        min-height: 70vh;
+      }
+    </style>
+  </head>
+  <body>
+    <gm-nav orientation="vertical" spy>
+      <a href="#intro">Intro</a>
+      <a href="#install">Install</a>
+      <a href="#notes">Notes</a>
+    </gm-nav>
+    <gm-scrollbar></gm-scrollbar>
+    <main>
+      <gm-search hotkey="k" placeholder="Search docs"></gm-search>
+      <section id="intro">
+        <gm-surface><h1>Components</h1><p>Glass Web Components over a photo.</p></gm-surface>
+      </section>
+      <section id="install">
+        <gm-tabs sync="pkg">
+          <gm-tab label="pnpm"><gm-code><pre>pnpm add @glass-midas/components</pre></gm-code></gm-tab>
+          <gm-tab label="npm"><gm-code><pre>npm i @glass-midas/components</pre></gm-code></gm-tab>
+          <gm-tab label="yarn"><gm-code><pre>yarn add @glass-midas/components</pre></gm-code></gm-tab>
+        </gm-tabs>
+      </section>
+      <section id="notes">
+        <gm-callout type="tip" heading="Tip"><p>Large still surfaces use the blur tier.</p></gm-callout>
+        <gm-callout type="danger" heading="Careful"><p>Never put a lens over text.</p></gm-callout>
+      </section>
+    </main>
+    <script type="module" src="/src/components.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "name": "@glass-midas/components",
+  "version": "0.0.0",
+  "description": "Glass components as Web Components: navigation, search, tabs, callouts, code blocks and more",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./src/styles.css"
+  },
+  "sideEffects": [
+    "./dist/index.js",
+    "./src/styles.css"
+  ],
+  "files": [
+    "dist",
+    "src/styles.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BladeHoly/glass-midas.git",
+    "directory": "packages/components"
+  },
+  "sizeBudget": {
+    "dist/index.js": 8192
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "size": "node ../../scripts/size.mjs"
+  },
+  "dependencies": {
+    "@glass-midas/core": "workspace:^"
+  }
+}
