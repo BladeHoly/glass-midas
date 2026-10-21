@@ -74,7 +74,7 @@ glass-midas stands on the work of others, and owes them its look:
 - **[ybouane/liquidglass](https://github.com/ybouane/liquidglass)** (MIT), whose thick, rounded glass showed what makes Liquid Glass read as a solid object: the whole surface acting as a lens, and the folded band at the rim that becomes its side wall.
 - **[Astryx](https://astryx.atmeta.com/)**, whose documentation shaped ours: component pages with an overview, a live demo and the API, and docs made for agents too.
 
-The other open-source implementations we studied, and how glass-midas compares, are in [`research/`](research/).
+We also studied [gentpan/liquidglass](https://github.com/gentpan/liquidglass), [ptu14/liquid-glass](https://github.com/ptu14/liquid-glass), [sohumsuthar/liquid-glass](https://github.com/sohumsuthar/liquid-glass), [liquefy-ui](https://github.com/liquefy-ui/liquefy-ui), [moekoelueker/open-glass-ui](https://github.com/moekoelueker/open-glass-ui) and [batch-ly's glass](https://batch-ly.com/glass/). How each one models the glass, and how glass-midas compares, is in [`research/`](research/). The code and docs speak only of the glass itself; this section is where the credit lives.
 
 ## License
 
