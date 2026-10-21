@@ -1,0 +1,38 @@
+---
+title: Sign in
+description: Email first, then a password, a passkey or a link by email.
+order: 1
+template: sign-in
+---
+
+The email comes first, and decides what comes next. Most people then type a password, but a
+passkey or a link by email is one tap away. With a server, the email can also route to single
+sign-on. Password managers and passkeys find the right account, because the email field asks for
+`username webauthn`.
+
+<Template name="sign-in" />
+
+## Try it
+
+- Type an email and continue.
+- A password shorter than 8 characters is wrong in the demo: the error shows above the field and
+  the password is selected, ready to type again.
+- **Email me a sign-in link** shows where the link went. Its **Send it again** waits 30 seconds
+  between sends.
+
+## The steps
+
+| Step     | Shows                                                                          |
+| -------- | ------------------------------------------------------------------------------ |
+| Email    | The email, **Continue**, and a passkey as the other way in.                    |
+| Password | Who's signing in (with **Change**), the password, and a link by email instead. |
+| Link     | Where the link went, how long it works, and to look in spam.                   |
+| Done     | Signed in; the page would move on to the account.                              |
+
+## Details that matter
+
+- **One field at a time.** Asking for the email alone is faster to type. It also lets the server
+  pick the way in: password, passkey or single sign-on.
+- **A hidden username in the password step,** so password managers save the right account.
+- **Focus follows the steps.** Each step puts the cursor in its field, and an error keeps it there.
+- **Errors say what to do.** "That password isn't right. Try again, or get a link."

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign in · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="auth.css" />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+    ></script>
+    <script type="module" src="sign-in.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-tide" aria-hidden="true"></div>
+    <div class="auth">
+      <header class="auth-head">
+        <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+      </header>
+
+      <main class="auth-main">
+        <gm-surface class="auth-card" material="frost" radius="28">
+          <!-- 1. Who: the email first, then the right way in for it. -->
+          <form
+            class="auth-form auth-step"
+            id="step-email"
+            aria-labelledby="email-title"
+            novalidate
+          >
+            <div>
+              <h1 id="email-title" tabindex="-1">Welcome back</h1>
+              <p class="auth-lede">Sign in to your Ondine account.</p>
+            </div>
+            <div class="gm-field">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                class="gm-input"
+                type="email"
+                name="email"
+                autocomplete="username webauthn"
+                inputmode="email"
+                required
+                aria-describedby="email-error"
+              />
+              <p class="gm-field-error" id="email-error"></p>
+            </div>
+            <button class="gm-chip gm-chip-primary" type="submit">Continue</button>
+            <p class="auth-or">or</p>
+            <button class="gm-chip" type="button" data-action="passkey">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="8" cy="8" r="4" />
+                <path d="M10.8 10.8 20 20M16 16l2-2M18.5 18.5l2-2" />
+              </svg>
+              Sign in with a passkey
+            </button>
+          </form>
+
+          <!-- 2. The password, or a link by email instead. -->
+          <form
+            class="auth-form auth-step"
+            id="step-password"
+            aria-labelledby="password-title"
+            novalidate
+            hidden
+          >
+            <div>
+              <h1 id="password-title" tabindex="-1">Enter your password</h1>
+              <p class="auth-lede">Or get a link to sign in by email.</p>
+            </div>
+            <!-- For password managers: which account this password belongs to. -->
+            <input
+              type="email"
+              name="username"
+              autocomplete="username"
+              hidden
+              data-bind-value="email"
+            />
+            <div class="auth-who">
+              <span data-bind="email"></span>
+              <button class="gm-chip" type="button" data-action="change">Change</button>
+            </div>
+            <p class="auth-alert" id="password-alert" role="alert"></p>
+            <div class="gm-field">
+              <label for="password">Password</label>
+              <div class="gm-input-group">
+                <input
+                  id="password"
+                  class="gm-input"
+                  type="password"
+                  name="password"
+                  autocomplete="current-password"
+                  required
+                  aria-describedby="password-alert"
+                />
+                <button
+                  class="gm-chip gm-chip-plain gm-chip-round"
+                  type="button"
+                  data-action="reveal"
+                  aria-label="Show password"
+                  aria-pressed="false"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="auth-row">
+              <a href="reset-password.html">Forgot your password?</a>
+            </div>
+            <button class="gm-chip gm-chip-primary" type="submit">Sign in</button>
+            <button class="gm-chip" type="button" data-action="link">
+              Email me a sign-in link
+            </button>
+          </form>
+
+          <!-- 3. A link was sent. -->
+          <section class="auth-step auth-done" id="step-link" aria-labelledby="link-title" hidden>
+            <span class="on-sigil" aria-hidden="true"></span>
+            <h1 id="link-title" tabindex="-1">Check your email</h1>
+            <p>
+              We sent a sign-in link to <strong data-bind="email"></strong>. It works for 15
+              minutes. Not there in a minute? Look in spam.
+            </p>
+            <button class="gm-chip" type="button" data-action="resend">Send it again</button>
+            <a href="#" data-action="change">Use a different email</a>
+          </section>
+
+          <!-- 4. Signed in. -->
+          <section class="auth-step auth-done" id="step-done" aria-labelledby="done-title" hidden>
+            <span class="on-sigil" aria-hidden="true"></span>
+            <h1 id="done-title" tabindex="-1">You're in</h1>
+            <p>Taking you to your account…</p>
+          </section>
+
+          <p class="auth-switch" data-show="step-email">
+            New to Ondine? <a href="sign-up.html">Create an account</a>
+          </p>
+          <p class="on-sr-only" role="status" id="status"></p>
+        </gm-surface>
+      </main>
+
+      <footer class="auth-foot">
+        <a href="#">Help</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { templateMarkdown } from './templates';
 
 export type Doc = CollectionEntry<'docs'>;
 
@@ -7,6 +8,7 @@ export const SECTIONS: [folder: string, label: string][] = [
   ['getting-started', 'Getting started'],
   ['concepts', 'Concepts'],
   ['components', 'Components'],
+  ['templates', 'Templates'],
   ['reference', 'Reference'],
   ['', 'More'],
 ];
@@ -40,6 +42,8 @@ export function toMarkdown(doc: Doc) {
     // Demos become their source; playgrounds go (their markup is under Usage).
     .replace(/<Demo[\s\S]*?html=\{`([\s\S]*?)`\}[\s\S]*?\/>/g, '```html\n$1\n```')
     .replace(/<Playground[\s\S]*?\n\/>/g, '')
+    // Templates become where they run and their files.
+    .replace(/<Template name="([\w-]+)"\s*\/>/g, (_, name: string) => templateMarkdown(name, url))
     .replace(/\n{3,}/g, '\n\n')
     .trim();
   const lines = [`# ${doc.data.title}`, '', `> ${doc.data.description}`, '', body];

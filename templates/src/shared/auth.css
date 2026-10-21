@@ -1,0 +1,212 @@
+/*
+ * The auth screens: the brand at the top, one frosted card on the tide, small links at the foot.
+ * Every auth template uses this sheet, so they look and behave alike.
+ */
+.auth {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100dvh;
+  padding: var(--gm-space-xl) var(--gm-space-lg);
+}
+.auth-head,
+.auth-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-lg);
+  width: min(100%, 72rem);
+  margin: 0 auto;
+}
+.auth-foot {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--gm-space-xs) var(--gm-space-lg);
+  font-size: var(--gm-text-sm);
+}
+.auth-foot a {
+  color: var(--on-ink-muted);
+}
+.auth-main {
+  display: grid;
+  place-items: center;
+  padding: var(--gm-space-2xl) 0;
+}
+
+/* The card: frosted glass that carries the form. */
+.auth-card {
+  display: block;
+  width: min(100%, 25rem);
+  padding: var(--gm-space-2xl) var(--gm-space-xl);
+  border-radius: 28px;
+}
+.auth-card h1 {
+  margin: 0 0 var(--gm-space-xs);
+  font: 500 var(--gm-text-3xl) / 1.1 var(--on-font-display);
+}
+.auth-card h1:focus {
+  outline: 0;
+}
+.auth-lede {
+  margin: 0 0 var(--gm-space-xs);
+  color: var(--on-ink-muted);
+}
+.auth-form {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.auth-form[hidden],
+.auth-step[hidden] {
+  display: none;
+}
+.auth-form > .gm-chip {
+  width: 100%;
+  min-height: 2.9rem;
+}
+/* The code's boxes spread across the card, edge to edge. */
+.auth-form gm-otp {
+  display: block;
+}
+.auth-form .gm-otp-cells {
+  justify-content: space-between;
+}
+/* Plain chips at the ends of a row: their text lines up with the fields' edges. */
+.auth-row > .gm-chip-plain:first-child {
+  margin-left: -1.1em;
+}
+.auth-row > .gm-chip-plain:last-child {
+  margin-right: -1.1em;
+}
+.auth-form .gm-check-label {
+  font-size: var(--gm-text-sm);
+}
+.auth-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+  font-size: var(--gm-text-sm);
+}
+.auth-row a {
+  color: var(--on-ink-muted);
+}
+
+/* "or", between two ways in. */
+.auth-or {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  margin: var(--gm-space-xs) 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.auth-or::before,
+.auth-or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--on-line);
+}
+
+/* Who's signing in, with a way back to change it. */
+.auth-who {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-sm);
+  min-width: 0;
+  padding: var(--gm-space-xs) var(--gm-space-xs) var(--gm-space-xs) var(--gm-space-md);
+  border-radius: var(--gm-radius-pill);
+  background: var(--gm-chip-fill);
+  font-size: var(--gm-text-sm);
+}
+.auth-who span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.auth-who .gm-chip {
+  min-height: 2rem;
+  padding: 0.25em 0.9em;
+}
+
+/* A message for the whole form: an error above the fields, or news. */
+.auth-alert {
+  margin: 0;
+  padding: var(--gm-space-md) var(--gm-space-lg);
+  border-radius: var(--gm-radius-sm);
+  background: color-mix(in srgb, var(--gm-status-danger) 14%, transparent);
+  font-size: var(--gm-text-sm);
+}
+.auth-alert:empty {
+  display: none;
+}
+
+.auth-switch {
+  margin: var(--gm-space-xl) 0 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+  text-align: center;
+}
+.auth-switch a {
+  color: var(--on-ink);
+  font-weight: 500;
+}
+
+/* The state after: an icon, a heading and what happens next. */
+.auth-done {
+  display: grid;
+  justify-items: center;
+  gap: var(--gm-space-md);
+  text-align: center;
+}
+.auth-done .on-sigil {
+  width: 3.5rem;
+  height: 3.5rem;
+  color: var(--on-accent);
+}
+.auth-done p {
+  margin: 0;
+  color: var(--on-ink-muted);
+}
+.auth-done .gm-chip {
+  width: auto;
+}
+
+/* Password rules, ticked off as they're met. */
+.auth-rules {
+  display: grid;
+  gap: var(--gm-space-2xs);
+  margin: 0;
+  padding: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+  list-style: none;
+}
+.auth-rules li::before {
+  content: '○';
+  display: inline-block;
+  width: 1.2em;
+}
+.auth-rules li[data-met]::before {
+  content: '✓';
+  color: var(--gm-status-success);
+}
+.auth-rules li[data-met] {
+  color: var(--on-ink);
+}
+
+@media (max-width: 30rem) {
+  .auth {
+    padding: var(--gm-space-lg) var(--gm-space-md);
+  }
+  .auth-main {
+    padding: var(--gm-space-xl) 0;
+  }
+  .auth-card {
+    padding: var(--gm-space-xl) var(--gm-space-lg);
+    border-radius: 24px;
+  }
+}

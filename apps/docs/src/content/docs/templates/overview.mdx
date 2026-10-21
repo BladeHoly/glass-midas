@@ -1,0 +1,64 @@
+---
+title: Templates
+label: Overview
+description: Whole screens built with glass-midas, finished, in HTML and React, to copy and make yours.
+order: 0
+---
+
+Templates are whole screens: sign in, tables, dashboards, a store. Each one is finished, not a
+sketch. It has its empty, loading and error states. It works from a phone to a wide screen, in
+every tier and in both themes. It comes with real copy, and works with the keyboard and screen
+readers. Each ships twice, as plain HTML with a small script and as React, and the two behave the
+same.
+
+They aren't a package: copy one into your project and it's yours.
+
+## One brand, so they fit together
+
+Every template belongs to the same imaginary store, **Ondine**, which makes audio pieces. They
+share one catalogue, one set of customers and one look, so the sign-in, the tables, the
+dashboards and the shop read as one product. Its look lives in one file, `ondine.css`: colors,
+type and the art. Change that file and every template takes your brand.
+
+The art is drawn by code, from a seed, so nothing in it is a photo:
+
+- **Tide:** noise fed through itself, behind the auth screens.
+- **Resonance:** strokes along a field of angles, with damped pendulums traced over them.
+- **Sigil:** the figure sand makes on a plate vibrating at one frequency.
+
+## How a template is made
+
+- **Glass where it belongs.** Glass is the navigation layer, the card a form sits on, dialogs.
+  Content and controls are fills. Glass is never nested inside glass.
+- **Fewer pieces, shared.** Templates of a kind share a kit: the auth screens use `auth.css` and
+  `auth.js` (`AuthKit.tsx` in React). So a field, an error or a busy button looks and behaves the
+  same on every screen.
+- **A stand-in server.** Each template calls `server`, which waits a moment and answers like an
+  API would, wrong passwords included. Replace its methods with calls to yours.
+
+## Using one
+
+In HTML, copy the template's files side by side, with the `art` folder. The page loads the
+components from the CDN, so it runs as it is.
+
+In React, copy the `.tsx` files and the stylesheets. Load `tokens.css`, `ondine.css` and the kit's
+CSS once in your app, along with `@glass-midas/components/styles.css`.
+
+## Auth
+
+<CardGrid>
+  <Card title="Sign in" href="/templates/sign-in/">
+    Email first, then a password, a passkey or a link by email.
+  </Card>
+  <Card title="Create account" href="/templates/sign-up/">
+    Three fields checked as you go, then a code to confirm the email.
+  </Card>
+  <Card title="Reset password" href="/templates/reset-password/">
+    The email, a code sent to it, then a new password.
+  </Card>
+  <Card title="Split sign in" href="/templates/split-sign-in/">
+    Email and password together on a frosted panel, beside the art.
+  </Card>
+</CardGrid>
+
+Tables, dashboards and the store come next.

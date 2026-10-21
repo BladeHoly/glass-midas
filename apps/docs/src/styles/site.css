@@ -913,3 +913,48 @@ gm-menu > a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Templates: a live frame with width and tier switches, then the code. */
+.template {
+  margin: 1.5rem 0;
+}
+.template-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+.template-bar .gm-chip {
+  margin-left: auto;
+  font-size: 0.85rem;
+}
+.template-stage {
+  display: grid;
+  justify-items: center;
+  overflow: hidden;
+  border-radius: 20px;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 0.5px var(--line);
+}
+.template-stage iframe {
+  width: 100%;
+  height: min(48rem, 80vh);
+  border: 0;
+  transition: width 0.35s ease;
+}
+.template[data-width='phone'] iframe {
+  width: 390px;
+}
+.template[data-width='tablet'] iframe {
+  width: min(100%, 820px);
+}
+/* Wider than the article: a template needs room to look like a page. */
+@media (min-width: 72rem) {
+  .template {
+    margin-inline: -2rem;
+  }
+}
+.template-shared {
+  font-size: 0.9rem;
+}

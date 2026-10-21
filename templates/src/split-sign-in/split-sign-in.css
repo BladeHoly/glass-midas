@@ -1,0 +1,85 @@
+/*
+ * Split sign in: the form on a frosted panel docked to the left, the art filling the rest. On a
+ * phone the art shows above, and the panel rises over it like a sheet.
+ */
+.split {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(22rem, 30rem) 1fr;
+  gap: var(--gm-space-lg);
+  min-height: 100dvh;
+  padding: var(--gm-space-lg);
+}
+/* The art's center sits in the open column, not under the panel. */
+.on-art {
+  background-position: 72% 40%;
+}
+
+.split-panel {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--gm-space-xl);
+  padding: var(--gm-space-xl) var(--gm-space-2xl);
+  border-radius: 32px;
+}
+.split-main {
+  display: grid;
+  align-content: center;
+}
+.split-main .auth-form {
+  width: min(100%, 22rem);
+  margin: 0 auto;
+}
+.split-main .on-display {
+  margin-bottom: var(--gm-space-xs);
+}
+.split-foot {
+  display: flex;
+  justify-content: center;
+  gap: var(--gm-space-lg);
+  font-size: var(--gm-text-sm);
+}
+.split-foot a {
+  color: var(--on-ink-muted);
+}
+
+/* The caption sits low on the art, on a scrim of its own so it reads over any part of it. */
+.split-art {
+  display: flex;
+  align-items: flex-end;
+  margin: 0;
+  padding: var(--gm-space-2xl);
+}
+.split-art figcaption {
+  display: grid;
+  gap: var(--gm-space-xs);
+  max-width: 30rem;
+  padding: var(--gm-space-lg) var(--gm-space-xl);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--on-bg) 55%, transparent);
+  font-size: var(--gm-text-sm);
+}
+.split-quote {
+  font: italic 500 var(--gm-text-2xl) / 1.15 var(--on-font-display);
+}
+
+@media (max-width: 52rem) {
+  .split {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    padding: 0;
+    gap: 0;
+  }
+  .split-art {
+    order: -1;
+    min-height: 34vh;
+    padding: var(--gm-space-lg);
+  }
+  .split-art figcaption {
+    display: none;
+  }
+  .split-panel {
+    padding: var(--gm-space-xl) var(--gm-space-lg);
+    border-radius: 28px 28px 0 0;
+  }
+}

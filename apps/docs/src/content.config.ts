@@ -25,6 +25,8 @@ export const collections = {
       properties: z.array(member).default([]),
       events: z.array(member).default([]),
       methods: z.array(member).default([]),
+      /** Template pages: the template's name in @glass-midas/templates. */
+      template: z.string().optional(),
     }),
   }),
 };

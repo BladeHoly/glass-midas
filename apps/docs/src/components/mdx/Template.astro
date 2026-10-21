@@ -1,0 +1,90 @@
+---
+import fs from 'node:fs';
+import { Code } from 'astro:components';
+import { url } from '../../lib/site';
+import { templateFiles, type TemplateEntry } from '../../lib/templates';
+
+interface Props {
+  /** The template's name in @glass-midas/templates. */
+  name: string;
+}
+const { name } = Astro.props;
+const { template, root } = templateFiles(name);
+
+// Its own files as tabs, the page first; what it shares with other templates as links.
+const order = ['.html', '.js', '.css', '.tsx'];
+const own = template.files
+  .filter((f: TemplateEntry['files'][number]) => f.from.startsWith(`${name}/`))
+  .sort((a, b) => order.findIndex((e) => a.to.endsWith(e)) - order.findIndex((e) => b.to.endsWith(e)));
+const shared = template.files.filter((f) => !f.from.startsWith(`${name}/`));
+const lang = (file: string) => file.split('.').pop() as 'html' | 'js' | 'css' | 'tsx';
+const preview = url(`/t/${name}/preview.html`);
+---
+
+<figure class="template" data-template={name}>
+  <div class="template-bar">
+    <gm-segmented class="template-width" value="desktop" label="Preview width">
+      <button value="phone">Phone</button>
+      <button value="tablet">Tablet</button>
+      <button value="desktop">Desktop</button>
+    </gm-segmented>
+    <gm-segmented class="template-tier" value="auto" label="Glass tier">
+      <button value="auto">Auto</button>
+      <button value="blur">Blur</button>
+      <button value="solid">Solid</button>
+    </gm-segmented>
+    <a class="gm-chip" href={preview} target="_blank" rel="noopener">Open ↗</a>
+  </div>
+  <div class="template-stage">
+    <iframe src={preview} title={`${template.title} template, live`} loading="lazy"></iframe>
+  </div>
+</figure>
+
+<gm-tabs sync="template-file">
+  {
+    own.map((f) => (
+      <gm-tab label={f.to}>
+        <gm-code>
+          <Code code={fs.readFileSync(`${root}/${f.from}`, 'utf8')} lang={lang(f.to)} theme="vitesse-dark" />
+        </gm-code>
+      </gm-tab>
+    ))
+  }
+</gm-tabs>
+
+<p class="template-shared">
+  Shared with the other templates:
+  {
+    shared.map((f, i) => (
+      <>
+        {i ? ', ' : ' '}
+        <a href={url(`/t/${f.from}`)}>
+          <code>{f.to}</code>
+        </a>
+      </>
+    ))
+  }.
+</p>
+
+<script>
+  // Width and tier switch the frame; the site's theme reaches into it, now and when it changes.
+  for (const figure of document.querySelectorAll<HTMLElement>('.template')) {
+    const frame = figure.querySelector('iframe')!;
+    const send = (data: Record<string, string>) => frame.contentWindow?.postMessage(data, location.origin);
+    const theme = () => document.documentElement.dataset.theme ?? 'dark';
+    const base = frame.getAttribute('src')!;
+    frame.src = `${base}?theme=${theme()}`;
+    figure.querySelector('.template-width')!.addEventListener('gm-change', (e) => {
+      figure.dataset.width = (e as CustomEvent<{ value: string }>).detail.value;
+    });
+    figure.querySelector('.template-tier')!.addEventListener('gm-change', (e) => {
+      const tier = (e as CustomEvent<{ value: string }>).detail.value;
+      // A tier is set once per surface, so "auto" reloads the page to detect it again.
+      frame.src = `${base}?theme=${theme()}${tier === 'auto' ? '' : `&tier=${tier}`}`;
+    });
+    new MutationObserver(() => send({ theme: theme() })).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+  }
+</script>
