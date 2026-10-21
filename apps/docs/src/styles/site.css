@@ -8,6 +8,8 @@
 :root,
 :root[data-theme='light'] :is(.demo, .gm-demo) {
   color-scheme: dark;
+  /* color inherits as a value, not a variable: the demos need their own. */
+  color: var(--ink);
   --bg: #08080b;
   --gold: #e9b949;
   --gold-soft: #f7dc98;
@@ -621,20 +623,13 @@ a.card-body:hover h3 {
 }
 .gm-demo-control {
   display: grid;
+  align-content: start;
   gap: 0.25rem;
   font-size: 0.85rem;
 }
-.gm-demo-control select,
 .gm-demo-control input {
   accent-color: var(--gold);
   font: inherit;
-}
-.gm-demo-control select {
-  padding: 0.3rem 0.5rem;
-  border: 0;
-  border-radius: 8px;
-  background: rgb(255 255 255 / 0.08);
-  color: var(--ink);
 }
 .gm-demo-control output {
   color: var(--ink-faint);
