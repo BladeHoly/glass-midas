@@ -1,5 +1,19 @@
 # @glass-midas/react
 
+## 0.3.0
+
+### Minor Changes
+
+- 16244ea: One entry per kind of component, each loading only its elements: `/surfaces`, `/navigation`, `/overlays` and `/forms`; `/components` still has them all. New: `GlassSelect` and `GlassOtp`.
+
+### Patch Changes
+
+- Updated dependencies [e14a352]
+- Updated dependencies [16244ea]
+- Updated dependencies [16244ea]
+  - @glass-midas/components@0.3.0
+  - @glass-midas/core@0.2.0
+
 ## 0.2.0
 
 ### Minor Changes

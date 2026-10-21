@@ -1,5 +1,11 @@
 # @glass-midas/core
 
+## 0.2.0
+
+### Minor Changes
+
+- 16244ea: New tokens: a spacing scale (`--gm-space-*`), a type scale (`--gm-text-*`) and status colors (`--gm-status-info`, `-success`, `-warning`, `-danger`).
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@glass-midas/react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "React bindings for glass-midas: the useGlass hook, <Glass>, and the glass components",
   "license": "MIT",
   "type": "module",

@@ -1,5 +1,17 @@
 # @glass-midas/components
 
+## 0.3.0
+
+### Minor Changes
+
+- e14a352: Chips: `.gm-chip-primary` for the one action a surface is for, `aria-busy="true"` for a spinner while it runs, and a dimmed disabled state. An invalid field and an invalid code box keep the focus ring while they're being fixed.
+- 16244ea: Form controls for inside glass: fields (`.gm-field`, `.gm-input`, `.gm-input-group`), checkboxes and radios (`.gm-check`), `gm-select` (a native select with its list on frosted glass) and `gm-otp` (a one-time code as boxes, on one real input). Callout colors now follow the status tokens, and `--gm-ink-inverse` sets what reads on a fill of the ink.
+
+### Patch Changes
+
+- Updated dependencies [16244ea]
+  - @glass-midas/core@0.2.0
+
 ## 0.2.0
 
 ### Minor Changes
