@@ -31,6 +31,7 @@ export interface WebGLGlassOptions extends Omit<GlassOptions, 'blur' | 'tier'> {
 export interface WebGLGlassHandle {
   /** `webgl`, or the core tier it fell back to. */
   readonly tier: 'webgl' | GlassTier;
+  /** Merges options; also re-reads a still backdrop, so call it after redrawing one. */
   update(options: Partial<WebGLGlassOptions>): void;
   destroy(): void;
 }
@@ -251,6 +252,10 @@ export function createWebGLGlass(el: HTMLElement, initial: WebGLGlassOptions): W
     },
     update(next) {
       options = { ...options, ...next };
+      // A still backdrop (an image, a canvas drawn once) may have changed: upload it again
+      // on the next frame instead of every frame.
+      uploaded = false;
+      frameKey = '';
       if (core) {
         const { blur } = next;
         core.update({

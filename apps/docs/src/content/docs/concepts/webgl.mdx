@@ -49,7 +49,9 @@ inside stay real DOM. All [core options](/reference/core/#glassoptions) work, pl
 
 - **Image, video or canvas element**: the glass reads its position on screen and its CSS
   `object-fit` (`cover`, `contain` or `fill`, centered) every frame, so scrolling and layout
-  changes stay aligned. Videos and canvases are re-uploaded every frame.
+  changes stay aligned. Videos and canvases are re-uploaded every frame. For a canvas you draw
+  only once in a while, pass a custom backdrop with `live: false` and call `glass.update({})` after
+  each redraw.
 - **Custom**: `{ source, rect(), fit?, live? }`, for a source that isn't on screen as an element.
 - **Arbitrary HTML**: `captureBackdrop(node)` from `@glass-midas/webgl/capture` snapshots it with
   the optional `html-to-image` package. It's a still image; capture again after the content changes.
