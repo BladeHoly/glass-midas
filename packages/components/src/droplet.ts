@@ -25,14 +25,14 @@ export class Droplet {
   #until = 0;
   #observer: ResizeObserver | undefined;
 
-  constructor(container: HTMLElement, target: () => Box | undefined) {
+  constructor(container: HTMLElement, target: () => Box | undefined, radius = 999) {
     this.#target = target;
     this.el = document.createElement('span');
     this.el.className = 'gm-droplet';
     this.el.setAttribute('aria-hidden', 'true');
     container.prepend(this.el);
     this.#glass = createGlass(this.el, {
-      radius: 999,
+      radius,
       bezel: 10,
       thickness: 16,
       caustics: false,

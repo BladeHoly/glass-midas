@@ -1,0 +1,81 @@
+---
+title: Menu
+description: A popover of actions, with a droplet under the focused one.
+order: 5.7
+element: gm-menu
+attributes:
+  - name: id
+    type: string
+    description: What a button's popovertarget points at to open it.
+  - name: value (on each item)
+    type: string
+    description: What the item stands for, in gm-select. Without it, its text.
+  - name: anchor, placement, popover, material
+    description: As on a popover.
+events:
+  - name: gm-select
+    type: 'CustomEvent<{ value, label }>'
+    description: An item was picked. Cancel it to keep the menu open.
+methods:
+  - name: open(), close()
+    description: As on a popover.
+---
+
+`<gm-menu>` is a [popover](/components/popover/) of actions: buttons and links, with a droplet
+of glass under the one in focus. Opening it focuses the first item, the arrow keys move through
+them, and picking one fires `gm-select` and closes the menu.
+
+<Demo
+  busy
+  height="19rem"
+  column
+  html={`<div style="display: grid; justify-items: center; padding-bottom: 11rem">
+<gm-button><button popovertarget="demo-model" id="demo-model-button">Plus <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button></gm-button>
+</div>
+<gm-menu id="demo-model">
+<button value="fast">Fast</button>
+<button value="plus">Plus</button>
+<button value="pro">Pro</button>
+<hr>
+<a href="#menu">About the models</a>
+</gm-menu>
+<script type="module">
+await customElements.whenDefined('gm-menu');
+const button = document.getElementById('demo-model-button');
+document.getElementById('demo-model').addEventListener('gm-select', (e) => {
+if (e.detail.value === 'About the models') return;
+button.firstChild.textContent = e.detail.label + ' ';
+});
+</script>`}
+/>
+
+## Usage
+
+```html
+<button popovertarget="actions">More</button>
+
+<gm-menu id="actions">
+  <button value="rename">Rename</button>
+  <button value="duplicate">Duplicate</button>
+  <hr />
+  <button value="delete">Delete</button>
+</gm-menu>
+```
+
+```ts
+menu.addEventListener('gm-select', (e) => run(e.detail.value)); // 'rename'
+```
+
+Links inside follow their `href` as links do. Icons go inside items, before the text.
+
+## Anatomy
+
+- **The host** is the glass and the popover, with `role="menu"`.
+- **Each `button` or `a`** inside becomes a `menuitem`; an `<hr>` becomes a separator.
+- **`.gm-droplet`** is the glass under the item in focus, following the pointer and the keys.
+
+## Best practices
+
+- **Actions, not navigation trees.** Keep it to one level and a handful of items.
+- **A choice that stays visible** (a model, a mode) can live in a menu whose button shows it, as
+  above. For two to four always-visible options, use [segmented](/components/segmented/).
