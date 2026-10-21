@@ -625,42 +625,106 @@ a.card-body:hover h3 {
   .top-links {
     display: none;
   }
+  /* The classic three bars, turning into a cross when the menu is open. */
   .menu {
+    position: relative;
     display: block;
-    padding: 0.5rem 0.9rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
     border: 0;
     border-radius: 999px;
     background: var(--gm-tint-light);
     box-shadow: var(--gm-rim);
-    color: var(--ink);
-    font: inherit;
-    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .menu span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.1rem;
+    height: 1.5px;
+    margin: -0.75px 0 0 -0.55rem;
+    border-radius: 1px;
+    background: var(--ink);
+    transition:
+      translate 0.25s,
+      rotate 0.25s,
+      opacity 0.2s;
+  }
+  .menu span:nth-child(1) {
+    translate: 0 -5px;
+  }
+  .menu span:nth-child(3) {
+    translate: 0 5px;
+  }
+  .menu[aria-expanded='true'] span:nth-child(1) {
+    translate: 0 0;
+    rotate: 45deg;
+  }
+  .menu[aria-expanded='true'] span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu[aria-expanded='true'] span:nth-child(3) {
+    translate: 0 0;
+    rotate: -45deg;
   }
   .shell {
     display: block;
     padding-inline: 1rem;
   }
+
+  /* The menu covers the whole screen under the top bar, as one sheet of frosted glass. The fade
+     is on the glass itself: an ancestor's opacity would cut it off from the page. */
   .sidebar {
     position: fixed;
-    top: var(--topbar);
-    left: 1rem;
+    inset: 0;
     z-index: 40;
-    width: min(18rem, calc(100vw - 2rem));
+    /* The desktop sticky rule's align-self: start would size it to its content instead. */
+    align-self: stretch;
+    max-height: none;
     visibility: hidden;
-    opacity: 0;
-    translate: -1rem 0;
-    transition:
-      opacity 0.2s,
-      translate 0.2s,
-      visibility 0.2s;
+    transition: visibility 0.3s;
   }
   .nav-open .sidebar {
     visibility: visible;
-    opacity: 1;
-    translate: 0 0;
+  }
+  .nav-open {
+    overflow: hidden;
+  }
+  /* Links scrolling up fade out under the bar instead of running into the logo. */
+  .nav-open .topbar {
+    background: linear-gradient(rgb(10 10 14 / 0.92) 70%, transparent);
   }
   .sidebar gm-nav {
-    --gm-tint-light: rgb(16 16 22 / 0.8);
+    --gm-tint-light: rgb(10 10 14 / 0.62);
+    height: 100%;
+    max-height: none;
+    padding: calc(var(--topbar) + 0.5rem) 1.25rem 2.5rem;
+    border-radius: 0;
+    box-shadow: none;
+    opacity: 0;
+    scale: 1.03;
+    transition:
+      opacity 0.3s,
+      scale 0.3s;
+  }
+  .nav-open .sidebar gm-nav {
+    opacity: 1;
+    scale: 1;
+  }
+  .sidebar gm-nav a {
+    padding: 0.6rem 1rem;
+    font-size: 1.25rem;
+  }
+  .sidebar .nav-group p {
+    margin: 1.5rem 1rem 0.4rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sidebar gm-nav,
+    .menu span {
+      transition: none;
+    }
   }
   .article {
     padding: 1.75rem 1.25rem 2rem;

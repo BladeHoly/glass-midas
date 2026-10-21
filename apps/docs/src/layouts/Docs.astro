@@ -62,8 +62,16 @@ const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
       </nav>
       {
         !splash && (
-          <button class="menu" type="button" aria-expanded="false" aria-controls="sidebar">
-            Menu
+          <button
+            class="menu"
+            type="button"
+            aria-label="Menu"
+            aria-expanded="false"
+            aria-controls="sidebar"
+          >
+            <span />
+            <span />
+            <span />
           </button>
         )
       }
@@ -119,6 +127,15 @@ const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
       import { setupSearch } from '../lib/search';
 
       setupSearch();
+
+      // On narrow screens the search box says just "Search".
+      const narrow = matchMedia('(max-width: 56rem)');
+      const placeholder = () => {
+        const input = document.querySelector<HTMLInputElement>('.topbar gm-search input');
+        if (input) input.placeholder = narrow.matches ? 'Search' : 'Search the docs';
+      };
+      placeholder();
+      narrow.addEventListener('change', placeholder);
 
       // The sidebar becomes a drawer on narrow screens.
       const menu = document.querySelector<HTMLButtonElement>('.menu');
