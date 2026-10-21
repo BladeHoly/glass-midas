@@ -12,10 +12,17 @@ const stored = (key: string) => {
   }
 };
 
+/** Detail of `gm-change`: the newly selected tab. */
+export interface TabsChangeDetail {
+  index: number;
+  label: string | null;
+}
+
 /**
  * `<gm-tabs sync="pkg"><gm-tab label="pnpm">…</gm-tab><gm-tab label="npm">…</gm-tab></gm-tabs>`:
  * tabs on a glass bar with a droplet under the selected one. Tabs sharing a `sync` key switch
- * together across the page and remember the choice.
+ * together across the page and remember the choice. A change of tab, by the user or a synced
+ * group, fires `gm-change` with the new index and label.
  */
 export class GmTabs extends GlassElement {
   static glassDefaults = { radius: 999, bezel: 14, thickness: 28 };
@@ -81,6 +88,7 @@ export class GmTabs extends GlassElement {
 
   select(index: number, broadcast = true) {
     if (!this.#buttons[index]) return;
+    const changed = index !== this.selected;
     this.selected = index;
     this.#buttons.forEach((b, i) => {
       const on = i === index;
@@ -96,6 +104,11 @@ export class GmTabs extends GlassElement {
         localStorage.setItem(`gm-tabs:${key}`, label);
       } catch {}
       dispatchEvent(new CustomEvent(SYNC_EVENT, { detail: { key, label } }));
+    }
+    if (changed) {
+      this.dispatchEvent(
+        new CustomEvent<TabsChangeDetail>('gm-change', { detail: { index, label }, bubbles: true }),
+      );
     }
   }
 

@@ -126,6 +126,15 @@ describe('gm-tabs', () => {
     expect(el.selected).toBe(0);
   });
 
+  it('fires gm-change when the tab changes, not when it stays', () => {
+    const el = mount<GmTabs>(html());
+    const changes: unknown[] = [];
+    el.addEventListener('gm-change', (e) => changes.push((e as CustomEvent).detail));
+    el.select(2);
+    el.select(2);
+    expect(changes).toEqual([{ index: 2, label: 'yarn' }]);
+  });
+
   it('keeps synced tabs together and remembers the choice', () => {
     mount(html('sync="pkg"') + html('sync="pkg"'));
     const [a, b] = document.querySelectorAll<GmTabs>('gm-tabs');

@@ -2,7 +2,14 @@ import type { GmSearch } from '@glass-midas/components';
 import { act, createRef } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { GlassCode, GlassNav, GlassSearch, GlassSurface } from './components.js';
+import {
+  GlassCode,
+  GlassNav,
+  GlassSearch,
+  GlassSurface,
+  GlassTab,
+  GlassTabs,
+} from './components.js';
 
 // React only acts synchronously inside act() when it knows it's a test.
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
@@ -68,6 +75,19 @@ describe('glass components for React', () => {
     expect(first).not.toHaveBeenCalled();
     expect(second).toHaveBeenCalledOnce();
     expect((second.mock.calls[0]![0] as CustomEvent).detail.href).toBe('#a');
+  });
+
+  it('calls onChange when the tab changes', () => {
+    const onChange = vi.fn();
+    const host = render(
+      <GlassTabs onChange={onChange}>
+        <GlassTab label="pnpm">a</GlassTab>
+        <GlassTab label="npm">b</GlassTab>
+      </GlassTabs>,
+    );
+    act(() => host.querySelectorAll<HTMLButtonElement>('.gm-tab-button')[1]!.click());
+    expect(onChange).toHaveBeenCalledOnce();
+    expect((onChange.mock.calls[0]![0] as CustomEvent).detail).toEqual({ index: 1, label: 'npm' });
   });
 
   it('leaves out false flags', () => {
