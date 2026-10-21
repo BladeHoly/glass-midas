@@ -37,6 +37,9 @@ export async function readingOrder() {
 export function toMarkdown(doc: Doc) {
   const body = (doc.body ?? '')
     .replace(/^import .*$\n?/gm, '')
+    // Demos become their source; playgrounds go (their markup is under Usage).
+    .replace(/<Demo[\s\S]*?html=\{`([\s\S]*?)`\}[\s\S]*?\/>/g, '```html\n$1\n```')
+    .replace(/<Playground[\s\S]*?\n\/>/g, '')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
   const lines = [`# ${doc.data.title}`, '', `> ${doc.data.description}`, '', body];

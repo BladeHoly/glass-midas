@@ -84,3 +84,30 @@ One element. It gets `data-glass-tier` with the tier it renders at, for tier-spe
 - **Small and interactive:** keep full refraction. **Large and still:** use `variant="lite"`.
 - **Check text at the `solid` tier.** With no backdrop effect, the tint is all there is.
 - **Don't nest surfaces.** Glass inside glass only sees its parent.
+
+## Examples
+
+### A media card
+
+Thick, frosted glass for a card that carries text over a bright wallpaper. The controls inside
+are [chips](/components/chip/); the one playing gets the fill.
+
+<Demo
+  height="24rem"
+  html={`<gm-surface material="frost" radius="32" thickness="60" bezel="28" style="width: min(100%, 21rem); padding: 1.4rem; border-radius: 32px">
+<div style="display: flex; gap: 1rem; align-items: center">
+<div style="flex: none; width: 4.5rem; height: 4.5rem; border-radius: 16px; background: radial-gradient(circle at 30% 30%, #8fb6ff, #1b2a8a 70%)"></div>
+<div>
+<strong style="display: block; font-size: 1.1rem">Golden Hour</strong>
+<span style="opacity: 0.65">Midas Quartet</span>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; margin-top: 1.25rem; font-size: 0.8rem; opacity: 0.8"><span>0:22</span><span>-2:31</span></div>
+<div style="height: 4px; margin-top: 0.4rem; border-radius: 2px; background: rgb(255 255 255 / 0.25)"><div style="width: 30%; height: 100%; border-radius: 2px; background: white"></div></div>
+<div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem">
+<button class="gm-chip gm-chip-round gm-chip-plain" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 9 12l9 6zM6 6v12"/></svg></button>
+<button class="gm-chip gm-chip-round" aria-label="Pause"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6v12M15 6v12"/></svg></button>
+<button class="gm-chip gm-chip-round gm-chip-plain" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 6 9 6-9 6zM18 6v12"/></svg></button>
+</div>
+</gm-surface>`}
+/>

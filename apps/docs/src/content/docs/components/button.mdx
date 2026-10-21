@@ -33,7 +33,35 @@ surface are [chips](/components/chip/) instead.
   ]}
 />
 
-### In context
+## Usage
+
+```html
+<gm-button>
+  <button type="button">Analyze docs</button>
+</gm-button>
+
+<gm-button shape="round">
+  <a href="/new" aria-label="New"><svg>…</svg></a>
+</gm-button>
+```
+
+The glass is on `gm-button`; the native control inside keeps its semantics, focus and keyboard
+behavior. Give an icon-only control an `aria-label`.
+
+## Anatomy
+
+- **The host** is the glass pill. `shape="round"` makes it a circle.
+- **The control** inside, a `button` or an `a`, fills it, and lights up on hover.
+
+## Best practices
+
+- **Float it over content**, not inside other glass: there, use a [chip](/components/chip/).
+- **Keep labels short** and lead with an icon where one helps.
+- **A few at a time.** A row of floating glass pills reads as one group; a wall of them doesn't.
+
+## Examples
+
+### Suggestions over a prompt
 
 <Demo
   busy
@@ -62,29 +90,3 @@ surface are [chips](/components/chip/) instead.
 
 Above: three frost buttons floating over the page, and a frost surface whose controls are
 chips. The one that's on, Plus, gets the rim.
-
-## Usage
-
-```html
-<gm-button>
-  <button type="button">Analyze docs</button>
-</gm-button>
-
-<gm-button shape="round">
-  <a href="/new" aria-label="New"><svg>…</svg></a>
-</gm-button>
-```
-
-The glass is on `gm-button`; the native control inside keeps its semantics, focus and keyboard
-behavior. Give an icon-only control an `aria-label`.
-
-## Anatomy
-
-- **The host** is the glass pill. `shape="round"` makes it a circle.
-- **The control** inside, a `button` or an `a`, fills it, and lights up on hover.
-
-## Best practices
-
-- **Float it over content**, not inside other glass: there, use a [chip](/components/chip/).
-- **Keep labels short** and lead with an icon where one helps.
-- **A few at a time.** A row of floating glass pills reads as one group; a wall of them doesn't.

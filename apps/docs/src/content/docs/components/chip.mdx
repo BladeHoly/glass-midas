@@ -66,3 +66,27 @@ droplet is the moving version of the same idea.
 
 - **The rim marks the one that's on.** Don't add it to resting chips, or nothing stands out.
 - **Floating over content on its own?** Then it's a [button](/components/button/), on glass.
+
+## Examples
+
+### Filters
+
+Chips that toggle on their own (`aria-pressed`), in a frosted bar. Several can be on.
+
+<Demo
+  busy
+  height="12rem"
+  html={`<gm-surface material="frost" radius="999" id="demo-filters" style="display: flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.3rem; border-radius: 999px">
+<button class="gm-chip gm-chip-plain" aria-pressed="true">Design</button>
+<button class="gm-chip gm-chip-plain" aria-pressed="false">Code</button>
+<button class="gm-chip gm-chip-plain" aria-pressed="true">Docs</button>
+<button class="gm-chip gm-chip-plain" aria-pressed="false">Motion</button>
+</gm-surface>
+<script type="module">
+for (const chip of document.querySelectorAll('#demo-filters .gm-chip')) {
+chip.addEventListener('click', () => {
+chip.setAttribute('aria-pressed', String(chip.getAttribute('aria-pressed') !== 'true'));
+});
+}
+</script>`}
+/>
