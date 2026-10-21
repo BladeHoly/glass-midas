@@ -70,6 +70,12 @@ without a fight. Set the [tokens](/concepts/tokens/) and these to theme every co
 | `--gm-frost-tint`     | The smoke tint of frost glass.            |
 | `--gm-chip-fill`      | Chip fill; `-hover` and `-on` for states. |
 
+## With React
+
+React 19 can use the elements directly. For React 18 too, and for typed props and events,
+`@glass-midas/react/components` wraps each one: `<GlassSearch source={…} onSelect={…} />`. See
+the [React reference](/reference/react/#components).
+
 ## Glass inside glass
 
 A `backdrop-filter` on an element hides the page from any glass inside it, which then only sees

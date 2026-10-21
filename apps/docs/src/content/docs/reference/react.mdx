@@ -49,6 +49,78 @@ function Toolbar() {
 Changes to any option except `tier` update the live surface. A change to `tier`
 replaces it.
 
+## Components
+
+```ts
+import {
+  GlassButton,
+  GlassCallout,
+  GlassCode,
+  GlassNav,
+  GlassScrollbar,
+  GlassSearch,
+  GlassSurface,
+  GlassTab,
+  GlassTabs,
+} from '@glass-midas/react/components';
+```
+
+Every [glass component](/components/overview/) as a React component, from the
+`@glass-midas/react/components` entry point (install `@glass-midas/components` too, and load its
+stylesheet). Importing it registers the elements. They work the same in React 18 and 19:
+
+- **Glass options are props in camelCase**, written to the element as its attributes:
+  `specularSaturation={2}` becomes `specular-saturation="2"`, `caustics={false}` becomes
+  `caustics="false"`. So are each component's own attributes (`labelCopied` → `label-copied`).
+- **Properties** that aren't strings, like the search box's `source` or the scrollbar's
+  `scroller`, are assigned on the element after every render.
+- **Events** become `on` props: `GlassSearch`'s `onSelect` listens to `gm-select`, `GlassNav`'s
+  `onNavigate` to `gm-navigate`. Call `preventDefault()` to take over.
+- **`ref`** gives you the element itself (`GmSearch`, `GmScrollbar`…), with its methods.
+
+```tsx
+import '@glass-midas/components/styles.css';
+import { GlassNav, GlassSearch } from '@glass-midas/react/components';
+
+export function Header({ pages }: { pages: { label: string; href: string }[] }) {
+  const router = useRouter();
+  return (
+    <>
+      <GlassSearch
+        material="frost"
+        hotkey="k"
+        source={(q) => pages.filter((p) => p.label.toLowerCase().includes(q.toLowerCase()))}
+        onSelect={(e) => {
+          e.preventDefault();
+          router.push(e.detail.href);
+        }}
+      />
+      <GlassNav orientation="vertical">
+        <a href="/docs" aria-current="page">
+          Docs
+        </a>
+        <a href="/blog">Blog</a>
+      </GlassNav>
+    </>
+  );
+}
+```
+
+| Component        | Element        | Its own props                                                   |
+| ---------------- | -------------- | --------------------------------------------------------------- |
+| `GlassSurface`   | `gm-surface`   |                                                                 |
+| `GlassButton`    | `gm-button`    | `shape`                                                         |
+| `GlassCallout`   | `gm-callout`   | `type`, `heading`                                               |
+| `GlassCode`      | `gm-code`      | `labelCopy`, `labelCopied`                                      |
+| `GlassTabs`      | `gm-tabs`      | `sync`                                                          |
+| `GlassTab`       | `gm-tab`       | `label`                                                         |
+| `GlassNav`       | `gm-nav`       | `orientation`, `spy`, `onNavigate`                              |
+| `GlassSearch`    | `gm-search`    | `source`, `placeholder`, `label`, `hotkey`, `empty`, `onSelect` |
+| `GlassScrollbar` | `gm-scrollbar` | `scroller`                                                      |
+
+Chips are a class, so they need no wrapper: `<button className="gm-chip">`.
+
 ## Types
 
-`GlassOptions` and `GlassTier` are re-exported from the core.
+`GlassOptions` and `GlassTier` are re-exported from the core; `GlassAttributes`, `SearchResult`,
+`SearchSource`, `NavigateDetail` and `CalloutType` from `@glass-midas/react/components`.
