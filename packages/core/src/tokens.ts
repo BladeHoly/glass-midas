@@ -12,6 +12,36 @@ export const tokens = {
   },
   highlight: { edge: 'rgb(255 255 255 / 0.55)', glow: 'rgb(255 255 255 / 0.12)' },
   radius: { sm: '10px', md: '18px', lg: '28px', pill: '999px' },
+  /** Gaps and padding, one scale for every layout. */
+  space: {
+    '2xs': '2px',
+    xs: '4px',
+    sm: '8px',
+    md: '12px',
+    lg: '16px',
+    xl: '24px',
+    '2xl': '32px',
+    '3xl': '48px',
+    '4xl': '64px',
+  },
+  /** Font sizes, from captions to display headings. */
+  text: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    md: '1rem',
+    lg: '1.125rem',
+    xl: '1.375rem',
+    '2xl': '1.75rem',
+    '3xl': '2.25rem',
+    '4xl': '3rem',
+  },
+  /** Colors that mean something: never decoration. */
+  status: {
+    info: 'rgb(120 170 255)',
+    success: 'rgb(90 210 150)',
+    warning: 'rgb(255 196 90)',
+    danger: 'rgb(255 110 110)',
+  },
 } as const;
 
 export type Tokens = typeof tokens;

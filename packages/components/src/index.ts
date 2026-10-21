@@ -5,8 +5,10 @@ import { GmDialog } from './dialog.js';
 import { GmMenu } from './menu.js';
 import { GmNav } from './nav.js';
 import { GmPopover } from './popover.js';
+import { GmOtp } from './otp.js';
 import { GmScrollbar } from './scrollbar.js';
 import { GmSearch } from './search.js';
+import { GmSelect } from './select.js';
 import { GmSegmented } from './segmented.js';
 import { GmSlider } from './slider.js';
 import { GmSurface } from './surface.js';
@@ -36,6 +38,8 @@ export {
   GmDialog,
   GmToast,
   GmSlider,
+  GmSelect,
+  GmOtp,
 };
 export { toast, type ToastOptions } from './toast.js';
 export type { CalloutType } from './callout.js';
@@ -44,3 +48,4 @@ export type { SearchResult, SearchSource } from './search.js';
 export type { TabsChangeDetail } from './tabs.js';
 export type { SegmentedChangeDetail } from './segmented.js';
 export type { MenuSelectDetail } from './menu.js';
+export type { SelectChangeDetail } from './select.js';

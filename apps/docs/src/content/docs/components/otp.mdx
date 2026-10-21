@@ -1,0 +1,56 @@
+---
+title: One-time code
+label: Code input
+description: A one-time code shown as one box per character, on a single real input.
+order: 6.6
+element: gm-otp
+attributes:
+  - name: (on the input) maxlength
+    description: How many characters, and boxes. 6 by default.
+  - name: (on the input) inputmode
+    description: numeric by default, digits only; "text" allows letters too.
+  - name: (on the input) autocomplete
+    description: one-time-code by default, so phones offer the code from a message.
+events:
+  - name: gm-complete
+    description: Every box is filled. `detail` is `{ value }`.
+methods:
+  - name: sync()
+    description: Redraws the boxes. Call it after setting the input's value from code.
+---
+
+`<gm-otp>` shows a verification code as a row of boxes, but it's **one real input** stretched over
+them. Phones offer the code from the message that brought it, password managers fill it, pasting
+works in one go, and screen readers hear one ordinary field, none of which is true of six separate
+inputs.
+
+<Demo
+  busy
+  height="13rem"
+  html={`<gm-surface material="frost" radius="26" style="display: grid; gap: 0.6rem; padding: 1.2rem 1.4rem; border-radius: 26px">
+<label for="demo-code" style="font-size: 0.875rem; font-weight: 500">Enter the code we sent you</label>
+<gm-otp><input id="demo-code" name="code" maxlength="6"></gm-otp>
+</gm-surface>`}
+/>
+
+## Usage
+
+```html
+<label for="code">Enter the code we sent to ada@example.com</label>
+<gm-otp>
+  <input id="code" name="code" maxlength="6" />
+</gm-otp>
+```
+
+```js
+document.querySelector('gm-otp').addEventListener('gm-complete', (e) => verify(e.detail.value));
+```
+
+It keeps only digits unless the input has `inputmode="text"`. Mark a wrong code with
+`aria-invalid="true"` on the input: every box gets the error ring.
+
+## Best practices
+
+- **Say where the code went**, in the label: "sent to ada@example.com".
+- **Check it on `gm-complete`**, with no button to press; keep a "Send a new code" link next to it.
+- **On a wrong code, clear it and keep the focus** in the field, with the error under it.

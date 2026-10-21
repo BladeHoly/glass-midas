@@ -1,0 +1,68 @@
+---
+title: Checkbox and radio
+label: Checkbox
+description: Native checkboxes and radios for inside glass, with a class. CSS only.
+order: 6.4
+element: .gm-check
+attributes:
+  - name: class="gm-check"
+    description: On an input of type checkbox or radio.
+  - name: class="gm-check-label"
+    description: On a label around the input and its text, so the whole row is the target.
+  - name: indeterminate (property)
+    description: Shows a dash, for a "select all" box when only some are selected.
+---
+
+A checkbox, or a radio, with a class: a light fill when it's off, the ink with a tick, a dash or
+a dot when it's on. Like a [chip](/components/chip/), it sits inside glass rather than being
+glass. The input stays native, so forms, keyboard and screen readers work as always.
+
+<Demo
+  busy
+  height="15rem"
+  html={`<gm-surface material="frost" radius="24" style="display: grid; gap: 0.3rem; width: min(100%, 19rem); padding: 1rem 1.2rem; border-radius: 24px">
+<label class="gm-check-label"><input type="checkbox" class="gm-check" checked> Email me when it ships</label>
+<label class="gm-check-label"><input type="checkbox" class="gm-check"> Gift wrap</label>
+<hr style="width: 100%; border: 0; border-top: 1px solid rgb(255 255 255 / 0.1)">
+<label class="gm-check-label"><input type="radio" class="gm-check" name="demo-ship" checked> Standard, free</label>
+<label class="gm-check-label"><input type="radio" class="gm-check" name="demo-ship"> Express, $12</label>
+</gm-surface>`}
+/>
+
+## Usage
+
+```html
+<label class="gm-check-label">
+  <input type="checkbox" class="gm-check" name="updates" />
+  Email me when it ships
+</label>
+
+<fieldset>
+  <legend>Delivery</legend>
+  <label class="gm-check-label">
+    <input type="radio" class="gm-check" name="ship" value="standard" checked /> Standard
+  </label>
+  <label class="gm-check-label">
+    <input type="radio" class="gm-check" name="ship" value="express" /> Express
+  </label>
+</fieldset>
+```
+
+For a "select all" box over a table, set `checkbox.indeterminate = true` when only some rows are
+selected: it shows a dash.
+
+## Theming
+
+| Property               | Use                                    |
+| ---------------------- | -------------------------------------- |
+| `--gm-check-on`        | The fill when on. The ink by default.  |
+| `--gm-check-mark`      | The tick, dash and dot.                |
+| `--gm-ink-inverse`     | The mark's default: what reads on ink. |
+| `--gm-chip-fill-hover` | The fill when off.                     |
+
+## Best practices
+
+- **A checkbox for a choice that waits for a button**, a [toggle](/components/toggle/) for one
+  that acts at once.
+- **Radios for 2 to 5 choices** that should all be seen; a [select](/components/select/) for more.
+- **Group radios in a `<fieldset>`** with a `<legend>`, so they're announced together.
