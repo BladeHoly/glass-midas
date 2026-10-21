@@ -2,6 +2,7 @@ import { define } from './base.js';
 import { GmButton } from './button.js';
 import { GmCallout } from './callout.js';
 import { GmCode } from './code.js';
+import { GmDialog } from './dialog.js';
 import { GmMenu } from './menu.js';
 import { GmNav } from './nav.js';
 import { GmPopover } from './popover.js';
@@ -26,6 +27,7 @@ define('gm-tip', GmTip);
 define('gm-segmented', GmSegmented);
 define('gm-popover', GmPopover);
 define('gm-menu', GmMenu);
+define('gm-dialog', GmDialog);
 
 export { define, glassOptions, GlassElement } from './base.js';
 export { Droplet, boxOf, type Box } from './droplet.js';
@@ -42,6 +44,7 @@ export {
   GmSegmented,
   GmPopover,
   GmMenu,
+  GmDialog,
 };
 export type { CalloutType } from './callout.js';
 export type { NavigateDetail } from './nav.js';

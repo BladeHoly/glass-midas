@@ -30,6 +30,7 @@
   gm-segmented,
   gm-popover,
   gm-menu,
+  .gm-dialog-panel,
   gm-nav,
   .gm-search-field,
   .gm-search-results,
@@ -42,7 +43,8 @@
 
 /* Frost material: a smoke tint under heavy frosting, so what's on the glass always reads. */
 :where(
-  [material='frost']:not(gm-tabs, gm-search, gm-tip),
+  [material='frost']:not(gm-tabs, gm-search, gm-tip, gm-dialog),
+  gm-dialog[material='frost'] > .gm-dialog-panel,
   gm-tabs[material='frost'] > .gm-tablist,
   gm-tip[material='frost'] > .gm-tip-card,
   gm-search[material='frost'] :is(.gm-search-field, .gm-search-results)
@@ -366,6 +368,60 @@
   border-radius: 12px;
 }
 
+/*
+ * Dialog: frosted glass on a native <dialog>, over a dimmed page. It rises in as it opens; with
+ * placement="bottom" it's a sheet along the bottom edge.
+ */
+:where(gm-dialog) {
+  display: contents;
+}
+:where(.gm-dialog-panel) {
+  width: min(28rem, calc(100vw - 2rem));
+  max-width: none;
+  padding: 1.3rem 1.4rem;
+  border: 0;
+  border-radius: 24px;
+  color: var(--gm-ink);
+}
+:where(.gm-dialog-panel)::backdrop {
+  background: rgb(0 0 0 / 0.35);
+}
+:where(.gm-dialog-heading) {
+  margin: 0 0 0.4rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+:where(.gm-dialog-panel > :not(.gm-dialog-heading, form)) {
+  color: var(--gm-ink-muted);
+}
+:where(.gm-dialog-panel form[method='dialog']) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+:where(gm-dialog[placement='bottom'] > .gm-dialog-panel) {
+  width: min(40rem, 100vw);
+  margin: auto auto 0;
+  padding-bottom: calc(1.4rem + env(safe-area-inset-bottom));
+  border-radius: 28px 28px 0 0;
+}
+:where(.gm-dialog-panel[open]) {
+  transition:
+    opacity 0.25s,
+    translate 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@starting-style {
+  :where(.gm-dialog-panel[open]) {
+    opacity: 0;
+    translate: 0 0.75rem;
+  }
+  :where(gm-dialog[placement='bottom'] > .gm-dialog-panel[open]) {
+    translate: 0 100%;
+  }
+}
+
 /* Nav */
 :where(gm-nav) {
   position: relative;
@@ -651,7 +707,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where(.gm-copy, .gm-tab-button, .gm-segment, gm-nav a, gm-scrollbar) {
+  :where(.gm-copy, .gm-tab-button, .gm-segment, gm-nav a, gm-scrollbar, .gm-dialog-panel) {
     transition: none;
   }
 }

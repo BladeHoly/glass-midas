@@ -1,6 +1,7 @@
 import '@glass-midas/components';
 import type {
   CalloutType,
+  GmDialog,
   GmMenu,
   GmPopover,
   GmScrollbar,
@@ -191,6 +192,17 @@ export const GlassMenu = wrap<
   },
   GmMenu
 >('gm-menu', [], { onSelect: 'gm-select' });
+
+/** `<gm-dialog>`: a modal of frosted glass; `placement="bottom"` for a sheet. Open it with `ref.current.show()`. */
+export const GlassDialog = wrap<
+  {
+    heading?: string;
+    placement?: 'center' | 'bottom';
+    /** It closed: `detail.value` is the button's value, `"cancel"` (Escape) or `"dismiss"`. */
+    onClose?: (e: CustomEvent<{ value: string }>) => void;
+  },
+  GmDialog
+>('gm-dialog', [], { onClose: 'gm-close' });
 
 /** `<gm-tip>`: a tip on frosted glass, inline or anchored to an element, with a close button. */
 export const GlassTip = wrap<
