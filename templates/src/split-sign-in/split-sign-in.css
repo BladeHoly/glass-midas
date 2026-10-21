@@ -1,18 +1,28 @@
 /*
- * Split sign in: the form on a frosted panel docked to the left, the art filling the rest. On a
+ * Split sign in: the form on a frosted panel docked to the right, the art filling the rest. On a
  * phone the art shows above, and the panel rises over it like a sheet.
  */
 .split {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(22rem, 30rem) 1fr;
+  grid-template-columns: 1fr minmax(22rem, 30rem);
   gap: var(--gm-space-lg);
   min-height: 100dvh;
   padding: var(--gm-space-lg);
 }
 /* The art's center sits in the open column, not under the panel. */
 .on-art {
-  background-position: 72% 40%;
+  background-position: 28% 40%;
+}
+
+/* The panel comes first in the page, for keyboards and screen readers, but sits on the right. */
+.split-panel {
+  grid-column: 2;
+  grid-row: 1;
+}
+.split-art {
+  grid-column: 1;
+  grid-row: 1;
 }
 
 .split-panel {
@@ -69,6 +79,11 @@
     grid-template-rows: auto 1fr;
     padding: 0;
     gap: 0;
+  }
+  .split-panel,
+  .split-art {
+    grid-column: 1;
+    grid-row: auto;
   }
   .split-art {
     order: -1;
