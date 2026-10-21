@@ -1,6 +1,6 @@
 {
   "name": "@glass-midas/webgl",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "WebGL renderer for glass-midas: floating-point optics and dispersion over an explicit backdrop",
   "license": "MIT",
   "type": "module",
