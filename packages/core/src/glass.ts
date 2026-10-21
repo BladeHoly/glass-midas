@@ -37,6 +37,38 @@ export interface GlassHandle {
 const SVG_NS = 'http://www.w3.org/2000/svg';
 let filterCount = 0;
 
+// Maps already drawn, shared by every surface: a size or shape seen before (a nav that
+// expands and collapses, identical cards) costs nothing the second time.
+const CACHE_SIZE = 32;
+const maps = new Map<string, { url: string; scale: number }>();
+
+// While a surface keeps changing size (an animation, a window drag), its last map is
+// stretched to fit and the exact one is drawn once the size holds this long.
+const SETTLE_MS = 140;
+
+function mapFor(width: number, height: number, optics: LensOptics) {
+  const density = Math.min(devicePixelRatio || 1, 2);
+  const key = JSON.stringify([width, height, optics, density]);
+  let entry = maps.get(key);
+  if (entry) {
+    maps.delete(key); // refresh its place in the LRU order
+  } else {
+    const map = displacementMap(width, height, optics, density);
+    const canvas = document.createElement('canvas');
+    const ctx = map && canvas.getContext('2d');
+    if (!map || !ctx) return undefined;
+    canvas.width = map.width;
+    canvas.height = map.height;
+    const image = ctx.createImageData(map.width, map.height);
+    image.data.set(map.data);
+    ctx.putImageData(image, 0, 0);
+    entry = { url: canvas.toDataURL(), scale: map.scale };
+    if (maps.size >= CACHE_SIZE) maps.delete(maps.keys().next().value!);
+  }
+  maps.set(key, entry);
+  return entry;
+}
+
 function setBackdrop(el: HTMLElement, value: string) {
   el.style.setProperty('backdrop-filter', value);
   el.style.setProperty('-webkit-backdrop-filter', value);
@@ -49,11 +81,13 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
   const id = `gm-glass-${++filterCount}`;
   let svg: SVGSVGElement | undefined;
   let observer: ResizeObserver | undefined;
-  let drawn = '';
+  let drawn = ''; // optics and size of the map in the filter
+  let shape = ''; // the same without the size
+  let settle: ReturnType<typeof setTimeout> | undefined;
 
   el.dataset.glassTier = tier;
 
-  const render = () => {
+  const render = (resizing = false) => {
     if (tier === 'solid') return setBackdrop(el, 'none');
     if (tier === 'blur') {
       const blur = options.blur ?? 'var(--gm-blur-md, 16px)';
@@ -77,34 +111,23 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
     };
     const specular = options.specular ?? 0.2;
     const saturation = options.specularSaturation ?? 4;
-    // The map depends only on size and optics, so moving the element never redraws it.
-    const key = JSON.stringify([width, height, optics, specular, saturation]);
-    if (key !== drawn && !drawMap(width, height, optics, specular, saturation)) {
-      return setBackdrop(el, tail);
+    const nextShape = JSON.stringify([optics, specular, saturation]);
+    const next = JSON.stringify([width, height, nextShape]);
+    if (next === drawn) return setBackdrop(el, `${tail} url(#${id})`);
+
+    clearTimeout(settle);
+    if (resizing && svg && nextShape === shape) {
+      // Only the size moved: stretch the current map now, draw the exact one when it settles.
+      for (const node of svg.querySelectorAll('filter, feImage')) {
+        node.setAttribute('width', `${width}`);
+        node.setAttribute('height', `${height}`);
+      }
+      settle = setTimeout(() => render(), SETTLE_MS);
+      return;
     }
-    drawn = key;
-    // Frost first, then bend: the rim light added by the filter stays crisp.
-    setBackdrop(el, `${tail} url(#${id})`);
-  };
 
-  const drawMap = (
-    width: number,
-    height: number,
-    optics: LensOptics,
-    specular: number,
-    saturation: number,
-  ) => {
-    const map = displacementMap(width, height, optics, Math.min(devicePixelRatio || 1, 2));
-    if (!map) return false;
-    const canvas = document.createElement('canvas');
-    canvas.width = map.width;
-    canvas.height = map.height;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return false;
-    const image = ctx.createImageData(map.width, map.height);
-    image.data.set(map.data);
-    ctx.putImageData(image, 0, 0);
-
+    const map = mapFor(width, height, optics);
+    if (!map) return setBackdrop(el, tail);
     if (!svg) {
       svg = document.body.appendChild(document.createElementNS(SVG_NS, 'svg'));
       svg.setAttribute('aria-hidden', 'true');
@@ -119,7 +142,7 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       : '<feGaussianBlur in="bent" stdDeviation="0.6" result="bent"/>';
     svg.innerHTML =
       `<filter id="${id}" x="0" y="0" width="${width}" height="${height}" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">` +
-      `<feImage href="${canvas.toDataURL()}" width="${width}" height="${height}" preserveAspectRatio="none" result="map"/>` +
+      `<feImage href="${map.url}" width="${width}" height="${height}" preserveAspectRatio="none" result="map"/>` +
       bend +
       smooth +
       `<feColorMatrix in="map" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0" result="rim"/>` +
@@ -129,12 +152,15 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       `<feComponentTransfer in="rim" result="line"><feFuncA type="linear" slope="${specular}"/></feComponentTransfer>` +
       `<feComposite in="line" in2="lit"/>` +
       `</filter>`;
-    return true;
+    drawn = next;
+    shape = nextShape;
+    // Frost first, then bend: the rim light added by the filter stays crisp.
+    setBackdrop(el, `${tail} url(#${id})`);
   };
 
   render();
   if (tier === 'refract' && typeof ResizeObserver !== 'undefined') {
-    observer = new ResizeObserver(render);
+    observer = new ResizeObserver(() => render(true));
     observer.observe(el);
   }
 
@@ -145,6 +171,7 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       render();
     },
     destroy() {
+      clearTimeout(settle);
       observer?.disconnect();
       svg?.remove();
       setBackdrop(el, '');
