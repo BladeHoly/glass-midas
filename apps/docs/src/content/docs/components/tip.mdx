@@ -1,0 +1,121 @@
+---
+title: Tip
+description: A tip that teaches one thing, on frosted glass, inline or floating next to what it's about.
+order: 5.5
+element: gm-tip
+attributes:
+  - name: heading
+    type: string
+    description: The tip's title.
+  - name: anchor
+    type: string
+    description: The id of the element to float next to. Without it, the tip sits in the flow of the page.
+  - name: placement
+    type: "'bottom' | 'top'"
+    default: bottom
+    description: Which side of the anchor it floats on.
+  - name: remember
+    type: string
+    description: A key that keeps the tip closed on later visits once dismissed.
+  - name: label-close
+    type: string
+    default: Dismiss tip
+    description: Accessible name of the close button.
+  - name: material
+    type: "'clear' | 'frost'"
+    default: frost
+    description: Tips carry text over whatever is behind them, so they're frosted by default.
+events:
+  - name: gm-dismiss
+    type: CustomEvent
+    description: The tip is closing. Cancel it to keep it open.
+methods:
+  - name: dismiss()
+    description: Closes the tip, as its close button does, and remembers it with remember.
+  - name: show()
+    description: Shows the tip again and forgets that it was closed.
+---
+
+`<gm-tip>` teaches one thing at the moment it matters: a shortcut, a feature someone hasn't
+found yet. A frosted card with an optional icon, a heading, a short message, actions if any, and
+a close button. Closed with `remember`, it stays closed.
+
+<Playground
+  element="gm-tip"
+  busy
+  height="14rem"
+  attrs={{ heading: 'Search everything', style: 'width: min(100%, 22rem)' }}
+  inner={`<svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+<p>Press Ctrl K anywhere to search every page.</p>`}
+  controls={[
+    { name: 'material', options: ['frost', 'clear'], value: 'frost', omit: 'frost' },
+    { name: 'tier', options: ['auto', 'refract', 'blur', 'solid'], value: 'auto', omit: 'auto' },
+  ]}
+/>
+
+## Usage
+
+```html
+<gm-tip heading="Search everything" remember="search-tip">
+  <svg slot="icon">…</svg>
+  <p>Press Ctrl K anywhere to search every page.</p>
+</gm-tip>
+```
+
+Keep it to a heading and a sentence or two. Add a `.gm-tip-actions` row of
+[chips](/components/chip/) when the tip leads somewhere.
+
+### Next to an element
+
+With `anchor`, the tip floats next to the element with that id, with an arrow pointing at it,
+and follows it as the page scrolls:
+
+```html
+<gm-button><button id="new-doc">New</button></gm-button>
+
+<gm-tip anchor="new-doc" placement="bottom" heading="Start here" remember="new-doc">
+  <p>Create a page, or drop a file anywhere.</p>
+</gm-tip>
+```
+
+## Anatomy
+
+- **The host** positions the tip; it has no glass of its own.
+- **`.gm-tip-card`** is the glass: icon, `.gm-tip-heading`, your content, `.gm-tip-close`.
+- **`.gm-tip-arrow`**, when anchored, is the card's sibling with its own frost, since glass
+  inside glass can't see the page.
+
+## Best practices
+
+- **One tip at a time.** Several at once read as noise and get closed unread.
+- **Always `remember`** a tip people can close, or it comes back on every visit.
+- **Teach, don't announce.** A tip says how to do something; news belongs elsewhere.
+
+## Examples
+
+### Anchored, with actions
+
+<Demo
+  busy
+  height="20rem"
+  column
+  html={`<div style="display: grid; justify-items: center; padding-bottom: 9rem">
+<gm-button><button id="demo-new">New page</button></gm-button>
+</div>
+<gm-tip anchor="demo-new" heading="Start here" id="demo-tip">
+<svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
+<p>Create a page, or drop a file anywhere to start from it.</p>
+<div class="gm-tip-actions">
+<button class="gm-chip" aria-pressed="true">Create</button>
+<button class="gm-chip gm-chip-plain">Later</button>
+</div>
+</gm-tip>
+<script type="module">
+await customElements.whenDefined('gm-tip');
+const tip = document.getElementById('demo-tip');
+for (const chip of tip.querySelectorAll('.gm-chip')) chip.addEventListener('click', () => tip.dismiss());
+document.getElementById('demo-new').addEventListener('click', () => tip.show());
+</script>`}
+/>
+
+Closing it hides it; the button brings it back.

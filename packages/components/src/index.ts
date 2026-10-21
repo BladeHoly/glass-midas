@@ -7,6 +7,7 @@ import { GmScrollbar } from './scrollbar.js';
 import { GmSearch } from './search.js';
 import { GmSurface } from './surface.js';
 import { GmTabs } from './tabs.js';
+import { GmTip } from './tip.js';
 
 // Importing the package registers every element. Pair it with the stylesheet:
 // import '@glass-midas/components/styles.css'.
@@ -18,10 +19,11 @@ define('gm-tabs', GmTabs);
 define('gm-nav', GmNav);
 define('gm-search', GmSearch);
 define('gm-scrollbar', GmScrollbar);
+define('gm-tip', GmTip);
 
 export { define, glassOptions, GlassElement } from './base.js';
 export { Droplet, boxOf, type Box } from './droplet.js';
-export { GmSurface, GmButton, GmCallout, GmCode, GmTabs, GmNav, GmSearch, GmScrollbar };
+export { GmSurface, GmButton, GmCallout, GmCode, GmTabs, GmNav, GmSearch, GmScrollbar, GmTip };
 export type { CalloutType } from './callout.js';
 export type { NavigateDetail } from './nav.js';
 export type { SearchResult, SearchSource } from './search.js';
