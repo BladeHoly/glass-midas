@@ -20,11 +20,17 @@ attributes:
 `<gm-callout>` sets an aside apart from the text around it, on still glass with an accent on its
 leading edge.
 
-<Demo
-  height="20rem"
-  column
-  html={`<gm-callout type="tip" heading="Tip"><p>Match radius to border-radius.</p></gm-callout>
-<gm-callout type="danger" heading="Careful"><p>Never put a lens over text.</p></gm-callout>`}
+<Playground
+  element="gm-callout"
+  busy
+  height="14rem"
+  attrs={{ heading: 'Heads up', style: 'width: min(100%, 26rem)' }}
+  inner="<p>Match radius to border-radius.</p>"
+  controls={[
+    { name: 'type', options: ['note', 'tip', 'caution', 'danger'], value: 'tip' },
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'variant', options: ['lite', 'full'], value: 'lite', omit: 'lite' },
+  ]}
 />
 
 ## Usage

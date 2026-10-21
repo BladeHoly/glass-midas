@@ -23,10 +23,16 @@ methods:
 
 `<gm-code>` wraps a `<pre>` and adds a copy button. Every code block on this site is one.
 
-<Demo
+<Playground
+  element="gm-code"
+  busy
   height="10rem"
-  column
-  html={`<gm-code label-copied="Copied!"><pre style="padding: 1rem 1.25rem">pnpm add @glass-midas/components</pre></gm-code>`}
+  attrs={{ 'label-copied': 'Copied!', style: 'width: min(100%, 26rem)' }}
+  inner='<pre style="padding: 1rem 1.25rem">pnpm add @glass-midas/components</pre>'
+  controls={[
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'variant', options: ['lite', 'full'], value: 'lite', omit: 'lite' },
+  ]}
 />
 
 ## Usage

@@ -36,11 +36,15 @@ methods:
 [kube.io's liquid glass article](https://kube.io/blog/liquid-glass-css-svg/), with a glass list of
 results under it. The search at the top of this page is one, over a Pagefind index.
 
-<Demo
+<Playground
+  element="gm-search"
   height="22rem"
-  column
-  html={`<gm-search id="demo-search" placeholder="Search fruit" style="width: min(100%, 24rem); margin: 0 auto 12rem"></gm-search>
-<script type="module">
+  attrs={{
+    id: 'demo-search',
+    placeholder: 'Search fruit',
+    style: 'display: block; width: min(100%, 24rem); margin-bottom: 12rem',
+  }}
+  script={`<script type="module">
   const fruit = ['Apple', 'Apricot', 'Banana', 'Cherry', 'Grape', 'Lemon', 'Mango', 'Peach'];
   await customElements.whenDefined('gm-search');
   document.getElementById('demo-search').source = (q) => {
@@ -48,6 +52,12 @@ results under it. The search at the top of this page is one, over a Pagefind ind
     return hits.map((f) => ({ label: f, href: '#' + f.toLowerCase(), hint: 'Fruit' }));
   };
 </script>`}
+  controls={[
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'tier', options: ['auto', 'refract', 'blur', 'solid'], value: 'auto', omit: 'auto' },
+    { name: 'thickness', min: 0, max: 120, value: 40, omit: 40 },
+    { name: 'bezel', min: 2, max: 60, value: 20, omit: 20 },
+  ]}
 />
 
 ## Usage

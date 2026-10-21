@@ -756,3 +756,62 @@ gm-nav a:hover,
 gm-nav a[aria-current] {
   color: var(--ink);
 }
+
+/* Playground: a live component, its controls and its source, in one figure. */
+.pg-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: 1rem 1.5rem;
+  padding: 1.1rem 1.25rem;
+  background: rgb(255 255 255 / 0.03);
+  box-shadow: inset 0 0 0 0.5px var(--line);
+}
+.pg-control {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.pg-label {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ink-faint);
+  font: 500 0.75rem var(--font-mono);
+}
+.pg-label output {
+  color: var(--gold-soft);
+}
+.pg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.pg-chips .gm-chip {
+  min-height: 2em;
+  padding: 0.25em 0.8em;
+  font-size: 0.82rem;
+}
+.pg-control input[type='range'] {
+  width: 100%;
+  accent-color: var(--gold);
+}
+.playground > gm-code {
+  margin: 0;
+  border-radius: 0 0 24px 24px;
+}
+.pg-code {
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.tok-tag {
+  color: #4d9375;
+}
+.tok-attr {
+  color: #bd976a;
+}
+.tok-str {
+  color: #c98a7d;
+}

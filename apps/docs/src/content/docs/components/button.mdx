@@ -20,6 +20,21 @@ attributes:
 their own: suggestions above an input, a toolbar over a photo. Controls inside another glass
 surface are [chips](/components/chip/) instead.
 
+<Playground
+  element="gm-button"
+  busy
+  height="12rem"
+  inner="<button>Analyze docs</button>"
+  controls={[
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'tier', options: ['auto', 'refract', 'blur', 'solid'], value: 'auto', omit: 'auto' },
+    { name: 'thickness', min: 0, max: 120, value: 24, omit: 24 },
+    { name: 'bezel', min: 2, max: 60, value: 12, omit: 12 },
+  ]}
+/>
+
+### In context
+
 <Demo
   busy
   height="22rem"

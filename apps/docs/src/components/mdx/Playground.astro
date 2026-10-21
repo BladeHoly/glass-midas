@@ -1,0 +1,104 @@
+---
+import { highlight, initialState, markup, type Control } from '../../lib/playground';
+
+interface Props {
+  /** The element to play with. */
+  element: string;
+  /** Attributes that don't change. */
+  attrs?: Record<string, string>;
+  controls: Control[];
+  /** Its content, as HTML. */
+  inner?: string;
+  height?: string;
+  /** A busy backdrop of big type, to show how much a material lets through. */
+  busy?: boolean;
+  /** A script for the stage, run but not shown: to give a search box its source, say. */
+  script?: string;
+}
+
+const { element, attrs = {}, controls, inner = '', height = '16rem', busy = false, script } = Astro.props;
+const state = initialState(element, attrs, controls, inner);
+---
+
+<figure class="demo playground" data-playground={JSON.stringify(state)}>
+  <div class:list={['demo-stage', busy && 'is-busy']} style={`min-height: ${height}`}>
+    <Fragment set:html={markup(state)} />
+    {script && <Fragment set:html={script} />}
+  </div>
+  <div class="pg-controls">
+    {
+      controls.map((c) =>
+        c.options ? (
+          <div class="pg-control" role="group" aria-label={c.name}>
+            <span class="pg-label">{c.name}</span>
+            <div class="pg-chips">
+              {c.options.map((o) => (
+                <button
+                  type="button"
+                  class="gm-chip gm-chip-plain"
+                  data-name={c.name}
+                  data-value={o}
+                  aria-pressed={String(o === String(c.value))}
+                >
+                  {o}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <label class="pg-control">
+            <span class="pg-label">
+              {c.name} <output>{c.value}</output>
+            </span>
+            <input
+              type="range"
+              data-name={c.name}
+              min={c.min}
+              max={c.max}
+              step={c.step ?? 1}
+              value={c.value}
+            />
+          </label>
+        ),
+      )
+    }
+  </div>
+  <gm-code><pre class="pg-code"><code set:html={highlight(state)} /></pre></gm-code>
+</figure>
+
+<script>
+  import { attributes, highlight, type PlaygroundState } from '../../lib/playground';
+
+  // Each control sets its attribute on the live element and rewrites the code under it.
+  for (const figure of document.querySelectorAll<HTMLElement>('[data-playground]')) {
+    const state: PlaygroundState = JSON.parse(figure.dataset.playground!);
+    const target = figure.querySelector<HTMLElement>(`.demo-stage ${state.tag}`)!;
+    const code = figure.querySelector('.pg-code code')!;
+
+    const set = (name: string, value: string) => {
+      state.values[name] = value;
+      const written = new Map(attributes(state));
+      const control = state.controls.find((c) => c.name === name)!;
+      if (written.has(name)) target.setAttribute(name, value);
+      else target.removeAttribute(name);
+      // Only that property: the rest of the inline style belongs to the glass (backdrop-filter).
+      if (control.style) target.style.setProperty(control.style, `${value}px`);
+      code.innerHTML = highlight(state);
+    };
+
+    for (const chip of figure.querySelectorAll<HTMLButtonElement>('.pg-chips .gm-chip')) {
+      chip.addEventListener('click', () => {
+        for (const other of chip.parentElement!.children) {
+          other.setAttribute('aria-pressed', String(other === chip));
+        }
+        set(chip.dataset.name!, chip.dataset.value!);
+      });
+    }
+    for (const range of figure.querySelectorAll<HTMLInputElement>('input[type="range"]')) {
+      range.addEventListener('input', () => {
+        range.closest('label')!.querySelector('output')!.textContent = range.value;
+        set(range.dataset.name!, range.value);
+      });
+    }
+  }
+</script>
