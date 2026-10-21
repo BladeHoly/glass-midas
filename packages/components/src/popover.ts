@@ -1,5 +1,5 @@
 import { anchorTo, follow } from './anchor.js';
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 /**
  * `<button popovertarget="more">…</button> <gm-popover id="more">…</gm-popover>`: frosted glass
@@ -75,3 +75,5 @@ export class GmPopover extends GlassElement {
   /** Called once it's open and placed; menus move focus in here. */
   protected opened() {}
 }
+
+define('gm-popover', GmPopover);

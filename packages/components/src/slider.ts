@@ -1,4 +1,4 @@
-import { Base } from './base.js';
+import { Base, define } from './base.js';
 
 /**
  * `<gm-slider><input type="range" min="0" max="100" value="40"></gm-slider>`: a range on a light
@@ -29,3 +29,5 @@ export class GmSlider extends Base {
     this.style.setProperty('--gm-fill', `${ratio * 100}%`);
   };
 }
+
+define('gm-slider', GmSlider);

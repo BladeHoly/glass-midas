@@ -1,5 +1,5 @@
 import { createGlass, type GlassHandle } from '@glass-midas/core';
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 export interface SearchResult {
   label: string;
@@ -197,3 +197,5 @@ export class GmSearch extends GlassElement {
     }
   }
 }
+
+define('gm-search', GmSearch);

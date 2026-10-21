@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 export interface ToastOptions {
   /** A button next to the message, as a chip. */
@@ -86,3 +86,5 @@ export function toast(message: string, options: ToastOptions = {}): GmToast {
   if (shown.length > 3) shown[0]!.dismiss();
   return el;
 }
+
+define('gm-toast', GmToast);

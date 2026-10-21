@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 import { boxOf, Droplet } from './droplet.js';
 
 export interface NavigateDetail {
@@ -134,3 +134,5 @@ export class GmNav extends GlassElement {
     this.#droplet?.follow();
   }
 }
+
+define('gm-nav', GmNav);

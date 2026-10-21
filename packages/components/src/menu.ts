@@ -1,3 +1,4 @@
+import { define } from './base.js';
 import { boxOf, Droplet } from './droplet.js';
 import { GmPopover } from './popover.js';
 
@@ -86,3 +87,5 @@ export class GmMenu extends GmPopover {
     this.#focus(next);
   };
 }
+
+define('gm-menu', GmMenu);

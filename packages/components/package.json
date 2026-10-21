@@ -12,15 +12,76 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./styles.css": "./src/styles.css"
+    "./surface": {
+      "types": "./dist/surface.d.ts",
+      "default": "./dist/surface.js"
+    },
+    "./button": {
+      "types": "./dist/button.d.ts",
+      "default": "./dist/button.js"
+    },
+    "./callout": {
+      "types": "./dist/callout.d.ts",
+      "default": "./dist/callout.js"
+    },
+    "./code": {
+      "types": "./dist/code.d.ts",
+      "default": "./dist/code.js"
+    },
+    "./tabs": {
+      "types": "./dist/tabs.d.ts",
+      "default": "./dist/tabs.js"
+    },
+    "./segmented": {
+      "types": "./dist/segmented.d.ts",
+      "default": "./dist/segmented.js"
+    },
+    "./nav": {
+      "types": "./dist/nav.d.ts",
+      "default": "./dist/nav.js"
+    },
+    "./search": {
+      "types": "./dist/search.d.ts",
+      "default": "./dist/search.js"
+    },
+    "./scrollbar": {
+      "types": "./dist/scrollbar.d.ts",
+      "default": "./dist/scrollbar.js"
+    },
+    "./tip": {
+      "types": "./dist/tip.d.ts",
+      "default": "./dist/tip.js"
+    },
+    "./popover": {
+      "types": "./dist/popover.d.ts",
+      "default": "./dist/popover.js"
+    },
+    "./menu": {
+      "types": "./dist/menu.d.ts",
+      "default": "./dist/menu.js"
+    },
+    "./dialog": {
+      "types": "./dist/dialog.d.ts",
+      "default": "./dist/dialog.js"
+    },
+    "./toast": {
+      "types": "./dist/toast.d.ts",
+      "default": "./dist/toast.js"
+    },
+    "./slider": {
+      "types": "./dist/slider.d.ts",
+      "default": "./dist/slider.js"
+    },
+    "./styles.css": "./dist/styles.css",
+    "./css/*": "./dist/css/*"
   },
   "sideEffects": [
-    "./dist/index.js",
-    "./src/styles.css"
+    "./dist/*.js",
+    "./dist/*.css",
+    "./dist/css/*.css"
   ],
   "files": [
-    "dist",
-    "src/styles.css"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -28,10 +89,24 @@
     "directory": "packages/components"
   },
   "sizeBudget": {
-    "dist/index.js": 8192
+    "dist/surface.js": 4608,
+    "dist/button.js": 4608,
+    "dist/callout.js": 4608,
+    "dist/code.js": 4608,
+    "dist/tabs.js": 4608,
+    "dist/segmented.js": 4608,
+    "dist/nav.js": 4608,
+    "dist/search.js": 4608,
+    "dist/scrollbar.js": 4608,
+    "dist/tip.js": 4608,
+    "dist/popover.js": 4608,
+    "dist/menu.js": 4608,
+    "dist/dialog.js": 4608,
+    "dist/toast.js": 4608,
+    "dist/slider.js": 4608
   },
   "scripts": {
-    "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json",
+    "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/css.mjs",
     "dev": "tsc -p tsconfig.build.json --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

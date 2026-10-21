@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 let uid = 0;
 
@@ -80,3 +80,5 @@ export class GmDialog extends GlassElement {
     this.#panel?.close(value);
   }
 }
+
+define('gm-dialog', GmDialog);

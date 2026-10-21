@@ -122,7 +122,7 @@ ${tokens}
 <gm-callout type="tip" heading="Glass">It works.</gm-callout>
 \`\`\`
 
-No bundler? Load \`https://cdn.jsdelivr.net/npm/@glass-midas/components/+esm\` in a module script and its \`src/styles.css\`.`,
+No bundler? Load \`https://cdn.jsdelivr.net/npm/@glass-midas/components/+esm\` in a module script and its \`dist/styles.css\`.`,
     react: `## Install
 
 \`\`\`sh

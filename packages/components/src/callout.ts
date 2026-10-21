@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 export type CalloutType = 'note' | 'tip' | 'caution' | 'danger';
 
@@ -22,3 +22,5 @@ export class GmCallout extends GlassElement {
     }
   }
 }
+
+define('gm-callout', GmCallout);

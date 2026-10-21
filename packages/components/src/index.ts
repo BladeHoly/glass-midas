@@ -1,4 +1,3 @@
-import { define } from './base.js';
 import { GmButton } from './button.js';
 import { GmCallout } from './callout.js';
 import { GmCode } from './code.js';
@@ -15,23 +14,9 @@ import { GmTabs } from './tabs.js';
 import { GmTip } from './tip.js';
 import { GmToast } from './toast.js';
 
-// Importing the package registers every element. Pair it with the stylesheet:
-// import '@glass-midas/components/styles.css'.
-define('gm-surface', GmSurface);
-define('gm-button', GmButton);
-define('gm-callout', GmCallout);
-define('gm-code', GmCode);
-define('gm-tabs', GmTabs);
-define('gm-nav', GmNav);
-define('gm-search', GmSearch);
-define('gm-scrollbar', GmScrollbar);
-define('gm-tip', GmTip);
-define('gm-segmented', GmSegmented);
-define('gm-popover', GmPopover);
-define('gm-menu', GmMenu);
-define('gm-dialog', GmDialog);
-define('gm-toast', GmToast);
-define('gm-slider', GmSlider);
+// The whole library: importing it registers every element. Each one is also its own entry
+// (@glass-midas/components/menu), which registers that element alone; pair either with its
+// stylesheet: @glass-midas/components/styles.css, or css/base.css plus css/<name>.css.
 
 export { define, glassOptions, GlassElement } from './base.js';
 export { Droplet, boxOf, type Box } from './droplet.js';

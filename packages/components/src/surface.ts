@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 /**
  * `<gm-surface>`: any block as a glass panel. Full refraction by default; add
@@ -7,3 +7,5 @@ import { GlassElement } from './base.js';
 export class GmSurface extends GlassElement {
   static glassDefaults = { radius: 24 };
 }
+
+define('gm-surface', GmSurface);
