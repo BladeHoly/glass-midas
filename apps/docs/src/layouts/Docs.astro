@@ -33,6 +33,18 @@ const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Before the first paint, so the page never flashes the other theme: the saved choice,
+      // else the system's.
+      (() => {
+        let saved = null;
+        try {
+          saved = localStorage.getItem('gm-theme');
+        } catch {}
+        const light = saved ? saved === 'light' : matchMedia('(prefers-color-scheme: light)').matches;
+        document.documentElement.dataset.theme = light ? 'light' : 'dark';
+      })();
+    </script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
@@ -56,25 +68,49 @@ const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
     <header class="topbar">
       <a class="brand" href={url('/')}>glass<em>midas</em></a>
       <gm-search hotkey="k" placeholder="Search the docs" label="Search the docs"></gm-search>
-      <nav class="top-links" aria-label="Project">
-        <a href={url('/llms.txt')}>llms.txt</a>
-        <a href="https://github.com/BladeHoly/glass-midas">GitHub</a>
-      </nav>
-      {
-        !splash && (
-          <button
-            class="menu"
-            type="button"
-            aria-label="Menu"
-            aria-expanded="false"
-            aria-controls="sidebar"
+      <div class="top-actions">
+        <nav class="top-links" aria-label="Project">
+          <a href={url('/llms.txt')}>llms.txt</a>
+          <a href="https://github.com/BladeHoly/glass-midas">GitHub</a>
+        </nav>
+        <button class="theme" type="button" aria-label="Switch to light theme">
+          <svg
+            class="moon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"></path></svg
           >
-            <span />
-            <span />
-            <span />
-          </button>
-        )
-      }
+          <svg
+            class="sun"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            ><circle cx="12" cy="12" r="4"></circle><path
+              d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+            ></path></svg
+          >
+        </button>
+        {
+          !splash && (
+            <button
+              class="menu"
+              type="button"
+              aria-label="Menu"
+              aria-expanded="false"
+              aria-controls="sidebar"
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          )
+        }
+      </div>
     </header>
 
     <div class="shell">
@@ -136,6 +172,31 @@ const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
       };
       placeholder();
       narrow.addEventListener('change', placeholder);
+
+      // Theme switch: saves the choice; without one, the page follows the system as it changes.
+      const root = document.documentElement;
+      const themeButton = document.querySelector<HTMLButtonElement>('.theme')!;
+      const label = () => {
+        const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+        themeButton.setAttribute('aria-label', `Switch to ${next} theme`);
+      };
+      label();
+      themeButton.addEventListener('click', () => {
+        root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
+        try {
+          localStorage.setItem('gm-theme', root.dataset.theme);
+        } catch {}
+        label();
+      });
+      matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+        let saved = null;
+        try {
+          saved = localStorage.getItem('gm-theme');
+        } catch {}
+        if (saved) return;
+        root.dataset.theme = e.matches ? 'light' : 'dark';
+        label();
+      });
 
       // The sidebar becomes a drawer on narrow screens.
       const menu = document.querySelector<HTMLButtonElement>('.menu');
