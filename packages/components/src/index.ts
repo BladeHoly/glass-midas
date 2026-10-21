@@ -9,6 +9,7 @@ import { GmPopover } from './popover.js';
 import { GmScrollbar } from './scrollbar.js';
 import { GmSearch } from './search.js';
 import { GmSegmented } from './segmented.js';
+import { GmSlider } from './slider.js';
 import { GmSurface } from './surface.js';
 import { GmTabs } from './tabs.js';
 import { GmTip } from './tip.js';
@@ -30,6 +31,7 @@ define('gm-popover', GmPopover);
 define('gm-menu', GmMenu);
 define('gm-dialog', GmDialog);
 define('gm-toast', GmToast);
+define('gm-slider', GmSlider);
 
 export { define, glassOptions, GlassElement } from './base.js';
 export { Droplet, boxOf, type Box } from './droplet.js';
@@ -48,6 +50,7 @@ export {
   GmMenu,
   GmDialog,
   GmToast,
+  GmSlider,
 };
 export { toast, type ToastOptions } from './toast.js';
 export type { CalloutType } from './callout.js';

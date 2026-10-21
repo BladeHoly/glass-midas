@@ -2,7 +2,9 @@ import { createGlass, detectTier, type GlassHandle, type GlassOptions } from '@g
 
 // On a server there's no HTMLElement; an empty class lets the module load there (Astro, SSR)
 // without defining anything.
-const Base = (typeof HTMLElement === 'undefined' ? class {} : HTMLElement) as typeof HTMLElement;
+export const Base = (
+  typeof HTMLElement === 'undefined' ? class {} : HTMLElement
+) as typeof HTMLElement;
 
 const NUMBERS = [
   'radius',

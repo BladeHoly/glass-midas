@@ -1,0 +1,69 @@
+---
+title: Slider
+description: A range for inside glass, filled up to its value, on the native range input.
+order: 6.2
+element: gm-slider
+attributes:
+  - name: min, max, step, value (on the input)
+    description: As on any range input; it takes part in forms.
+methods:
+  - name: sync()
+    description: Repaints the fill. Call it after setting the input's value from code.
+---
+
+`<gm-slider>` wraps a native `<input type="range">`, so the keyboard, forms and screen readers
+work as usual; it paints a light track filled up to the value, and a white knob that stretches
+while it's held. Like a [chip](/components/chip/), it sits inside glass.
+
+<Demo
+  busy
+  height="11rem"
+  html={`<gm-surface material="frost" radius="22" style="width: min(100%, 20rem); padding: 1rem 1.1rem; border-radius: 22px">
+<label for="demo-volume" style="display: block; margin-bottom: 0.4rem">Volume</label>
+<gm-slider><input id="demo-volume" type="range" min="0" max="100" value="60"></gm-slider>
+</gm-surface>`}
+/>
+
+## Usage
+
+```html
+<label for="volume">Volume</label>
+<gm-slider>
+  <input id="volume" type="range" min="0" max="100" value="60" />
+</gm-slider>
+```
+
+Setting the value from code doesn't fire `input`, so call `slider.sync()` after it. In React,
+`GlassSlider` does that after every render.
+
+## Theming
+
+| Property           | Use                                  |
+| ------------------ | ------------------------------------ |
+| `--gm-slider-fill` | The filled part. The ink by default. |
+| `--gm-knob`        | The knob.                            |
+
+## Examples
+
+### A control panel
+
+A frosted panel of settings: switches and a slider, the way they're meant to sit.
+
+<Demo
+  busy
+  height="20rem"
+  html={`<gm-surface material="frost" radius="26" style="display: grid; gap: 0.9rem; width: min(100%, 20rem); padding: 1.1rem 1.2rem; border-radius: 26px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<label for="demo-panel-wifi">Wi-Fi</label>
+<input id="demo-panel-wifi" type="checkbox" class="gm-toggle" role="switch" checked>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center">
+<label for="demo-panel-focus">Focus</label>
+<input id="demo-panel-focus" type="checkbox" class="gm-toggle" role="switch">
+</div>
+<div>
+<label for="demo-panel-light" style="display: block; margin-bottom: 0.3rem">Brightness</label>
+<gm-slider><input id="demo-panel-light" type="range" min="0" max="100" value="70"></gm-slider>
+</div>
+</gm-surface>`}
+/>

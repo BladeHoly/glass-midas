@@ -7,6 +7,7 @@ import type {
   GmScrollbar,
   GmSearch,
   GmSegmented,
+  GmSlider,
   GmTip,
   MenuSelectDetail,
   NavigateDetail,
@@ -225,6 +226,17 @@ export const GlassScrollbar = wrap<{ scroller?: (y: number) => void }, GmScrollb
   'gm-scrollbar',
   ['scroller'],
 );
+
+/**
+ * `<gm-slider>`: put an `<input type="range">` inside. It repaints after every render, since a
+ * controlled input's value changes without an `input` event.
+ */
+export const GlassSlider = forwardRef<GmSlider, HTMLAttributes<GmSlider>>((props, ref) => {
+  const el = useRef<GmSlider>(null);
+  useImperativeHandle(ref, () => el.current!);
+  useEffect(() => el.current?.sync());
+  return createElement('gm-slider', { ...props, ref: el });
+});
 
 /** Shows a toast: a function, so it needs no component. */
 export { toast, type ToastOptions } from '@glass-midas/components';
