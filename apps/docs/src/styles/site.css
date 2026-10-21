@@ -38,10 +38,11 @@
   --gm-ink-muted: var(--ink-muted);
   --gm-lift: 0 10px 34px rgb(0 0 0 / 0.32);
   --gm-focus: 0 0 0 2px var(--gold);
-  --gm-callout-note: #8fb6ff;
-  --gm-callout-tip: #6fdcaa;
-  --gm-callout-caution: var(--gold);
-  --gm-callout-danger: #ff8c7a;
+  --gm-status-info: #8fb6ff;
+  --gm-status-success: #6fdcaa;
+  --gm-status-warning: var(--gold);
+  --gm-status-danger: #ff8c7a;
+  --gm-ink-inverse: rgb(14 14 20);
   --gm-highlight-glow: rgb(255 255 255 / 0.12);
   --gm-rim: inset 0 0 0 0.5px var(--gm-highlight-edge, rgb(255 255 255 / 0.55));
   --gm-frost-tint: var(--gm-tint-dark, rgb(20 20 28 / 0.32));
@@ -77,9 +78,10 @@
   --gm-chip-fill: rgb(24 20 14 / 0.05);
   --gm-chip-fill-hover: rgb(24 20 14 / 0.09);
   --gm-chip-fill-on: rgb(255 255 255 / 0.75);
-  --gm-callout-note: #2f63c8;
-  --gm-callout-tip: #13875b;
-  --gm-callout-danger: #c4412d;
+  --gm-status-info: #2f63c8;
+  --gm-status-success: #13875b;
+  --gm-status-danger: #c4412d;
+  --gm-ink-inverse: #fff;
 }
 :root[data-theme='light'] .backdrop {
   opacity: 0.55;
@@ -342,8 +344,8 @@ gm-nav a {
   font-size: 1.1rem;
   font-weight: 600;
 }
-.article p,
-.article li {
+/* Not in demos: what's shown there styles its own text. */
+.article :is(p, li):not(:is(.demo, .gm-demo) *) {
   color: var(--text);
 }
 .article li + li {

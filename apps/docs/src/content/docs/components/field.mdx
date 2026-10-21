@@ -1,0 +1,93 @@
+---
+title: Field
+description: Text inputs for inside glass, with a label, a hint and an error. CSS only.
+order: 6.3
+element: .gm-field
+attributes:
+  - name: class="gm-field"
+    description: On a wrapper. Stacks its label, control, hint and error.
+  - name: class="gm-input"
+    description: On an input, a textarea or anything that should look like one.
+  - name: class="gm-field-hint", "gm-field-error"
+    description: On the text under the control. An empty error takes no room.
+  - name: class="gm-input-group"
+    description: On a wrapper around an input and an icon or a button at either end.
+  - name: aria-invalid="true"
+    description: On the input, to mark it invalid; it also shows once the user leaves an invalid field.
+---
+
+A field is a label, a control and a line of help under it. Inputs sit inside glass, so like
+[chips](/components/chip/) they're a light fill rather than glass; the focus ring shows the one
+being typed in. It's all CSS on native elements: autofill, password managers, mobile keyboards
+and form validation work as they always do.
+
+<Demo
+  busy
+  height="17rem"
+  html={`<gm-surface material="frost" radius="24" style="display: grid; gap: 1rem; width: min(100%, 21rem); padding: 1.2rem; border-radius: 24px">
+<div class="gm-field">
+<label for="demo-email">Email</label>
+<input id="demo-email" class="gm-input" type="email" autocomplete="email" placeholder="you@example.com">
+</div>
+<div class="gm-field">
+<label for="demo-name">Name on the card</label>
+<input id="demo-name" class="gm-input" autocomplete="cc-name" aria-invalid="true" aria-describedby="demo-name-error">
+<p class="gm-field-error" id="demo-name-error">Write it as it's printed on the card.</p>
+</div>
+</gm-surface>`}
+/>
+
+## Usage
+
+```html
+<div class="gm-field">
+  <label for="email">Email</label>
+  <input
+    id="email"
+    class="gm-input"
+    type="email"
+    autocomplete="email"
+    aria-describedby="email-hint"
+  />
+  <p class="gm-field-hint" id="email-hint">We'll send the receipt here.</p>
+</div>
+```
+
+Point `aria-describedby` at the hint and the error, so screen readers read them with the field.
+When the field is wrong, set `aria-invalid="true"` and write the error into `.gm-field-error`;
+an empty error takes no room, so it can stay in the page.
+
+### An icon or a button inside
+
+```html
+<div class="gm-input-group">
+  <svg aria-hidden="true">…</svg>
+  <input class="gm-input" type="search" aria-label="Search orders" />
+</div>
+
+<div class="gm-input-group">
+  <input id="password" class="gm-input" type="password" autocomplete="current-password" />
+  <button type="button" class="gm-chip gm-chip-plain gm-chip-round" aria-label="Show password">
+    …
+  </button>
+</div>
+```
+
+The first child before the input sits at the start, the last one after it at the end, and the
+input makes room for them.
+
+## Theming
+
+| Property             | Use                                  |
+| -------------------- | ------------------------------------ |
+| `--gm-chip-fill`     | The input's fill; `-hover` on focus. |
+| `--gm-focus`         | The ring on the field being typed.   |
+| `--gm-status-danger` | The ring and text of an error.       |
+| `--gm-radius-sm`     | The corners.                         |
+
+## Best practices
+
+- **Always a visible label.** A placeholder isn't one: it disappears as soon as someone types.
+- **Use the right `type`, `autocomplete` and `inputmode`**, so browsers fill the field and
+  phones show the right keyboard: `email`, `tel`, `one-time-code`, `postal-code`, `cc-number`…
+- **Say what's wrong and how to fix it**, next to the field, once the user has left it.

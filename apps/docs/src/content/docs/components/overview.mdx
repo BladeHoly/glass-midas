@@ -44,15 +44,19 @@ import '@glass-midas/components/css/base.css';
 import '@glass-midas/components/css/popover.css';
 ```
 
-| Entry                                  | Its sheet (after `css/base.css`) |
-| -------------------------------------- | -------------------------------- |
-| `surface`, `button`, `callout`, `code` | `css/<same name>.css`            |
-| `tabs`, `segmented`, `nav`, `search`   | `css/<same name>.css`            |
-| `scrollbar`, `tip`, `dialog`, `toast`  | `css/<same name>.css`            |
-| `popover`, `menu`                      | `css/popover.css`                |
-| `slider`                               | `css/slider.css`                 |
-| chips (`.gm-chip`)                     | in `css/base.css`                |
-| toggles (`.gm-toggle`), no script      | `css/toggle.css`                 |
+| Entry                                  | Its sheet (after `css/base.css`)  |
+| -------------------------------------- | --------------------------------- |
+| `surface`, `button`, `callout`, `code` | `css/<same name>.css`             |
+| `tabs`, `segmented`, `nav`, `search`   | `css/<same name>.css`             |
+| `scrollbar`, `tip`, `dialog`, `toast`  | `css/<same name>.css`             |
+| `popover`, `menu`                      | `css/popover.css`                 |
+| `slider`                               | `css/slider.css`                  |
+| `select`                               | `css/field.css`, `css/select.css` |
+| `otp`                                  | `css/otp.css`                     |
+| fields (`.gm-field`, `.gm-input`)      | `css/field.css`                   |
+| checkboxes, radios (`.gm-check`)       | `css/check.css`                   |
+| chips (`.gm-chip`)                     | in `css/base.css`                 |
+| toggles (`.gm-toggle`), no script      | `css/toggle.css`                  |
 
 The sheets sit in cascade layers (`gm-base`, `gm-components`, `gm-overrides`), so they work in
 any order, and any CSS of yours outside a layer wins over them. Each entry stays under its own
@@ -154,6 +158,18 @@ translucent background instead, as this page's article does.
   </Card>
   <Card title="Slider" href="/components/slider/">
     A range, filled up to its value.
+  </Card>
+  <Card title="Field" href="/components/field/">
+    Text inputs with a label, a hint and an error.
+  </Card>
+  <Card title="Checkbox and radio" href="/components/check/">
+    Native boxes and radios, for inside glass.
+  </Card>
+  <Card title="Select" href="/components/select/">
+    A native select, its list on frosted glass.
+  </Card>
+  <Card title="Code input" href="/components/otp/">
+    A one-time code, one box per character.
   </Card>
   <Card title="Code" href="/components/code/">
     Code blocks with a copy button.

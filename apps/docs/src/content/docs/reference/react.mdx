@@ -107,22 +107,35 @@ export function Header({ pages }: { pages: { label: string; href: string }[] }) 
 }
 ```
 
-| Component        | Element        | Its own props                                                   |
-| ---------------- | -------------- | --------------------------------------------------------------- |
-| `GlassSurface`   | `gm-surface`   |                                                                 |
-| `GlassButton`    | `gm-button`    | `shape`                                                         |
-| `GlassCallout`   | `gm-callout`   | `type`, `heading`                                               |
-| `GlassCode`      | `gm-code`      | `labelCopy`, `labelCopied`                                      |
-| `GlassSegmented` | `gm-segmented` | `value`, `label`, `onChange`                                    |
-| `GlassTabs`      | `gm-tabs`      | `sync`, `onChange`                                              |
-| `GlassTab`       | `gm-tab`       | `label`                                                         |
-| `GlassNav`       | `gm-nav`       | `orientation`, `spy`, `onNavigate`                              |
-| `GlassSearch`    | `gm-search`    | `source`, `placeholder`, `label`, `hotkey`, `empty`, `onSelect` |
-| `GlassScrollbar` | `gm-scrollbar` | `scroller`                                                      |
+Each kind of component is also its own entry, which registers only its elements. Import from
+there to ship less; `@glass-midas/react/components` has them all.
 
-Chips are a class, so they need no wrapper: `<button className="gm-chip">`.
+| Entry         | Component        | Element        | Its own props                                                   |
+| ------------- | ---------------- | -------------- | --------------------------------------------------------------- |
+| `/surfaces`   | `GlassSurface`   | `gm-surface`   |                                                                 |
+|               | `GlassButton`    | `gm-button`    | `shape`                                                         |
+|               | `GlassCallout`   | `gm-callout`   | `type`, `heading`                                               |
+|               | `GlassCode`      | `gm-code`      | `labelCopy`, `labelCopied`                                      |
+| `/navigation` | `GlassTabs`      | `gm-tabs`      | `sync`, `onChange`                                              |
+|               | `GlassTab`       | `gm-tab`       | `label`                                                         |
+|               | `GlassSegmented` | `gm-segmented` | `value`, `label`, `onChange`                                    |
+|               | `GlassNav`       | `gm-nav`       | `orientation`, `spy`, `onNavigate`                              |
+|               | `GlassSearch`    | `gm-search`    | `source`, `placeholder`, `label`, `hotkey`, `empty`, `onSelect` |
+|               | `GlassScrollbar` | `gm-scrollbar` | `scroller`                                                      |
+| `/overlays`   | `GlassPopover`   | `gm-popover`   | `anchor`, `placement`                                           |
+|               | `GlassMenu`      | `gm-menu`      | `anchor`, `placement`, `onSelect`                               |
+|               | `GlassDialog`    | `gm-dialog`    | `heading`, `placement`, `onClose`                               |
+|               | `GlassTip`       | `gm-tip`       | `heading`, `anchor`, `placement`, `remember`, `onDismiss`       |
+|               | `toast()`        | `gm-toast`     | a function, no component                                        |
+| `/forms`      | `GlassSlider`    | `gm-slider`    | redraws after every render                                      |
+|               | `GlassSelect`    | `gm-select`    | redraws after every render                                      |
+|               | `GlassOtp`       | `gm-otp`       | `onComplete`                                                    |
+
+Chips, toggles, fields and checkboxes are classes, so they need no wrapper:
+`<button className="gm-chip">`, `<input className="gm-input">`.
 
 ## Types
 
 `GlassOptions` and `GlassTier` are re-exported from the core; `GlassAttributes`, `SearchResult`,
-`SearchSource`, `NavigateDetail` and `CalloutType` from `@glass-midas/react/components`.
+`SearchSource`, `NavigateDetail`, `CalloutType`, `MenuSelectDetail`, `SelectChangeDetail` and the
+other event details from `@glass-midas/react/components`, and each from its own entry.

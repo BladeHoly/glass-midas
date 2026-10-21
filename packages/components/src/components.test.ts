@@ -6,6 +6,7 @@ import {
   type GmMenu,
   type GmSearch,
   type GmSegmented,
+  type GmSelect,
   type GmTabs,
   type GmTip,
   type SearchResult,
@@ -332,6 +333,100 @@ describe('gm-slider', () => {
     input.value = '150';
     input.dispatchEvent(new Event('input'));
     expect(el.style.getPropertyValue('--gm-fill')).toBe('75%');
+  });
+});
+
+describe('gm-select', () => {
+  const select = () =>
+    mount<GmSelect>(
+      `<gm-select><select id="country" name="country" required aria-describedby="hint">
+        <option value="" disabled selected hidden>Choose a country</option>
+        <option value="ar">Argentina</option>
+        <optgroup label="Europe"><option value="es">Spain</option><option value="fr" disabled>France</option></optgroup>
+      </select></gm-select>`,
+    );
+  const options = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[role="option"]')];
+
+  it('puts a button over the native select, which keeps the name for forms', () => {
+    const el = select();
+    const trigger = el.querySelector('button')!;
+    const native = el.querySelector('select')!;
+    expect(trigger.id).toBe('country');
+    expect(native.id).toBe('');
+    expect(native.name).toBe('country');
+    expect(trigger.getAttribute('aria-haspopup')).toBe('listbox');
+    expect(trigger.getAttribute('aria-describedby')).toBe('hint');
+    expect(trigger.getAttribute('aria-required')).toBe('true');
+    expect(trigger.textContent).toBe('Choose a country');
+    expect(trigger.classList.contains('gm-select-placeholder')).toBe(true);
+  });
+
+  it('lists the options but not the placeholder, with groups', () => {
+    const el = select();
+    expect(options(el).map((o) => o.textContent)).toEqual(['Argentina', 'Spain', 'France']);
+    expect(options(el)[2]!.getAttribute('aria-disabled')).toBe('true');
+    expect(el.querySelector('.gm-select-group')!.textContent).toBe('Europe');
+  });
+
+  it('picks an option: the select changes and both events fire', () => {
+    const el = select();
+    const native = el.querySelector('select')!;
+    const seen: string[] = [];
+    native.addEventListener('change', () => seen.push(`change:${native.value}`));
+    el.addEventListener('gm-change', (e) =>
+      seen.push(`gm-change:${(e as CustomEvent).detail.label}`),
+    );
+    options(el)[1]!.click();
+    expect(el.value).toBe('es');
+    expect(seen).toEqual(['change:es', 'gm-change:Spain']);
+    expect(el.querySelector('button')!.textContent).toBe('Spain');
+    expect(options(el)[1]!.getAttribute('aria-selected')).toBe('true');
+  });
+
+  it("doesn't pick a disabled option", () => {
+    const el = select();
+    options(el)[2]!.click();
+    expect(el.value).toBe('');
+  });
+
+  it('follows a value set from code, and new options', () => {
+    const el = select();
+    el.value = 'ar';
+    expect(el.querySelector('button')!.textContent).toBe('Argentina');
+    el.querySelector('select')!.insertAdjacentHTML(
+      'beforeend',
+      '<option value="cl">Chile</option>',
+    );
+    el.sync();
+    expect(options(el).map((o) => o.textContent)).toContain('Chile');
+  });
+
+  it('gives the select its id back when removed', () => {
+    const el = select();
+    el.remove();
+    expect(el.querySelector('select')!.id).toBe('country');
+    expect(el.querySelector('button')).toBeNull();
+  });
+});
+
+describe('gm-otp', () => {
+  it('draws one box per character, keeping only digits', () => {
+    const el = mount('<gm-otp><input maxlength="4"></gm-otp>');
+    const input = el.querySelector('input')!;
+    expect(input.inputMode).toBe('numeric');
+    expect(input.autocomplete).toBe('one-time-code');
+    const cells = () => [...el.querySelectorAll('.gm-otp-cells > span')].map((c) => c.textContent);
+    expect(cells()).toEqual(['', '', '', '']);
+    const done: string[] = [];
+    el.addEventListener('gm-complete', (e) => done.push((e as CustomEvent).detail.value));
+    input.value = '1a2';
+    input.dispatchEvent(new Event('input'));
+    expect(input.value).toBe('12');
+    expect(cells()).toEqual(['1', '2', '', '']);
+    input.value = '123456';
+    input.dispatchEvent(new Event('input'));
+    expect(input.value).toBe('1234');
+    expect(done).toEqual(['1234']);
   });
 });
 

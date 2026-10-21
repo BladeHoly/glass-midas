@@ -5,7 +5,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   GlassCode,
   GlassNav,
+  GlassOtp,
   GlassSearch,
+  GlassSelect,
   GlassSlider,
   GlassSurface,
   GlassTab,
@@ -102,6 +104,40 @@ describe('glass components for React', () => {
     expect(el.style.getPropertyValue('--gm-fill')).toBe('20%');
     act(() => root!.render(slider(80)));
     expect(el.style.getPropertyValue('--gm-fill')).toBe('80%');
+  });
+
+  it('shows a controlled select, and its onChange fires from the glass list', () => {
+    const onChange = vi.fn();
+    const select = (value: string) => (
+      <GlassSelect>
+        <select value={value} onChange={onChange}>
+          <option value="a">Alpha</option>
+          <option value="b">Beta</option>
+        </select>
+      </GlassSelect>
+    );
+    const host = render(select('a'));
+    const trigger = () => host.querySelector('.gm-select-trigger')!.textContent;
+    expect(trigger()).toBe('Alpha');
+    act(() => root!.render(select('b')));
+    expect(trigger()).toBe('Beta');
+    act(() => host.querySelectorAll<HTMLElement>('[role="option"]')[0]!.click());
+    expect(onChange).toHaveBeenCalledOnce();
+  });
+
+  it('calls onComplete once the code is whole', () => {
+    const onComplete = vi.fn();
+    const host = render(
+      <GlassOtp onComplete={onComplete}>
+        <input maxLength={4} />
+      </GlassOtp>,
+    );
+    const input = host.querySelector('input')!;
+    act(() => {
+      input.value = '4821';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    expect((onComplete.mock.calls[0]![0] as CustomEvent).detail.value).toBe('4821');
   });
 
   it('leaves out false flags', () => {

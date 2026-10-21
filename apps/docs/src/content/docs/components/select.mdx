@@ -1,0 +1,97 @@
+---
+title: Select
+description: A native select, with its list on frosted glass instead of the browser's popup.
+order: 6.5
+element: gm-select
+attributes:
+  - name: (on the select) name, required, disabled, aria-describedby, aria-invalid
+    description: As on any select. The button takes over its id, label and description.
+  - name: (an option with value="")
+    description: The placeholder, shown on the button while nothing is chosen, never in the list.
+properties:
+  - name: value
+    description: The chosen option's value. Setting it chooses without firing events.
+events:
+  - name: gm-change
+    description: The user picked another option. `detail` is `{ value, label }`. The select also fires `input` and `change`.
+methods:
+  - name: sync()
+    description: Redraws the button and the list. Call it after setting the select's value from code.
+---
+
+`<gm-select>` wraps a native `<select>`. It puts a field-like button over it and opens the
+options on frosted glass, with a droplet under the one in focus, so the list looks like the rest
+of the page in every theme (the browser's popup doesn't). The `<select>` stays underneath: forms,
+`required`, resets and autofill work as always, and without the script it's simply the native
+select.
+
+<Demo
+  busy
+  height="19rem"
+  html={`<gm-surface material="frost" radius="24" style="display: grid; gap: 1rem; width: min(100%, 20rem); padding: 1.2rem; border-radius: 24px">
+<div class="gm-field">
+<label for="demo-finish">Finish</label>
+<gm-select><select id="demo-finish" name="finish">
+<option value="" disabled selected hidden>Choose a finish</option>
+<option value="obsidian">Obsidian</option>
+<option value="moonstone">Moonstone</option>
+<option value="verdigris">Verdigris</option>
+<option value="ember" disabled>Ember (sold out)</option>
+</select></gm-select>
+</div>
+</gm-surface>`}
+/>
+
+## Usage
+
+```html
+<div class="gm-field">
+  <label for="country">Country</label>
+  <gm-select>
+    <select id="country" name="country" autocomplete="country" required>
+      <option value="" disabled selected hidden>Choose a country</option>
+      <option value="ar">Argentina</option>
+      <optgroup label="Europe">
+        <option value="es">Spain</option>
+        <option value="fr">France</option>
+      </optgroup>
+    </select>
+  </gm-select>
+</div>
+```
+
+Load `css/field.css` and `css/select.css` after the base. `<optgroup>` labels become headings in
+the list, and disabled options can't be picked.
+
+### Keyboard
+
+| Key                      | Does                                                     |
+| ------------------------ | -------------------------------------------------------- |
+| Enter, Space, ↓, ↑       | Open the list, on the chosen option.                     |
+| ↓, ↑, Home, End, PageUp… | Move through the options.                                |
+| A letter                 | Jump to the next option that starts with what you typed. |
+| Enter, Space             | Pick the option in focus.                                |
+| Escape, Tab              | Close without picking.                                   |
+
+### In React
+
+`GlassSelect` from `@glass-midas/react/forms` redraws after every render, so a controlled
+`<select value={…} onChange={…}>` inside it just works: React's `onChange` fires when an option is
+picked from the glass list.
+
+```tsx
+<GlassSelect>
+  <select id="size" value={size} onChange={(e) => setSize(e.target.value)}>
+    <option value="s">Small</option>
+    <option value="m">Medium</option>
+  </select>
+</GlassSelect>
+```
+
+## Best practices
+
+- **For 6 options or more.** Fewer than that, show them all: radios, or a
+  [segmented control](/components/segmented/).
+- **Put the most likely choice first**, or pick it already when it's safe to.
+- **For a long list people type into**, like countries, use a [search](/components/search/)
+  instead.

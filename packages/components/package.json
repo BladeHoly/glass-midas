@@ -72,6 +72,14 @@
       "types": "./dist/slider.d.ts",
       "default": "./dist/slider.js"
     },
+    "./select": {
+      "types": "./dist/select.d.ts",
+      "default": "./dist/select.js"
+    },
+    "./otp": {
+      "types": "./dist/otp.d.ts",
+      "default": "./dist/otp.js"
+    },
     "./styles.css": "./dist/styles.css",
     "./css/*": "./dist/css/*"
   },
@@ -103,7 +111,9 @@
     "dist/menu.js": 4608,
     "dist/dialog.js": 4608,
     "dist/toast.js": 4608,
-    "dist/slider.js": 4608
+    "dist/slider.js": 4608,
+    "dist/select.js": 4608,
+    "dist/otp.js": 4608
   },
   "scripts": {
     "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/css.mjs",
