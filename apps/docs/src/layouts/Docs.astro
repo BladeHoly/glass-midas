@@ -67,7 +67,12 @@ const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
 
     <header class="topbar">
       <a class="brand" href={url('/')}>glass<em>midas</em></a>
-      <gm-search hotkey="k" placeholder="Search the docs" label="Search the docs"></gm-search>
+      <gm-search
+        material="frost"
+        hotkey="k"
+        placeholder="Search the docs"
+        label="Search the docs"
+      ></gm-search>
       <div class="top-actions">
         <nav class="top-links" aria-label="Project">
           <a href={url('/llms.txt')}>llms.txt</a>
