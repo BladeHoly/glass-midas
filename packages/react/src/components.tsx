@@ -3,6 +3,7 @@ import type {
   CalloutType,
   GmScrollbar,
   GmSearch,
+  GmTip,
   NavigateDetail,
   SearchResult,
   SearchSource,
@@ -156,6 +157,22 @@ export const GlassSearch = wrap<
   },
   GmSearch
 >('gm-search', ['source'], { onSelect: 'gm-select' });
+
+/** `<gm-tip>`: a tip on frosted glass, inline or anchored to an element, with a close button. */
+export const GlassTip = wrap<
+  {
+    heading?: string;
+    /** The id of the element to float next to. */
+    anchor?: string;
+    placement?: 'bottom' | 'top';
+    /** A key that keeps the tip closed on later visits once dismissed. */
+    remember?: string;
+    labelClose?: string;
+    /** The tip is closing. Call `preventDefault()` to keep it open. */
+    onDismiss?: (e: CustomEvent) => void;
+  },
+  GmTip
+>('gm-tip', [], { onDismiss: 'gm-dismiss' }, ['labelClose']);
 
 /** `<gm-scrollbar>`: a quiet glass thumb for the page's scroll. */
 export const GlassScrollbar = wrap<{ scroller?: (y: number) => void }, GmScrollbar>(

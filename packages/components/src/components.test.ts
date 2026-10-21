@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { glassOptions, type GmSearch, type GmTabs, type SearchResult } from './index.js';
+import {
+  glassOptions,
+  type GmSearch,
+  type GmTabs,
+  type GmTip,
+  type SearchResult,
+} from './index.js';
 
 const mount = <T extends HTMLElement>(html: string) => {
   // Through a template, as a browser's innerHTML does: the tree is whole before it connects.
@@ -180,6 +186,60 @@ describe('gm-nav', () => {
     links[1]!.click();
     expect(links[1]!.getAttribute('aria-current')).toBe('true');
     expect(links[0]!.hasAttribute('aria-current')).toBe(false);
+  });
+});
+
+describe('gm-tip', () => {
+  const tip = (attrs = '') =>
+    mount<GmTip>(
+      `<gm-tip heading="Search everything" ${attrs}><svg slot="icon"></svg><p>Press Ctrl K.</p></gm-tip>`,
+    );
+
+  it('builds a frosted card: icon, heading, message, close', () => {
+    const el = tip();
+    expect(el.getAttribute('material')).toBe('frost');
+    expect(el.getAttribute('role')).toBe('note');
+    const card = el.querySelector(':scope > .gm-tip-card')!;
+    expect(
+      [...card.children].map((c) => c.className || c.getAttribute('slot') || c.tagName),
+    ).toEqual(['icon', 'gm-tip-heading', 'P', 'gm-tip-close']);
+    expect(card.getAttribute('data-glass-tier')).toBeTruthy();
+    expect(el.querySelector('.gm-tip-arrow')).toBeNull();
+  });
+
+  it('closes, remembers, and comes back with show()', () => {
+    const el = tip('remember="search"');
+    el.querySelector<HTMLButtonElement>('.gm-tip-close')!.click();
+    expect(el.hidden).toBe(true);
+    expect(localStorage.getItem('gm-tip:search')).toBe('dismissed');
+    expect(tip('remember="search"').hidden).toBe(true);
+    const again = document.querySelector<GmTip>('gm-tip')!;
+    again.show();
+    expect(again.hidden).toBe(false);
+    expect(localStorage.getItem('gm-tip:search')).toBeNull();
+  });
+
+  it('stays open when gm-dismiss is canceled', () => {
+    const el = tip();
+    el.addEventListener('gm-dismiss', (e) => e.preventDefault());
+    el.dismiss();
+    expect(el.hidden).toBe(false);
+  });
+
+  it('floats next to its anchor with an arrow', async () => {
+    const el = mount<GmTip>(
+      '<gm-tip anchor="target" heading="Here"><p>Hi</p></gm-tip><button id="target">x</button>',
+    );
+    expect(el.querySelector(':scope > .gm-tip-arrow')).not.toBeNull();
+    await vi.waitFor(() => expect(el.style.top).not.toBe(''));
+    expect(el.style.getPropertyValue('--gm-tip-arrow')).toMatch(/px$/);
+  });
+
+  it('builds once across reconnects', () => {
+    const el = tip();
+    document.body.append(el);
+    expect(el.querySelectorAll('.gm-tip-heading')).toHaveLength(1);
+    expect(el.querySelectorAll('.gm-tip-card')).toHaveLength(1);
   });
 });
 

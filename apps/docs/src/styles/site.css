@@ -493,7 +493,8 @@ a.card-body:hover h3 {
   overflow-wrap: anywhere;
   pointer-events: none;
 }
-.demo-stage > * {
+/* Anchored tips position themselves against the viewport. */
+.demo-stage > :not(gm-tip[anchor]) {
   position: relative;
 
   max-width: 100%;
