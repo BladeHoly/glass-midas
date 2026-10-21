@@ -80,6 +80,10 @@
       "types": "./dist/otp.d.ts",
       "default": "./dist/otp.js"
     },
+    "./table": {
+      "types": "./dist/table.d.ts",
+      "default": "./dist/table.js"
+    },
     "./styles.css": "./dist/styles.css",
     "./css/*": "./dist/css/*"
   },
@@ -113,7 +117,8 @@
     "dist/toast.js": 4608,
     "dist/slider.js": 4608,
     "dist/select.js": 4608,
-    "dist/otp.js": 4608
+    "dist/otp.js": 4608,
+    "dist/table.js": 4608
   },
   "scripts": {
     "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/css.mjs",

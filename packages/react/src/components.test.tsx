@@ -11,6 +11,7 @@ import {
   GlassSlider,
   GlassSurface,
   GlassTab,
+  GlassTable,
   GlassTabs,
 } from './components.js';
 
@@ -138,6 +139,45 @@ describe('glass components for React', () => {
       input.dispatchEvent(new Event('input', { bubbles: true }));
     });
     expect((onComplete.mock.calls[0]![0] as CustomEvent).detail.value).toBe('4821');
+  });
+
+  it('leaves sorting to React with onSort, and reports the selection', () => {
+    const onSort = vi.fn();
+    const onSelectionChange = vi.fn();
+    const host = render(
+      <GlassTable stack onSort={onSort} onSelectionChange={onSelectionChange}>
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="name">Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" className="gm-check" data-select value="b" /> Bo
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <input type="checkbox" className="gm-check" data-select value="a" /> Al
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </GlassTable>,
+    );
+    const el = host.querySelector('gm-table')!;
+    expect(el.hasAttribute('stack')).toBe(true);
+    act(() => host.querySelector<HTMLButtonElement>('.gm-table-sort')!.click());
+    expect(onSort).toHaveBeenCalledWith({ key: 'name', direction: 'ascending' });
+    expect(host.querySelector('tbody td')!.textContent).toContain('Bo');
+    const box = host.querySelector<HTMLInputElement>('[data-select]')!;
+    act(() => {
+      box.checked = true;
+      box.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    expect(onSelectionChange).toHaveBeenLastCalledWith({ values: ['b'] });
   });
 
   it('leaves out false flags', () => {

@@ -12,6 +12,7 @@ import { GmSelect } from './select.js';
 import { GmSegmented } from './segmented.js';
 import { GmSlider } from './slider.js';
 import { GmSurface } from './surface.js';
+import { GmTable } from './table.js';
 import { GmTabs } from './tabs.js';
 import { GmTip } from './tip.js';
 import { GmToast } from './toast.js';
@@ -40,6 +41,7 @@ export {
   GmSlider,
   GmSelect,
   GmOtp,
+  GmTable,
 };
 export { toast, type ToastOptions } from './toast.js';
 export type { CalloutType } from './callout.js';
@@ -49,3 +51,4 @@ export type { TabsChangeDetail } from './tabs.js';
 export type { SegmentedChangeDetail } from './segmented.js';
 export type { MenuSelectDetail } from './menu.js';
 export type { SelectChangeDetail } from './select.js';
+export type { TableSelectionDetail, TableSortDetail } from './table.js';

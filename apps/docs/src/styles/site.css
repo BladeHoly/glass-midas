@@ -372,8 +372,8 @@ pre code {
   --gm-ink-muted: rgb(255 255 255 / 0.66);
 }
 
-/* Tables scroll on their own instead of widening the page. */
-.article table {
+/* Tables scroll on their own instead of widening the page. Not gm-table's: it styles its own. */
+.article table:not(gm-table *) {
   display: block;
   overflow-x: auto;
   width: 100%;
@@ -381,14 +381,13 @@ pre code {
   border-collapse: collapse;
   font-size: 0.9rem;
 }
-.article th,
-.article td {
+.article :is(th, td):not(gm-table *) {
   padding: 0.6rem 0.8rem;
   border-bottom: 1px solid var(--line);
   text-align: left;
   vertical-align: top;
 }
-.article th {
+.article th:not(gm-table *) {
   color: var(--ink-faint);
   font-size: 0.75rem;
   font-weight: 600;

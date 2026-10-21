@@ -7,6 +7,7 @@ import {
   type GmSearch,
   type GmSegmented,
   type GmSelect,
+  type GmTable,
   type GmTabs,
   type GmTip,
   type SearchResult,
@@ -427,6 +428,65 @@ describe('gm-otp', () => {
     input.dispatchEvent(new Event('input'));
     expect(input.value).toBe('1234');
     expect(done).toEqual(['1234']);
+  });
+});
+
+describe('gm-table', () => {
+  const table = () =>
+    mount<GmTable>(`<gm-table stack><table>
+      <thead><tr><th><input type="checkbox" class="gm-check" data-select-all></th><th data-sort="name">Name</th><th data-sort="total" class="gm-num">Total</th></tr></thead>
+      <tbody>
+        <tr><td><input type="checkbox" class="gm-check" data-select value="a"></td><td>Mira</td><td data-value="120">$120</td></tr>
+        <tr><td><input type="checkbox" class="gm-check" data-select value="b"></td><td>Ada</td><td data-value="1450">$1,450</td></tr>
+        <tr><td><input type="checkbox" class="gm-check" data-select value="c"></td><td>Lio</td><td data-value="98">$98</td></tr>
+      </tbody></table></gm-table>`);
+  const names = (el: HTMLElement) =>
+    [...el.querySelectorAll('tbody tr')].map(
+      (r) => (r as HTMLTableRowElement).cells[1]!.textContent,
+    );
+
+  it('turns sortable headers into buttons and sorts, numbers as numbers', () => {
+    const el = table();
+    const buttons = el.querySelectorAll<HTMLButtonElement>('.gm-table-sort');
+    expect(buttons).toHaveLength(2);
+    buttons[1]!.click();
+    expect(names(el)).toEqual(['Lio', 'Mira', 'Ada']);
+    expect(el.querySelector('[data-sort="total"]')!.getAttribute('aria-sort')).toBe('ascending');
+    buttons[1]!.click();
+    expect(names(el)).toEqual(['Ada', 'Mira', 'Lio']);
+    buttons[0]!.click();
+    expect(names(el)).toEqual(['Ada', 'Lio', 'Mira']);
+    expect(el.querySelector('[data-sort="total"]')!.hasAttribute('aria-sort')).toBe(false);
+  });
+
+  it('leaves the rows alone when gm-sort is canceled', () => {
+    const el = table();
+    el.addEventListener('gm-sort', (e) => e.preventDefault());
+    el.sort('name');
+    expect(names(el)).toEqual(['Mira', 'Ada', 'Lio']);
+  });
+
+  it('selects rows, all or some, and says so', () => {
+    const el = table();
+    const seen: string[][] = [];
+    el.addEventListener('gm-selection', (e) => seen.push((e as CustomEvent).detail.values));
+    const all = el.querySelector<HTMLInputElement>('[data-select-all]')!;
+    const rows = el.querySelectorAll<HTMLInputElement>('[data-select]');
+    rows[1]!.checked = true;
+    rows[1]!.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(all.indeterminate).toBe(true);
+    expect(rows[1]!.closest('tr')!.getAttribute('aria-selected')).toBe('true');
+    all.checked = true;
+    all.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(el.selected).toEqual(['a', 'b', 'c']);
+    expect(all.indeterminate).toBe(false);
+    el.clearSelection();
+    expect(seen).toEqual([['b'], ['a', 'b', 'c'], []]);
+  });
+
+  it('labels each cell with its column, for phones', () => {
+    const el = table();
+    expect(el.querySelector('tbody td:nth-child(3)')!.getAttribute('data-label')).toBe('Total');
   });
 });
 
