@@ -3,7 +3,9 @@ import '@glass-midas/components/styles.css';
 import type { GmSearch } from '@glass-midas/components';
 import '@glass-midas/components';
 
-document.head.append(Object.assign(document.createElement('style'), { textContent: tokensToCss() }));
+document.head.append(
+  Object.assign(document.createElement('style'), { textContent: tokensToCss() }),
+);
 
 const pages = [
   { label: 'Intro', href: '#intro', hint: 'Start' },
