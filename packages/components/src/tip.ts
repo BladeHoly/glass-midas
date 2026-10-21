@@ -1,5 +1,5 @@
 import { anchorTo, follow } from './anchor.js';
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 const stored = (key: string) => {
   try {
@@ -116,3 +116,5 @@ export class GmTip extends GlassElement {
     this.style.setProperty('--gm-tip-arrow', `${x}px`);
   }
 }
+
+define('gm-tip', GmTip);

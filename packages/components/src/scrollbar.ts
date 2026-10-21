@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 const MIN_THUMB = 56;
 
@@ -89,3 +89,5 @@ export class GmScrollbar extends GlassElement {
     this.toggleAttribute('dragging', false);
   };
 }
+
+define('gm-scrollbar', GmScrollbar);

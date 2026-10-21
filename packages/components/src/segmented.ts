@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 import { boxOf, Droplet } from './droplet.js';
 
 /** Detail of `gm-change` on `gm-segmented`: the newly chosen option. */
@@ -106,3 +106,5 @@ export class GmSegmented extends GlassElement {
     this.#options[next]!.focus();
   };
 }
+
+define('gm-segmented', GmSegmented);

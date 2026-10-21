@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 const ICON = (path: string) =>
   `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
@@ -60,3 +60,5 @@ export class GmCode extends GlassElement {
     button.toggleAttribute('data-copied', copied);
   }
 }
+
+define('gm-code', GmCode);

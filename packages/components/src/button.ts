@@ -1,4 +1,4 @@
-import { GlassElement } from './base.js';
+import { define, GlassElement } from './base.js';
 
 /**
  * `<gm-button><button>Analyze docs</button></gm-button>`: a pill of glass around a native button
@@ -8,3 +8,5 @@ import { GlassElement } from './base.js';
 export class GmButton extends GlassElement {
   static glassDefaults = { radius: 999, bezel: 12, thickness: 24 };
 }
+
+define('gm-button', GmButton);
