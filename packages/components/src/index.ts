@@ -25,3 +25,4 @@ export { GmSurface, GmButton, GmCallout, GmCode, GmTabs, GmNav, GmSearch, GmScro
 export type { CalloutType } from './callout.js';
 export type { NavigateDetail } from './nav.js';
 export type { SearchResult, SearchSource } from './search.js';
+export type { TabsChangeDetail } from './tabs.js';

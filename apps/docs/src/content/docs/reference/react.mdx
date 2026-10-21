@@ -74,8 +74,9 @@ stylesheet). Importing it registers the elements. They work the same in React 18
   `caustics="false"`. So are each component's own attributes (`labelCopied` → `label-copied`).
 - **Properties** that aren't strings, like the search box's `source` or the scrollbar's
   `scroller`, are assigned on the element after every render.
-- **Events** become `on` props: `GlassSearch`'s `onSelect` listens to `gm-select`, `GlassNav`'s
-  `onNavigate` to `gm-navigate`. Call `preventDefault()` to take over.
+- **Events** become `on` props: `GlassSearch`'s `onSelect` listens to `gm-select` and `GlassNav`'s
+  `onNavigate` to `gm-navigate` (call `preventDefault()` on either to take over), and
+  `GlassTabs`' `onChange` to `gm-change`, which only reports the new tab.
 - **`ref`** gives you the element itself (`GmSearch`, `GmScrollbar`…), with its methods.
 
 ```tsx
@@ -112,7 +113,7 @@ export function Header({ pages }: { pages: { label: string; href: string }[] }) 
 | `GlassButton`    | `gm-button`    | `shape`                                                         |
 | `GlassCallout`   | `gm-callout`   | `type`, `heading`                                               |
 | `GlassCode`      | `gm-code`      | `labelCopy`, `labelCopied`                                      |
-| `GlassTabs`      | `gm-tabs`      | `sync`                                                          |
+| `GlassTabs`      | `gm-tabs`      | `sync`, `onChange`                                              |
 | `GlassTab`       | `gm-tab`       | `label`                                                         |
 | `GlassNav`       | `gm-nav`       | `orientation`, `spy`, `onNavigate`                              |
 | `GlassSearch`    | `gm-search`    | `source`, `placeholder`, `label`, `hotkey`, `empty`, `onSelect` |

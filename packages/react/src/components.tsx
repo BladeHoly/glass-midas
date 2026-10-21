@@ -6,6 +6,7 @@ import type {
   NavigateDetail,
   SearchResult,
   SearchSource,
+  TabsChangeDetail,
 } from '@glass-midas/components';
 import type { GlassTier } from '@glass-midas/core';
 import {
@@ -39,7 +40,8 @@ export interface GlassAttributes {
   material?: 'clear' | 'frost';
 }
 
-type Base<E> = Omit<HTMLAttributes<E>, 'onSelect'> & GlassAttributes;
+// onSelect and onChange are the components' own events, not the DOM's.
+type Base<E> = Omit<HTMLAttributes<E>, 'onSelect' | 'onChange'> & GlassAttributes;
 type Wrapped<P, E> = ForwardRefExoticComponent<P & Base<E> & RefAttributes<E>>;
 
 const kebab = (s: string) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
@@ -124,7 +126,11 @@ export const GlassCode = wrap<{ labelCopy?: string; labelCopied?: string }>('gm-
 ]);
 
 /** `<gm-tabs>`: tabs from its `GlassTab` children. Tabs sharing `sync` switch together. */
-export const GlassTabs = wrap<{ sync?: string }>('gm-tabs');
+export const GlassTabs = wrap<{
+  sync?: string;
+  /** The selected tab changed, by the user or a synced group. */
+  onChange?: (e: CustomEvent<TabsChangeDetail>) => void;
+}>('gm-tabs', [], { onChange: 'gm-change' });
 
 /** `<gm-tab>`: one tab of `GlassTabs`. */
 export const GlassTab = wrap<{ label: string }>('gm-tab');
@@ -157,4 +163,4 @@ export const GlassScrollbar = wrap<{ scroller?: (y: number) => void }, GmScrollb
   ['scroller'],
 );
 
-export type { CalloutType, NavigateDetail, SearchResult, SearchSource };
+export type { CalloutType, NavigateDetail, SearchResult, SearchSource, TabsChangeDetail };

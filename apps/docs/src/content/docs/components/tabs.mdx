@@ -14,6 +14,10 @@ properties:
   - name: selected
     type: number
     description: Index of the selected tab.
+events:
+  - name: gm-change
+    type: 'CustomEvent<{ index, label }>'
+    description: The selected tab changed, by the user or a synced group. Not fired when the same tab is selected again.
 methods:
   - name: select(index)
     description: Selects a tab by index.
