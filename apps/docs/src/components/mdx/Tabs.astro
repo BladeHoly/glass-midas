@@ -1,0 +1,9 @@
+---
+interface Props {
+  /** Tabs with the same key switch together and remember the choice. */
+  syncKey?: string;
+}
+const { syncKey } = Astro.props;
+---
+
+<gm-tabs sync={syncKey}><slot /></gm-tabs>

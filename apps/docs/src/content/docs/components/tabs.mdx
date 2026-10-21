@@ -1,0 +1,61 @@
+---
+title: Tabs
+description: Tabs on a glass bar that stay in step across the page and remember the choice.
+order: 4
+element: gm-tabs
+attributes:
+  - name: sync
+    type: string
+    description: Tabs with the same key switch together and remember the choice across visits.
+  - name: label (on gm-tab)
+    type: string
+    description: The tab's button text.
+properties:
+  - name: selected
+    type: number
+    description: Index of the selected tab.
+methods:
+  - name: select(index)
+    description: Selects a tab by index.
+  - name: selectLabel(label)
+    description: Selects a tab by its label.
+---
+
+`<gm-tabs>` builds an accessible tab list from its `<gm-tab>` children, with a droplet under the
+selected tab. Every package-manager switch on this site is one.
+
+<Demo
+  height="14rem"
+  column
+  html={`<gm-tabs sync="demo-pkg" style="text-align: center">
+  <gm-tab label="pnpm"><p>pnpm add @glass-midas/components</p></gm-tab>
+  <gm-tab label="npm"><p>npm install @glass-midas/components</p></gm-tab>
+  <gm-tab label="yarn"><p>yarn add @glass-midas/components</p></gm-tab>
+</gm-tabs>`}
+/>
+
+## Usage
+
+```html
+<gm-tabs sync="pkg">
+  <gm-tab label="pnpm">…</gm-tab>
+  <gm-tab label="npm">…</gm-tab>
+</gm-tabs>
+```
+
+With `sync`, choosing npm in one group switches every group with the same key, and the next visit
+starts on npm. Groups without the chosen label keep their selection.
+
+## Anatomy
+
+- **`.gm-tablist`** is the glass bar, with `role="tablist"`, inserted before the panels.
+- **`.gm-tab-button`** is each tab, with `role="tab"`.
+- **`gm-tab`** is each panel, with `role="tabpanel"`.
+
+The arrow keys move between tabs and wrap around; Home and End jump to the ends.
+
+## Best practices
+
+- **Use tabs for alternatives**, like package managers or frameworks, not for content people need
+  to read in sequence.
+- **Keep labels to a word or two.**

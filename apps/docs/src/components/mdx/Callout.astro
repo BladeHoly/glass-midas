@@ -1,0 +1,9 @@
+---
+interface Props {
+  type?: 'note' | 'tip' | 'caution' | 'danger';
+  title?: string;
+}
+const { type = 'note', title } = Astro.props;
+---
+
+<gm-callout type={type} heading={title}><slot /></gm-callout>

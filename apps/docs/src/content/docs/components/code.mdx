@@ -1,0 +1,46 @@
+---
+title: Code
+description: Code blocks on glass, with a copy button.
+order: 6
+element: gm-code
+attributes:
+  - name: label-copy
+    type: string
+    default: Copy
+    description: The button's text.
+  - name: label-copied
+    type: string
+    default: Copied
+    description: The button's text right after copying.
+  - name: variant
+    type: "'full' | 'lite'"
+    default: lite
+    description: Code blocks blur by default; full refracts.
+methods:
+  - name: copy()
+    description: Copies the code and confirms on the button.
+---
+
+`<gm-code>` wraps a `<pre>` and adds a copy button. Every code block on this site is one.
+
+<Demo
+  height="10rem"
+  column
+  html={`<gm-code label-copied="Copied!"><pre style="padding: 1rem 1.25rem">pnpm add @glass-midas/components</pre></gm-code>`}
+/>
+
+## Usage
+
+```html
+<gm-code>
+  <pre><code>…</code></pre>
+</gm-code>
+```
+
+Highlight the code however you like; `gm-code` only adds the glass and the button. Where the page
+can't reach the clipboard, the button selects the code so it can be copied by hand.
+
+## Best practices
+
+- **Translate the button** with `label-copy` and `label-copied`.
+- **Keep the background of highlighted code transparent**, so the glass shows through.

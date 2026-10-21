@@ -1,0 +1,93 @@
+---
+title: Search
+description: kube.io's glass search box, with results from any source.
+order: 3
+element: gm-search
+attributes:
+  - name: placeholder
+    type: string
+    default: Search
+    description: Placeholder of the input.
+  - name: label
+    type: string
+    default: Search
+    description: Accessible name of the input.
+  - name: hotkey
+    type: string
+    description: A key that focuses the box with Ctrl or ⌘, shown in the box.
+  - name: empty
+    type: string
+    default: No results
+    description: Text when nothing matches.
+properties:
+  - name: source
+    type: '(query: string) => SearchResult[] | Promise<SearchResult[]>'
+    description: Where results come from. Called with an empty query on focus, for suggestions.
+events:
+  - name: gm-select
+    type: CustomEvent<SearchResult>
+    description: A result was picked. Unless canceled, the page navigates to its href.
+methods:
+  - name: close()
+    description: Closes the list of results.
+---
+
+`<gm-search>` is the search box from
+[kube.io's liquid glass article](https://kube.io/blog/liquid-glass-css-svg/), with a glass list of
+results under it. The search at the top of this page is one, over a Pagefind index.
+
+<Demo
+  height="22rem"
+  column
+  html={`<gm-search id="demo-search" placeholder="Search fruit" style="width: min(100%, 24rem); margin: 0 auto 12rem"></gm-search>
+<script type="module">
+  const fruit = ['Apple', 'Apricot', 'Banana', 'Cherry', 'Grape', 'Lemon', 'Mango', 'Peach'];
+  await customElements.whenDefined('gm-search');
+  document.getElementById('demo-search').source = (q) => {
+    const hits = fruit.filter((f) => f.toLowerCase().includes(q.toLowerCase()));
+    return hits.map((f) => ({ label: f, href: '#' + f.toLowerCase(), hint: 'Fruit' }));
+  };
+</script>`}
+/>
+
+## Usage
+
+Give it a `source`: any function from the query to results, synchronous or not.
+
+```ts
+interface SearchResult {
+  label: string;
+  href: string;
+  hint?: string; // secondary text: a section, an excerpt
+}
+
+search.source = async (query) => {
+  const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+  return res.json();
+};
+```
+
+Answers that arrive after a newer query are dropped, so a slow request never overwrites a fast
+one. Typing is debounced.
+
+### Routing
+
+Cancel `gm-select` to navigate your own way, with a client-side router for example:
+
+```ts
+search.addEventListener('gm-select', (e) => {
+  e.preventDefault();
+  router.push(e.detail.href);
+});
+```
+
+## Anatomy
+
+- **`.gm-search-field`** is the glass box, with the icon, the input and the hotkey hint.
+- **`.gm-search-results`** is the list, a separate glass surface, with `role="listbox"`.
+- The input is a `combobox`: the arrows move through results, Enter picks, Escape closes.
+
+## Best practices
+
+- **Return a handful of results.** Eight is plenty; the list scrolls past that, but people don't.
+- **Use `hint`** for what tells two similar results apart: the section, the type, an excerpt.

@@ -1,23 +1,29 @@
+import { satteri } from '@astrojs/markdown-satteri';
+import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
-import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
+import { defineMdastPlugin } from 'satteri';
+
+// Served from a subdirectory on GitHub Pages: DOCS_BASE=/glass-midas/ pnpm build.
+const base = process.env.DOCS_BASE ?? '/';
+
+// Root-relative links in Markdown (`/concepts/tiers/`) get the base, so pages can link plainly.
+const baseLinks = defineMdastPlugin({
+  name: 'base-links',
+  link(node, ctx) {
+    if (base !== '/' && node.url.startsWith('/') && !node.url.startsWith(base)) {
+      ctx.setProperty(node, 'url', base.replace(/\/$/, '') + node.url);
+    }
+  },
+});
 
 export default defineConfig({
-  integrations: [
-    starlight({
-      title: 'glass-midas',
-      description: 'A Liquid Glass style system for the web.',
-      social: [
-        { icon: 'github', label: 'GitHub', href: 'https://github.com/BladeHoly/glass-midas' },
-      ],
-      customCss: ['./src/styles/docs.css'],
-      sidebar: [
-        { label: 'Getting started', items: [{ autogenerate: { directory: 'getting-started' } }] },
-        { label: 'Concepts', items: [{ autogenerate: { directory: 'concepts' } }] },
-        { label: 'Reference', items: [{ autogenerate: { directory: 'reference' } }] },
-        { slug: 'browser-support' },
-      ],
-    }),
-    react(),
-  ],
+  site: 'https://bladeholy.github.io',
+  base,
+  trailingSlash: 'always',
+  markdown: {
+    processor: satteri({ mdastPlugins: [baseLinks] }),
+    shikiConfig: { theme: 'vitesse-dark' },
+  },
+  integrations: [mdx(), react()],
 });

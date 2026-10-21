@@ -1,0 +1,154 @@
+---
+import type { MarkdownHeading } from 'astro';
+import { tokensToCss } from '@glass-midas/core';
+import '@glass-midas/components/styles.css';
+import '../styles/site.css';
+import { docPath, readingOrder, sidebar, url } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Headings for "On this page". */
+  headings?: MarkdownHeading[];
+  /** A landing page: no sidebars. */
+  splash?: boolean;
+  /** The page's Markdown twin, for agents. */
+  markdown?: string;
+}
+
+const { title, description, headings = [], splash = false, markdown } = Astro.props;
+const sections = await sidebar();
+const here = Astro.url.pathname;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const pages = (await readingOrder()).map((d) => ({
+  label: d.data.title,
+  href: url(docPath(d)),
+  hint: d.data.description,
+}));
+const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    {markdown && <link rel="alternate" type="text/markdown" href={markdown} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
+    />
+    <style is:inline set:html={tokensToCss()}></style>
+  </head>
+  <body class:list={[splash && 'is-splash']}>
+    <div class="backdrop" aria-hidden="true">
+      <span class="blob gold"></span>
+      <span class="blob teal"></span>
+      <span class="blob ember"></span>
+      <span class="blob violet"></span>
+    </div>
+
+    <header class="topbar">
+      <a class="brand" href={url('/')}>glass<em>midas</em></a>
+      <gm-search hotkey="k" placeholder="Search the docs" label="Search the docs"></gm-search>
+      <nav class="top-links" aria-label="Project">
+        <a href={url('/llms.txt')}>llms.txt</a>
+        <a href="https://github.com/BladeHoly/glass-midas">GitHub</a>
+      </nav>
+      {
+        !splash && (
+          <button
+            class="menu"
+            type="button"
+            aria-label="Menu"
+            aria-expanded="false"
+            aria-controls="sidebar"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        )
+      }
+    </header>
+
+    <div class="shell">
+      {
+        !splash && (
+          <aside class="sidebar" id="sidebar">
+            <gm-nav orientation="vertical" variant="lite" aria-label="Documentation">
+              {sections.map((s) => (
+                <div class="nav-group">
+                  <p>{s.label}</p>
+                  {s.docs.map((d) => {
+                    const href = url(docPath(d));
+                    return (
+                      <a href={href} aria-current={href === here ? 'page' : undefined}>
+                        {d.data.label ?? d.data.title}
+                      </a>
+                    );
+                  })}
+                </div>
+              ))}
+            </gm-nav>
+          </aside>
+        )
+      }
+
+      <main class="content" id="content" data-pagefind-body>
+        <slot />
+      </main>
+
+      {
+        !splash && toc.length > 1 && (
+          <aside class="toc" aria-label="On this page">
+            <p>On this page</p>
+            <gm-nav orientation="vertical" variant="lite" spy>
+              {toc.map((h) => (
+                <a href={`#${h.slug}`} class:list={[h.depth === 3 && 'is-sub']}>
+                  {h.text}
+                </a>
+              ))}
+            </gm-nav>
+          </aside>
+        )
+      }
+    </div>
+
+    <gm-scrollbar></gm-scrollbar>
+    <script type="application/json" id="gm-pages" set:html={JSON.stringify(pages)} />
+    <script>
+      import '@glass-midas/components';
+      import { setupSearch } from '../lib/search';
+
+      setupSearch();
+
+      // On narrow screens the search box says just "Search".
+      const narrow = matchMedia('(max-width: 56rem)');
+      const placeholder = () => {
+        const input = document.querySelector<HTMLInputElement>('.topbar gm-search input');
+        if (input) input.placeholder = narrow.matches ? 'Search' : 'Search the docs';
+      };
+      placeholder();
+      narrow.addEventListener('change', placeholder);
+
+      // The sidebar becomes a drawer on narrow screens.
+      const menu = document.querySelector<HTMLButtonElement>('.menu');
+      const setOpen = (open: boolean) => {
+        document.body.classList.toggle('nav-open', open);
+        menu?.setAttribute('aria-expanded', String(open));
+      };
+      menu?.addEventListener('click', () => setOpen(!document.body.classList.contains('nav-open')));
+      addEventListener('keydown', (e) => e.key === 'Escape' && setOpen(false));
+      addEventListener('click', (e) => {
+        const target = e.target as Element;
+        if (!target.closest('.sidebar, .menu')) setOpen(false);
+      });
+    </script>
+  </body>
+</html>

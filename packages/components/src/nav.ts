@@ -80,6 +80,14 @@ export class GmNav extends GlassElement {
       e.preventDefault();
       history.replaceState(null, '', href);
     }
+    if (!this.hasAttribute('spy')) {
+      // Nothing will report the scroll: the clicked link is simply current now.
+      this.#links[this.#current]?.removeAttribute('aria-current');
+      this.#links[i]!.setAttribute('aria-current', 'true');
+      this.#current = i;
+      this.#droplet?.follow();
+      return;
+    }
     this.#pinned = i;
     this.#render();
     this.#settle();

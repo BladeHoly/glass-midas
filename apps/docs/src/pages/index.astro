@@ -1,0 +1,70 @@
+---
+import GlassDemo from '../components/GlassDemo';
+import Docs from '../layouts/Docs.astro';
+import { url } from '../lib/site';
+
+const features = [
+  {
+    title: 'Real refraction',
+    text: "Snell's law over a squircle bezel, with caustics folding at the rim and the light catching its edge.",
+    href: '/concepts/refraction/',
+  },
+  {
+    title: 'Works everywhere',
+    text: 'Refraction in Chromium, frosted glass in Safari and Firefox, a solid surface when neither fits. One API for all three.',
+    href: '/concepts/tiers/',
+  },
+  {
+    title: 'Components',
+    text: 'Navigation, search, tabs, callouts and code blocks as Web Components. This site is built with them.',
+    href: '/components/overview/',
+  },
+  {
+    title: 'Tokens, not magic numbers',
+    text: 'Blur, tint, rim and radius are design tokens on CSS custom properties. A theme is a stylesheet.',
+    href: '/concepts/tokens/',
+  },
+];
+---
+
+<Docs
+  title="glass-midas"
+  description="A Liquid Glass style system for the web: tokens, a refraction engine and glass components."
+  splash
+>
+  <section class="hero">
+    <p class="eyebrow">Liquid Glass for the web</p>
+    <h1>Glass that <em>bends</em> the light behind it.</h1>
+    <p class="tagline">
+      A style system of tokens, a refraction engine and components. Real optics where the browser
+      can draw them, graceful fallbacks everywhere else.
+    </p>
+    <div class="actions">
+      <a class="cta primary" href={url('/getting-started/installation/')}>
+        <gm-surface radius="999" bezel="16" thickness="30">Get started</gm-surface>
+      </a>
+      <a class="cta" href={url('/components/overview/')}>Browse components</a>
+    </div>
+  </section>
+
+  <section class="hero-demo">
+    <GlassDemo client:load controls={['look', 'tier', 'thickness', 'ior']} initialTier="refract" />
+  </section>
+
+  <section class="cards">
+    {
+      features.map((f) => (
+        <gm-surface variant="lite" radius="22" class="card">
+          <a class="card-body" href={url(f.href)}>
+            <h3>{f.title}</h3>
+            <p>{f.text}</p>
+          </a>
+        </gm-surface>
+      ))
+    }
+  </section>
+
+  <gm-callout type="caution" heading="Early development" class="splash-note">
+    <p>glass-midas isn't published to npm yet, and its API will change.</p>
+  </gm-callout>
+</Docs>

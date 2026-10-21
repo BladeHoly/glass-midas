@@ -1,0 +1,50 @@
+---
+title: Surface
+description: Any block of content as a glass panel.
+order: 1
+element: gm-surface
+attributes:
+  - name: radius
+    type: number
+    default: '24'
+    description: Corner radius in px. Match the element's border-radius.
+  - name: variant
+    type: "'full' | 'lite'"
+    default: full
+    description: lite renders the blur tier, for large panels.
+  - name: tier
+    type: "'refract' | 'blur' | 'solid'"
+    description: Forces a tier instead of detecting one.
+  - name: thickness, bezel, ior, curvature, magnify, caustics, blur, specular, specular-saturation, light-angle
+    description: The core's glass options, as on createGlass.
+---
+
+`<gm-surface>` is the simplest component: whatever you put inside, on glass. Everything else in the
+library is a surface with behavior added.
+
+<Demo
+  height="15rem"
+  html={`<gm-surface radius="28" style="padding: 1.5rem 2rem; border-radius: 28px">
+  <strong>Glass panel</strong>
+  <p style="margin: 0.25rem 0 0">The stage behind it bends at the rim.</p>
+</gm-surface>`}
+/>
+
+## Usage
+
+```html
+<gm-surface radius="28" style="border-radius: 28px">…</gm-surface>
+```
+
+Set `radius` to the same value as the CSS `border-radius`: the refraction map is drawn for that
+shape.
+
+## Anatomy
+
+One element. It gets `data-glass-tier` with the tier it renders at, for tier-specific styles.
+
+## Best practices
+
+- **Small and interactive:** keep full refraction. **Large and still:** use `variant="lite"`.
+- **Check text at the `solid` tier.** With no backdrop effect, the tint is all there is.
+- **Don't nest surfaces.** Glass inside glass only sees its parent.

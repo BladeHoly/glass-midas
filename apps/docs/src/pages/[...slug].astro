@@ -1,0 +1,75 @@
+---
+import { getCollection, render } from 'astro:content';
+import { mdxComponents } from '../components/mdx';
+import MemberTable from '../components/mdx/MemberTable.astro';
+import Docs from '../layouts/Docs.astro';
+import { docPath, readingOrder, url, type Doc } from '../lib/site';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  return docs.map((doc) => ({ params: { slug: doc.id }, props: { doc } }));
+}
+
+const { doc } = Astro.props as { doc: Doc };
+const { Content, headings } = await render(doc);
+const { title, description, element, attributes, properties, events, methods } = doc.data;
+const api = attributes.length + properties.length + events.length + methods.length > 0;
+
+const order = await readingOrder();
+const i = order.findIndex((d) => d.id === doc.id);
+const prev = order[i - 1];
+const next = order[i + 1];
+const markdown = url(`/${doc.id}.md`);
+const source = `https://github.com/BladeHoly/glass-midas/blob/main/apps/docs/src/content/docs/${doc.id}.mdx`;
+---
+
+<Docs title={title} description={description} headings={headings} markdown={markdown}>
+  <article class="article">
+    <header class="page-head">
+      {element && <p class="element">&lt;{element}&gt;</p>}
+      <h1>{title}</h1>
+      <p class="lead">{description}</p>
+      <p class="page-links" data-pagefind-ignore>
+        <a href={markdown}>View as Markdown</a>
+        <a href={source}>Edit on GitHub</a>
+      </p>
+    </header>
+
+    {
+      api ? (
+        <gm-tabs class="page-tabs">
+          <gm-tab label="Overview">
+            <Content components={mdxComponents} />
+          </gm-tab>
+          <gm-tab label="API">
+            <MemberTable title="Attributes" rows={attributes} />
+            <MemberTable title="Properties" rows={properties} />
+            <MemberTable title="Events" rows={events} />
+            <MemberTable title="Methods" rows={methods} />
+          </gm-tab>
+        </gm-tabs>
+      ) : (
+        <Content components={mdxComponents} />
+      )
+    }
+
+    <nav class="pager" aria-label="Pages" data-pagefind-ignore>
+      {
+        prev && (
+          <a href={url(docPath(prev))} rel="prev">
+            <small>Previous</small>
+            {prev.data.title}
+          </a>
+        )
+      }
+      {
+        next && (
+          <a href={url(docPath(next))} rel="next" class="next">
+            <small>Next</small>
+            {next.data.title}
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Docs>
