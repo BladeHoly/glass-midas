@@ -10,7 +10,7 @@ void main() {
 
 // The same optics as the core's SVG map, evaluated per pixel in floating point: no 8-bit steps,
 // so thick glass folds without banding. The Snell profile across the bezel comes from the core
-// as a 16-bit lookup table. The rim light follows kube.io's search box: a hairline 1.25 px in,
+// as a 16-bit lookup table. The rim light is the core's: a hairline 1.25 px in,
 // as bright as (n·L)², showing a saturated copy of the backdrop plus a faint white line.
 export const FRAGMENT = `
 precision highp float;

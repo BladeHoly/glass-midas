@@ -54,22 +54,21 @@ same profile runs along the distance to the rounded rectangle, bending radially.
 ### The whole surface is a lens
 
 With only a curved rim, the flat middle of the glass shows the backdrop unchanged, and the material
-reads as glass only at its edges. Two options carry it across the whole component, the way
-[ybouane/liquidglass](https://github.com/ybouane/liquidglass) does:
+reads as glass only at its edges. Two options carry it across the whole component:
 
 - **`magnify`** (default `0`) samples the whole surface toward its center, so everything behind it
   looks `1 / (1 − magnify)` times larger, like through a magnifier.
 - **A bezel as wide as half the smaller side** curves the entire surface. With **`curvature: 2`**
   the profile is a circle: a pillow of glass rather than a slab with rounded edges.
 
-Pick **Thick lens (ybouane-like)** in the demo above to see both together.
+Pick **Thick lens** in the demo above to see both together.
 
 ### Caustics: the side wall
 
 Near the rim of real glass, light bends so hard that the image folds over itself into a
 compressed, mirrored band of the backdrop. That band reads as the **side wall of the glass** and
-gives it depth. glass-midas renders it by default (`caustics: true`); the default 40 px of glass
-over a 20 px bezel matches the search box in kube.io's liquid glass article, and
+gives it depth. glass-midas renders it by default (`caustics: true`): the default 40 px of glass
+over a 20 px bezel folds a thin, crisp band (the **Crisp rim** preset), and
 `{ thickness: 160, bezel: 60, curvature: 2 }` gives the wide band of a thick lens.
 
 Keep blur low: frost is applied before the bend and smears the band away.
@@ -116,10 +115,6 @@ sides facing toward and away from the light glow and the ones across it fade. It
 1. A copy of the bent backdrop with its saturation multiplied by `specularSaturation` (default
    `4`), shown only through the hairline. The rim glows with the colors behind the glass.
 2. The hairline in white at `specular` opacity (default `0.2`).
-
-This is the recipe of the search box in
-[kube.io's liquid glass article](https://kube.io/blog/liquid-glass-css-svg/), read from its
-filters.
 
 ## Options
 

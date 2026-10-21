@@ -26,10 +26,10 @@ interface Props {
   height?: number;
 }
 
-// Starting points. The default reproduces kube.io's search box: a thin squircle rim that folds
-// the backdrop, lit by a hairline showing a saturated copy of what's behind.
+// Starting points. The default, a crisp rim: a thin squircle bezel that folds the backdrop, lit
+// by a hairline showing a saturated copy of what's behind.
 const LOOKS = {
-  searchbox: {
+  rim: {
     thickness: 40,
     bezel: 20,
     radius: 72,
@@ -41,8 +41,7 @@ const LOOKS = {
     light: -60,
     caustics: true,
   },
-  // A thick slab with a round edge, like ybouane/liquidglass: a wide folded band reads as the
-  // glass's side wall.
+  // A thick slab with a round edge: a wide folded band reads as the glass's side wall.
   lens: {
     thickness: 160,
     bezel: 60,
@@ -158,7 +157,7 @@ export default function GlassDemo({
   useTokens();
   const [detected, setDetected] = useState<GlassTier | null>(null);
   const [tier, setTier] = useState<GlassTier | 'auto'>(initialTier ?? 'auto');
-  const initial = LOOKS.searchbox;
+  const initial = LOOKS.rim;
   const [thickness, setThickness] = useState(initial.thickness);
   const [ior, setIor] = useState(1.5);
   const [bezel, setBezel] = useState(initial.bezel);
@@ -171,7 +170,7 @@ export default function GlassDemo({
   const [magnify, setMagnify] = useState(initial.magnify);
   const [caustics, setCaustics] = useState(initial.caustics);
   const [chroma, setChroma] = useState(0);
-  const [look, setLook] = useState<keyof typeof LOOKS>('searchbox');
+  const [look, setLook] = useState<keyof typeof LOOKS>('rim');
   const applyLook = (next: keyof typeof LOOKS) => {
     setLook(next);
     const l = LOOKS[next];
@@ -243,9 +242,9 @@ export default function GlassDemo({
             label="Look"
             value={look}
             options={[
-              { value: 'searchbox', label: 'Search box (kube.io)' },
-              { value: 'lens', label: 'Thick lens (ybouane-like)' },
-              { value: 'subtle', label: 'Subtle (no fold)' },
+              { value: 'rim', label: 'Crisp rim' },
+              { value: 'lens', label: 'Thick lens' },
+              { value: 'subtle', label: 'Soft edge (no fold)' },
             ]}
             onChange={applyLook}
           />

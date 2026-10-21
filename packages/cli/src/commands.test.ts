@@ -14,7 +14,7 @@ const pages: Page[] = [
     id: 'components/search',
     title: 'Search',
     label: 'Search',
-    description: "kube.io's glass search box, with results from any source.",
+    description: 'A glass search box, with results from any source.',
     section: 'Components',
     element: 'gm-search',
     markdown: 'components/search.md',

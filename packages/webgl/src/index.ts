@@ -156,7 +156,7 @@ export function createWebGLGlass(el: HTMLElement, initial: WebGLGlassOptions): W
     const zoom = box.width / width || 1;
     const content = contentRect(backdrop.rect(), sw, sh, backdrop.fit);
 
-    // Defaults match the core's: kube.io's search box.
+    // Defaults match the core's.
     const radius = Math.min(options.radius ?? 18, width / 2, height / 2);
     const bezel = Math.max(1, Math.min(options.bezel ?? 20, width / 2, height / 2));
     const optics = [
