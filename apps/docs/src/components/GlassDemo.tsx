@@ -15,6 +15,7 @@ type Control =
   | 'curvature'
   | 'magnify'
   | 'caustics'
+  | 'chroma'
   | 'saturation'
   | 'light';
 
@@ -145,6 +146,7 @@ export default function GlassDemo({
     'curvature',
     'magnify',
     'caustics',
+    'chroma',
     'blur',
     'specular',
     'saturation',
@@ -168,6 +170,7 @@ export default function GlassDemo({
   const [curvature, setCurvature] = useState(initial.curvature);
   const [magnify, setMagnify] = useState(initial.magnify);
   const [caustics, setCaustics] = useState(initial.caustics);
+  const [chroma, setChroma] = useState(0);
   const [look, setLook] = useState<keyof typeof LOOKS>('searchbox');
   const applyLook = (next: keyof typeof LOOKS) => {
     setLook(next);
@@ -215,6 +218,7 @@ export default function GlassDemo({
               curvature,
               magnify,
               caustics,
+              chroma,
               blur: `${blur}px`,
             }}
             className="gm-demo-panel"
@@ -303,6 +307,16 @@ export default function GlassDemo({
             max={0.5}
             step={0.01}
             onChange={setMagnify}
+          />
+        )}
+        {controls.includes('chroma') && (
+          <Slider
+            label="Dispersion"
+            value={chroma}
+            min={0}
+            max={0.3}
+            step={0.01}
+            onChange={setChroma}
           />
         )}
         {controls.includes('caustics') && (

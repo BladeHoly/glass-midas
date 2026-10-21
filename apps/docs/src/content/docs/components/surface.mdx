@@ -19,7 +19,7 @@ attributes:
   - name: tier
     type: "'refract' | 'blur' | 'solid'"
     description: Forces a tier instead of detecting one.
-  - name: thickness, bezel, ior, curvature, magnify, caustics, blur, specular, specular-saturation, light-angle
+  - name: thickness, bezel, ior, curvature, magnify, caustics, chroma, blur, specular, specular-saturation, light-angle
     description: The core's glass options, as on createGlass.
 ---
 
@@ -40,6 +40,7 @@ library is a surface with behavior added.
     { name: 'ior', min: 1, max: 2.4, step: 0.01, value: 1.5, omit: 1.5 },
     { name: 'blur', min: 0, max: 30, value: 1, omit: 1 },
     { name: 'caustics', options: ['true', 'false'], value: 'true', omit: 'true' },
+    { name: 'chroma', min: 0, max: 0.3, step: 0.01, value: 0, omit: 0 },
   ]}
 />
 
