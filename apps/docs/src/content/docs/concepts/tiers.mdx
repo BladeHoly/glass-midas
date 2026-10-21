@@ -46,8 +46,9 @@ Pass `tier` to skip detection, for example to test fallbacks in one browser:
 createGlass(el, { tier: 'blur' });
 ```
 
-Forcing `refract` outside Chromium doesn't make it work there; the browser silently ignores the
-filter and you get blur only.
+Don't force `refract` outside Chromium: Safari and Firefox accept the value but don't draw an SVG
+filter inside `backdrop-filter`, and they drop the blur with it, so the surface shows no glass at
+all. Forcing a tier is for testing the lower ones.
 
 A surface keeps its tier for life. To change it, destroy the surface and create a new one
 (in React, change the component's `key`).

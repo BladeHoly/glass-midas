@@ -188,7 +188,12 @@ export default function GlassDemo({
   const { offset, handlers } = useDrag();
 
   // Detection needs the browser, so it runs after hydration.
-  useEffect(() => setDetected(detectTier()), []);
+  useEffect(() => {
+    const d = detectTier();
+    setDetected(d);
+    // Refraction only draws in Chromium; elsewhere a forced refract tier would show no glass at all.
+    if (initialTier === 'refract' && d !== 'refract') setTier('auto');
+  }, [initialTier]);
 
   const forced = tier === 'auto' ? undefined : tier;
   const active = forced ?? detected;

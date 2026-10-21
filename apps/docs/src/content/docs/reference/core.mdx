@@ -29,20 +29,20 @@ Turns `el` into a glass surface at the best [tier](/concepts/tiers/) the browser
 
 ### GlassOptions
 
-| Option               | Type        | Default                                           | Description                                                                          |
-| -------------------- | ----------- | ------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `radius`             | `number`    | `18`                                              | Corner radius in px. Match the element's `border-radius`.                            |
-| `bezel`              | `number`    | `20`                                              | Width of the curved rim in px. `refract` only.                                       |
-| `thickness`          | `number`    | `40`                                              | Total height of the glass in px; thicker bends more. `refract` only.                 |
-| `ior`                | `number`    | `1.5`                                             | Index of refraction (water `1.33`, glass `1.5`). `refract` only.                     |
-| `curvature`          | `number`    | `4`                                               | Rim profile exponent: `2` circle, `4` squircle. `refract` only.                      |
-| `magnify`            | `number`    | `0`                                               | Magnifies the whole surface, `0` to `0.5`. `refract` only.                           |
-| `caustics`           | `boolean`   | `true`                                            | Fold the rim into a mirrored band; `false` caps magnification at 5×. `refract` only. |
-| `specular`           | `number`    | `0.2`                                             | Opacity of the white rim hairline. `refract` only.                                   |
-| `specularSaturation` | `number`    | `4`                                               | Saturation of the backdrop seen through the hairline. `refract` only.                |
-| `lightAngle`         | `number`    | `-60`                                             | Rim light direction in degrees: `0` right, `-90` top. `refract` only.                |
-| `blur`               | `string`    | `1px` (refract), `var(--gm-blur-md, 16px)` (blur) | Any CSS length. Ignored at `solid`.                                                  |
-| `tier`               | `GlassTier` | detected                                          | Forces a tier instead of calling `detectTier()`.                                     |
+| Option               | Type        | Default                                           | Description                                                                                       |
+| -------------------- | ----------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `radius`             | `number`    | `18`                                              | Corner radius in px. Match the element's `border-radius`.                                         |
+| `bezel`              | `number`    | `20`                                              | Width of the curved rim in px. `refract` only.                                                    |
+| `thickness`          | `number`    | `40`                                              | Total height of the glass in px; thicker bends more. `refract` only.                              |
+| `ior`                | `number`    | `1.5`                                             | Index of refraction (water `1.33`, glass `1.5`). `refract` only.                                  |
+| `curvature`          | `number`    | `4`                                               | Rim profile exponent: `2` circle, `4` squircle. `refract` only.                                   |
+| `magnify`            | `number`    | `0`                                               | Magnifies the whole surface, `0` to `0.5`. `refract` only.                                        |
+| `caustics`           | `boolean`   | `true`                                            | Fold the rim into a mirrored band; `false` caps magnification at 5×. `refract` only.              |
+| `specular`           | `number`    | `0.2`                                             | Opacity of the white rim hairline. `refract` only.                                                |
+| `specularSaturation` | `number`    | `4`                                               | Saturation of the backdrop seen through the hairline. `refract` only.                             |
+| `lightAngle`         | `number`    | `-60`                                             | Rim light direction in degrees: `0` right, `-90` top. `refract` only.                             |
+| `blur`               | `string`    | `1px` (refract), `var(--gm-blur-md, 16px)` (blur) | Any CSS length. Ignored at `solid`.                                                               |
+| `tier`               | `GlassTier` | detected                                          | Forces a tier instead of calling `detectTier()`. Forced `refract` draws nothing outside Chromium. |
 
 See [Refraction](/concepts/refraction/) for the optics behind these options.
 
