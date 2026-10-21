@@ -16,7 +16,7 @@ const NUMBERS = [
   'magnify',
 ] as const;
 
-export const GLASS_ATTRIBUTES = [...NUMBERS, 'tier', 'blur', 'caustics', 'variant'];
+export const GLASS_ATTRIBUTES = [...NUMBERS, 'tier', 'blur', 'caustics', 'variant', 'material'];
 
 const camel = (s: string) => s.replace(/-(\w)/g, (_, c: string) => c.toUpperCase());
 
@@ -25,6 +25,9 @@ const camel = (s: string) => s.replace(/-(\w)/g, (_, c: string) => c.toUpperCase
  * (`variant="lite"`, or a component that's lite by default) steps down from refraction to the
  * blur tier: right for large surfaces that barely move against their backdrop. It never steps
  * up, so a browser or user that needs the solid tier still gets it.
+ *
+ * `material="frost"` frosts the backdrop heavily (and the stylesheet adds a smoke tint), for
+ * glass that carries text over a busy background. The default, clear glass, shows the backdrop.
  */
 export function glassOptions(el: Element, defaults: GlassOptions = {}, lite = false): GlassOptions {
   const options: Record<string, unknown> = { ...defaults };
@@ -41,6 +44,8 @@ export function glassOptions(el: Element, defaults: GlassOptions = {}, lite = fa
     const detected = detectTier();
     options.tier = detected === 'refract' ? 'blur' : detected;
   }
+  // Frost: heavy frosting so text and icons on the glass always read; the rim stays crisp.
+  if (el.getAttribute('material') === 'frost') options.blur = 'var(--gm-blur-lg, 28px)';
   const blur = el.getAttribute('blur');
   if (blur) options.blur = /^[\d.]+$/.test(blur) ? `${blur}px` : blur;
   const caustics = el.getAttribute('caustics');

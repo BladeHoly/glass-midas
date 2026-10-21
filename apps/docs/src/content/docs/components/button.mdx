@@ -1,0 +1,75 @@
+---
+title: Button
+description: A pill of glass around a native button or link, for actions that float on their own.
+order: 1.5
+element: gm-button
+attributes:
+  - name: shape
+    type: "'pill' | 'round'"
+    default: pill
+    description: round makes an icon-only circle.
+  - name: material
+    type: "'clear' | 'frost'"
+    default: clear
+    description: frost blurs the backdrop heavily under a smoke tint.
+  - name: radius, bezel, thickness, variant, tier
+    description: Glass options. Defaults are radius 999, bezel 12, thickness 24.
+---
+
+`<gm-button>` puts a native `<button>` or `<a>` on glass, for actions that float over content on
+their own: suggestions above an input, a toolbar over a photo. Controls inside another glass
+surface are [chips](/components/chip/) instead.
+
+<Demo
+  busy
+  height="22rem"
+  column
+  html={`<div style="display: grid; gap: 0.75rem; width: min(100%, 30rem); margin: 0 auto">
+  <div style="display: flex; flex-wrap: wrap; gap: 0.6rem">
+    <gm-button shape="round" material="frost"><button aria-label="New"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button></gm-button>
+    <gm-button material="frost"><button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 3h7l4 4v14H7zM10 12h6M10 16h6"/></svg>Analyze docs</button></gm-button>
+    <gm-button material="frost"><button><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>Animate photo</button></gm-button>
+  </div>
+  <gm-surface material="frost" radius="28" style="display: grid; gap: 1rem; padding: 1.1rem 1.1rem 0.9rem; border-radius: 28px">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding-left: 0.4rem">
+      <span style="opacity: 0.7">Search or ask anything</span>
+      <button class="gm-chip gm-chip-round gm-chip-plain" aria-label="Dictate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+    </div>
+    <div style="display: flex; gap: 0.5rem">
+      <button class="gm-chip gm-chip-round" aria-label="Add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="gm-chip gm-chip-round" aria-label="Camera"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+      <button class="gm-chip gm-chip-round" aria-label="Photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m4 16 5-5 5 5 2-2 4 4"/></svg></button>
+      <button class="gm-chip" aria-pressed="true" style="margin-left: auto">Plus<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button>
+    </div>
+  </gm-surface>
+</div>`}
+/>
+
+Above: three frost buttons floating over the page, and a frost surface whose controls are
+chips. The one that's on, Plus, gets the rim.
+
+## Usage
+
+```html
+<gm-button>
+  <button type="button">Analyze docs</button>
+</gm-button>
+
+<gm-button shape="round">
+  <a href="/new" aria-label="New"><svg>…</svg></a>
+</gm-button>
+```
+
+The glass is on `gm-button`; the native control inside keeps its semantics, focus and keyboard
+behavior. Give an icon-only control an `aria-label`.
+
+## Anatomy
+
+- **The host** is the glass pill. `shape="round"` makes it a circle.
+- **The control** inside, a `button` or an `a`, fills it, and lights up on hover.
+
+## Best practices
+
+- **Float it over content**, not inside other glass: there, use a [chip](/components/chip/).
+- **Keep labels short** and lead with an icon where one helps.
+- **A few at a time.** A row of floating glass pills reads as one group; a wall of them doesn't.

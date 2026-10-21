@@ -47,19 +47,28 @@ refraction would cost more there than it shows. Add `variant="full"` to refract 
 `variant="lite"` to make any component blur. Components never step **up** a tier, so a browser or
 user that needs `solid` still gets it.
 
+## Materials
+
+Glass is **clear** by default: it shows the backdrop and bends it at the rim. Add
+`material="frost"` to frost it heavily under a smoke tint, for glass that carries text over a busy
+background. Both keep the same rim. See them side by side on the
+[Surface](/components/surface/#materials) page.
+
 ## Styling
 
 The stylesheet uses only custom properties, inside `:where()`, so any selector of yours wins
 without a fight. Set the [tokens](/concepts/tokens/) and these to theme every component:
 
-| Property              | Use                                      |
-| --------------------- | ---------------------------------------- |
-| `--gm-ink`            | Text on glass.                           |
-| `--gm-ink-muted`      | Secondary text, inactive tabs and links. |
-| `--gm-rim`            | The hairline edge of every surface.      |
-| `--gm-lift`           | The shadow under every surface.          |
-| `--gm-focus`          | Keyboard focus ring.                     |
-| `--gm-callout-<type>` | Accent of each callout type.             |
+| Property              | Use                                       |
+| --------------------- | ----------------------------------------- |
+| `--gm-ink`            | Text on glass.                            |
+| `--gm-ink-muted`      | Secondary text, inactive tabs and links.  |
+| `--gm-rim`            | The hairline edge of every surface.       |
+| `--gm-lift`           | The shadow under every surface.           |
+| `--gm-focus`          | Keyboard focus ring.                      |
+| `--gm-callout-<type>` | Accent of each callout type.              |
+| `--gm-frost-tint`     | The smoke tint of frost glass.            |
+| `--gm-chip-fill`      | Chip fill; `-hover` and `-on` for states. |
 
 ## Glass inside glass
 
@@ -72,6 +81,12 @@ translucent background instead, as this page's article does.
 <CardGrid>
   <Card title="Surface" href="/components/surface/">
     Any block as a glass panel.
+  </Card>
+  <Card title="Button" href="/components/button/">
+    A glass pill for actions that float on their own.
+  </Card>
+  <Card title="Chip" href="/components/chip/">
+    Controls inside glass: a fill, and a rim when on.
   </Card>
   <Card title="Navigation" href="/components/nav/">
     Links with a liquid droplet under the current one.

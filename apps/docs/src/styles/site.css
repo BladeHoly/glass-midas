@@ -422,7 +422,19 @@ a.card-body:hover h3 {
   place-items: stretch;
   align-content: center;
 }
+.demo-stage.is-busy::before {
+  content: 'LIQUID GLASS · MIDAS · LIQUID GLASS · MIDAS · LIQUID GLASS · MIDAS · LIQUID GLASS';
+  position: absolute;
+  inset: -1rem;
+  color: rgb(255 255 255 / 0.85);
+  font: 800 clamp(2.4rem, 7vw, 3.6rem) / 0.95 var(--font);
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
 .demo-stage > * {
+  position: relative;
+
   max-width: 100%;
 }
 .demo > gm-code {

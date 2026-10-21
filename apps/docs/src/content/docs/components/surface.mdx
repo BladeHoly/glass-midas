@@ -8,6 +8,10 @@ attributes:
     type: number
     default: '24'
     description: Corner radius in px. Match the element's border-radius.
+  - name: material
+    type: "'clear' | 'frost'"
+    default: clear
+    description: frost blurs the backdrop heavily under a smoke tint, so text over a busy background reads.
   - name: variant
     type: "'full' | 'lite'"
     default: full
@@ -38,6 +42,29 @@ library is a surface with behavior added.
 
 Set `radius` to the same value as the CSS `border-radius`: the refraction map is drawn for that
 shape.
+
+## Materials
+
+Clear glass, the default, shows what's behind it, bent at the rim. **Frost** blurs the backdrop
+into color and adds a smoke tint, keeping the same crisp rim. Use clear glass for small,
+interactive pieces and over calm backgrounds; frost for glass that carries text over a busy one.
+
+<Demo
+  busy
+  height="16rem"
+  html={`<div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center">
+  <gm-surface radius="24" style="width: 13rem; padding: 1.25rem 1.5rem; border-radius: 24px">
+    <strong>Clear</strong>
+    <p style="margin: 0.25rem 0 0">The backdrop shows through.</p>
+  </gm-surface>
+  <gm-surface material="frost" radius="24" style="width: 13rem; padding: 1.25rem 1.5rem; border-radius: 24px">
+    <strong>Frost</strong>
+    <p style="margin: 0.25rem 0 0">The text always reads.</p>
+  </gm-surface>
+</div>`}
+/>
+
+Every component takes `material`.
 
 ## Anatomy
 

@@ -153,7 +153,8 @@ export class GmSearch extends GlassElement {
     list.hidden = false;
     input.setAttribute('aria-expanded', 'true');
     // The list's glass is created on first show, when it has a size to refract.
-    this.#listGlass ??= createGlass(list, { radius: 24, bezel: 18, thickness: 32, blur: '6px' });
+    const blur = this.getAttribute('material') === 'frost' ? 'var(--gm-blur-lg, 28px)' : '6px';
+    this.#listGlass ??= createGlass(list, { radius: 24, bezel: 18, thickness: 32, blur });
     this.#select(this.#selected);
   }
 
