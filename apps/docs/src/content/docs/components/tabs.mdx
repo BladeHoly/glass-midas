@@ -64,3 +64,23 @@ The arrow keys move between tabs and wrap around; Home and End jump to the ends.
 - **Use tabs for alternatives**, like package managers or frameworks, not for content people need
   to read in sequence.
 - **Keep labels to a word or two.**
+
+## Examples
+
+### Kept in step
+
+Two groups with the same `sync` key: choose TypeScript in one and the other follows. Reload the
+page and TypeScript is still chosen.
+
+<Demo
+  height="16rem"
+  column
+  html={`<gm-tabs sync="demo-lang">
+<gm-tab label="CSS"><p>border-radius: var(--gm-radius-lg);</p></gm-tab>
+<gm-tab label="TypeScript"><p>tokenVar('radius', 'lg')</p></gm-tab>
+</gm-tabs>
+<gm-tabs sync="demo-lang">
+<gm-tab label="CSS"><p>background: var(--gm-tint-light);</p></gm-tab>
+<gm-tab label="TypeScript"><p>tokenVar('tint', 'light')</p></gm-tab>
+</gm-tabs>`}
+/>

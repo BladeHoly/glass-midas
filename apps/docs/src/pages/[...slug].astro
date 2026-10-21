@@ -30,8 +30,9 @@ const source = `https://github.com/BladeHoly/glass-midas/blob/main/apps/docs/src
       <h1>{title}</h1>
       <p class="lead">{description}</p>
       <p class="page-links" data-pagefind-ignore>
-        <a href={markdown}>View as Markdown</a>
-        <a href={source}>Edit on GitHub</a>
+        <button type="button" class="gm-chip copy-page" data-markdown={markdown}>Copy page</button>
+        <a class="gm-chip gm-chip-plain" href={markdown}>View as Markdown</a>
+        <a class="gm-chip gm-chip-plain" href={source}>Edit on GitHub</a>
       </p>
     </header>
 
@@ -73,3 +74,21 @@ const source = `https://github.com/BladeHoly/glass-midas/blob/main/apps/docs/src
     </nav>
   </article>
 </Docs>
+
+<script>
+  // Copies the page's Markdown twin, ready to paste into an agent. The clipboard gets a promise
+  // of the text, so the copy stays tied to the click while the file loads (Safari needs that).
+  const button = document.querySelector<HTMLButtonElement>('.copy-page');
+  button?.addEventListener('click', async () => {
+    const text = fetch(button.dataset.markdown!).then((r) => r.text());
+    try {
+      await navigator.clipboard.write([
+        new ClipboardItem({ 'text/plain': text.then((t) => new Blob([t], { type: 'text/plain' })) }),
+      ]);
+    } catch {
+      await navigator.clipboard.writeText(await text);
+    }
+    button.textContent = 'Copied';
+    setTimeout(() => (button.textContent = 'Copy page'), 1600);
+  });
+</script>

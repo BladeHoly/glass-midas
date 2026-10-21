@@ -266,12 +266,18 @@ gm-nav a {
 }
 .page-links {
   display: flex;
-  gap: 1.25rem;
-  margin: 1rem 0 0;
-  font-size: 0.82rem;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 1.1rem 0 0;
 }
-.page-links a {
-  color: var(--ink-faint);
+.page-links .gm-chip {
+  min-height: 2em;
+  padding: 0.3em 0.9em;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+}
+.page-links .gm-chip:hover {
+  color: var(--ink);
 }
 
 .article h2 {
