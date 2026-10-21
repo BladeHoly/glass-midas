@@ -4,6 +4,7 @@ import {
   type WebGLGlassOptions,
 } from '@glass-midas/webgl';
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
+import Choice from './Choice';
 
 type Look = 'searchbox' | 'lens';
 
@@ -146,15 +147,16 @@ export default function WebGLDemo() {
         </div>
       </div>
       <div className="gm-demo-controls">
-        <label className="gm-demo-control">
-          <span>
-            Look <output>{tier}</output>
-          </span>
-          <select value={look} onChange={(e) => setLook(e.target.value as Look)}>
-            <option value="searchbox">Search box (kube.io)</option>
-            <option value="lens">Thick lens (ybouane-like)</option>
-          </select>
-        </label>
+        <Choice
+          label="Look"
+          output={tier}
+          value={look}
+          options={[
+            { value: 'searchbox', label: 'Search box (kube.io)' },
+            { value: 'lens', label: 'Thick lens (ybouane-like)' },
+          ]}
+          onChange={setLook}
+        />
         <label className="gm-demo-control">
           <span>
             Dispersion <output>{chroma}</output>

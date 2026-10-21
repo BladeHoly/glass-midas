@@ -1,6 +1,7 @@
 import { detectTier, tokensToCss, tokenVar, type GlassTier } from '@glass-midas/core';
 import { Glass } from '@glass-midas/react';
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
+import Choice from './Choice';
 
 type Control =
   | 'look'
@@ -167,8 +168,10 @@ export default function GlassDemo({
   const [curvature, setCurvature] = useState(initial.curvature);
   const [magnify, setMagnify] = useState(initial.magnify);
   const [caustics, setCaustics] = useState(initial.caustics);
-  const applyLook = (look: keyof typeof LOOKS) => {
-    const l = LOOKS[look];
+  const [look, setLook] = useState<keyof typeof LOOKS>('searchbox');
+  const applyLook = (next: keyof typeof LOOKS) => {
+    setLook(next);
+    const l = LOOKS[next];
     setThickness(l.thickness);
     setBezel(l.bezel);
     setRadius(l.radius);
@@ -232,28 +235,29 @@ export default function GlassDemo({
 
       <div className="gm-demo-controls">
         {controls.includes('look') && (
-          <label className="gm-demo-control">
-            <span>Look</span>
-            <select
-              defaultValue="searchbox"
-              onChange={(e) => applyLook(e.target.value as keyof typeof LOOKS)}
-            >
-              <option value="searchbox">Search box (kube.io)</option>
-              <option value="lens">Thick lens (ybouane-like)</option>
-              <option value="subtle">Subtle (no fold)</option>
-            </select>
-          </label>
+          <Choice
+            label="Look"
+            value={look}
+            options={[
+              { value: 'searchbox', label: 'Search box (kube.io)' },
+              { value: 'lens', label: 'Thick lens (ybouane-like)' },
+              { value: 'subtle', label: 'Subtle (no fold)' },
+            ]}
+            onChange={applyLook}
+          />
         )}
         {controls.includes('tier') && (
-          <label className="gm-demo-control">
-            <span>Tier</span>
-            <select value={tier} onChange={(e) => setTier(e.target.value as GlassTier | 'auto')}>
-              <option value="auto">auto ({detected ?? '…'})</option>
-              <option value="refract">refract</option>
-              <option value="blur">blur</option>
-              <option value="solid">solid</option>
-            </select>
-          </label>
+          <Choice
+            label="Tier"
+            value={tier}
+            options={[
+              { value: 'auto', label: `auto (${detected ?? '…'})` },
+              { value: 'refract', label: 'refract' },
+              { value: 'blur', label: 'blur' },
+              { value: 'solid', label: 'solid' },
+            ]}
+            onChange={setTier}
+          />
         )}
         {controls.includes('thickness') && (
           <Slider
@@ -266,18 +270,13 @@ export default function GlassDemo({
           />
         )}
         {controls.includes('ior') && (
-          <label className="gm-demo-control">
-            <span>
-              Material <output>n = {ior}</output>
-            </span>
-            <select value={ior} onChange={(e) => setIor(Number(e.target.value))}>
-              {MATERIALS.map((m) => (
-                <option key={m.label} value={m.ior}>
-                  {m.label} ({m.ior})
-                </option>
-              ))}
-            </select>
-          </label>
+          <Choice
+            label="Material"
+            output={`n = ${ior}`}
+            value={ior}
+            options={MATERIALS.map((m) => ({ value: m.ior, label: m.label }))}
+            onChange={setIor}
+          />
         )}
         {controls.includes('bezel') && (
           <Slider label="Bezel" value={bezel} min={2} max={80} unit="px" onChange={setBezel} />
@@ -286,13 +285,15 @@ export default function GlassDemo({
           <Slider label="Radius" value={radius} min={0} max={80} unit="px" onChange={setRadius} />
         )}
         {controls.includes('curvature') && (
-          <label className="gm-demo-control">
-            <span>Profile</span>
-            <select value={curvature} onChange={(e) => setCurvature(Number(e.target.value))}>
-              <option value={2}>Circle (2)</option>
-              <option value={4}>Squircle (4)</option>
-            </select>
-          </label>
+          <Choice
+            label="Profile"
+            value={curvature}
+            options={[
+              { value: 2, label: 'Circle (2)' },
+              { value: 4, label: 'Squircle (4)' },
+            ]}
+            onChange={setCurvature}
+          />
         )}
         {controls.includes('magnify') && (
           <Slider
