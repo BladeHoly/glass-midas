@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   glassOptions,
+  type GmDialog,
   type GmMenu,
   type GmSearch,
   type GmSegmented,
@@ -282,6 +283,43 @@ describe('gm-menu', () => {
     expect(document.activeElement).toBe(items(el)[2]);
     key('Home');
     expect(document.activeElement).toBe(items(el)[0]);
+  });
+});
+
+describe('gm-dialog', () => {
+  const dialog = () =>
+    mount<GmDialog>(
+      '<gm-dialog heading="Delete this page?"><p>It can’t be undone.</p><form method="dialog"><button value="delete">Delete</button></form></gm-dialog>',
+    );
+
+  it('wraps its content in a frosted, labelled <dialog>', () => {
+    const el = dialog();
+    const panel = el.querySelector(':scope > dialog.gm-dialog-panel')!;
+    expect(el.getAttribute('material')).toBe('frost');
+    const heading = panel.querySelector('.gm-dialog-heading')!;
+    expect(heading.textContent).toBe('Delete this page?');
+    expect(panel.getAttribute('aria-labelledby')).toBe(heading.id);
+    expect(panel.querySelector('p')!.textContent).toBe('It can’t be undone.');
+    expect(panel.getAttribute('data-glass-tier')).toBeTruthy();
+  });
+
+  it('reports why it closed in gm-close', () => {
+    const el = dialog();
+    const closed = vi.fn();
+    el.addEventListener('gm-close', (e) => closed((e as CustomEvent).detail.value));
+    el.show();
+    expect(el.open).toBe(true);
+    el.close('delete');
+    expect(el.open).toBe(false);
+    expect(closed).toHaveBeenCalledWith('delete');
+  });
+
+  it('puts its content back when it leaves the page', () => {
+    const el = dialog();
+    el.remove();
+    expect(el.querySelector('dialog')).toBeNull();
+    expect(el.querySelector('p')).not.toBeNull();
+    expect(el.querySelector('.gm-dialog-heading')).toBeNull();
   });
 });
 

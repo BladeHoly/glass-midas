@@ -1,0 +1,110 @@
+---
+title: Dialog
+description: A modal of frosted glass on the browser's dialog, centered or as a sheet from the bottom.
+order: 5.8
+element: gm-dialog
+attributes:
+  - name: heading
+    type: string
+    description: Its title, which also names it for screen readers.
+  - name: placement
+    type: "'center' | 'bottom'"
+    default: center
+    description: bottom makes it a sheet that rises from the bottom edge.
+  - name: material
+    type: "'clear' | 'frost'"
+    default: frost
+    description: It sits over a dimmed page, so it's frosted by default.
+properties:
+  - name: open
+    type: boolean
+    description: Whether it's showing.
+events:
+  - name: gm-close
+    type: 'CustomEvent<{ value }>'
+    description: It closed. value is the button's value, "cancel" for Escape, "dismiss" for a click on the backdrop.
+methods:
+  - name: show()
+    description: Opens it as a modal.
+  - name: close(value)
+    description: Closes it, with value as the reason gm-close reports.
+---
+
+`<gm-dialog>` asks for a decision or shows something that needs the whole attention: a modal
+of frosted glass over a dimmed page. It's the browser's `<dialog>` underneath, so focus stays
+inside while it's open, Escape closes it, and it returns focus where it was.
+
+<Demo
+  busy
+  height="12rem"
+  html={`<gm-button><button id="demo-open">Delete page</button></gm-button>
+<gm-dialog id="demo-dialog" heading="Delete this page?">
+<p>It goes to the trash, where you can restore it for 30 days.</p>
+<form method="dialog">
+<button class="gm-chip gm-chip-plain" value="cancel">Cancel</button>
+<button class="gm-chip" value="delete" aria-pressed="true">Delete</button>
+</form>
+</gm-dialog>
+<script type="module">
+await customElements.whenDefined('gm-dialog');
+const dialog = document.getElementById('demo-dialog');
+document.getElementById('demo-open').addEventListener('click', () => dialog.show());
+</script>`}
+/>
+
+## Usage
+
+```html
+<gm-dialog id="confirm" heading="Delete this page?">
+  <p>It goes to the trash.</p>
+  <form method="dialog">
+    <button class="gm-chip gm-chip-plain" value="cancel">Cancel</button>
+    <button class="gm-chip" value="delete">Delete</button>
+  </form>
+</gm-dialog>
+```
+
+```ts
+confirm.show();
+confirm.addEventListener('gm-close', (e) => {
+  if (e.detail.value === 'delete') remove();
+});
+```
+
+Buttons in a `<form method="dialog">` close it with their `value`, no script needed. Escape
+closes it as `"cancel"`, and a click on the dimmed page as `"dismiss"`.
+
+## Anatomy
+
+- **The host** holds it in your markup; it has no box of its own.
+- **`.gm-dialog-panel`** is the native `<dialog>` and the glass: `.gm-dialog-heading`, your
+  content, the form of actions.
+- **`::backdrop`** dims the page behind it.
+
+## Best practices
+
+- **Say what happens** on the buttons ("Delete", not "OK"), and keep the safe one first.
+- **Don't stack dialogs.** A choice that leads to another belongs on one page.
+- **A sheet for phones:** `placement="bottom"` is easier to reach with a thumb.
+
+## Examples
+
+### A sheet
+
+<Demo
+  busy
+  height="12rem"
+  html={`<gm-button><button id="demo-sheet-open">Share</button></gm-button>
+<gm-dialog id="demo-sheet" heading="Share" placement="bottom">
+<p>Send this page to anyone, or copy its link.</p>
+<form method="dialog">
+<button class="gm-chip gm-chip-plain" value="close">Close</button>
+<button class="gm-chip" value="copy" aria-pressed="true">Copy link</button>
+</form>
+</gm-dialog>
+<script type="module">
+await customElements.whenDefined('gm-dialog');
+const sheet = document.getElementById('demo-sheet');
+document.getElementById('demo-sheet-open').addEventListener('click', () => sheet.show());
+</script>`}
+/>
