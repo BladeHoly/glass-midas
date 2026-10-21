@@ -38,7 +38,7 @@ const state = initialState(element, attrs, controls, inner);
                   class="gm-chip gm-chip-plain"
                   data-name={c.name}
                   data-value={o}
-                  aria-pressed={String(o === String(c.value))}
+                  aria-pressed={o === String(c.value) ? 'true' : 'false'}
                 >
                   {o}
                 </button>
