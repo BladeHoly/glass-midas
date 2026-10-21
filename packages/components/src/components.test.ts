@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   glassOptions,
+  toast,
   type GmDialog,
   type GmMenu,
   type GmSearch,
@@ -320,6 +321,50 @@ describe('gm-dialog', () => {
     expect(el.querySelector('dialog')).toBeNull();
     expect(el.querySelector('p')).not.toBeNull();
     expect(el.querySelector('.gm-dialog-heading')).toBeNull();
+  });
+});
+
+describe('toast', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('shows a frosted toast in a polite live region, then goes away', () => {
+    vi.useFakeTimers();
+    const el = toast('Saved', { duration: 1000 });
+    const region = document.querySelector('.gm-toasts')!;
+    expect(region.getAttribute('aria-live')).toBe('polite');
+    expect(el.parentElement).toBe(region);
+    expect(el.getAttribute('material')).toBe('frost');
+    expect(el.textContent).toBe('Saved');
+    vi.advanceTimersByTime(1000);
+    expect(el.hasAttribute('leaving')).toBe(true);
+    vi.advanceTimersByTime(200);
+    expect(el.isConnected).toBe(false);
+  });
+
+  it('waits while the pointer is on it', () => {
+    vi.useFakeTimers();
+    const el = toast('Saved', { duration: 1000 });
+    vi.advanceTimersByTime(400);
+    el.dispatchEvent(new Event('pointerenter'));
+    vi.advanceTimersByTime(2000);
+    expect(el.hasAttribute('leaving')).toBe(false);
+    el.dispatchEvent(new Event('pointerleave'));
+    vi.advanceTimersByTime(600);
+    expect(el.hasAttribute('leaving')).toBe(true);
+  });
+
+  it('runs its action and closes', () => {
+    const run = vi.fn();
+    const el = toast('Deleted', { action: { label: 'Undo', onClick: run }, duration: 0 });
+    el.querySelector<HTMLButtonElement>('.gm-chip')!.click();
+    expect(run).toHaveBeenCalledOnce();
+    expect(el.hasAttribute('leaving')).toBe(true);
+  });
+
+  it('keeps three at most', () => {
+    const toasts = [1, 2, 3, 4].map((n) => toast(`#${n}`, { duration: 0 }));
+    expect(toasts[0]!.hasAttribute('leaving')).toBe(true);
+    expect(document.querySelectorAll('gm-toast:not([leaving])')).toHaveLength(3);
   });
 });
 

@@ -1,0 +1,73 @@
+---
+title: Toast
+description: A short message on frosted glass at the bottom of the page, gone on its own.
+order: 5.9
+element: gm-toast
+attributes:
+  - name: duration
+    type: number
+    default: '4000'
+    description: How long it shows, in ms. 0 keeps it until dismissed.
+  - name: material
+    type: "'clear' | 'frost'"
+    default: frost
+    description: It floats over anything, so it's frosted by default.
+events:
+  - name: gm-dismiss
+    type: CustomEvent
+    description: It's leaving.
+methods:
+  - name: dismiss()
+    description: Fades it out and removes it.
+  - name: 'toast(message, { action, duration })'
+    description: Shows one at the bottom center and returns it. A function exported by the package.
+---
+
+A toast confirms something that just happened ("Saved", "Link copied") without getting in the
+way: frosted glass at the bottom center that goes away on its own, and waits while the pointer
+or focus is on it. Make one with `toast()`.
+
+<Demo
+  busy
+  height="10rem"
+  html={`<div style="display: flex; gap: 0.75rem">
+<gm-button><button id="demo-toast">Save</button></gm-button>
+<gm-button><button id="demo-toast-undo">Delete</button></gm-button>
+</div>
+<script type="module">
+// In your code: import { toast } from '@glass-midas/components'. These docs expose it as glassMidas.toast.
+const toast = (...args) => window.glassMidas.toast(...args);
+document.getElementById('demo-toast').addEventListener('click', () => toast('Saved'));
+document.getElementById('demo-toast-undo').addEventListener('click', () =>
+toast('Page deleted', { action: { label: 'Undo', onClick: () => toast('Restored') } }),
+);
+</script>`}
+/>
+
+## Usage
+
+```ts
+import { toast } from '@glass-midas/components';
+
+toast('Saved');
+
+toast('Page deleted', {
+  action: { label: 'Undo', onClick: () => restore() },
+  duration: 6000,
+});
+```
+
+Toasts stack at the bottom center, newest last, three at most: a fourth pushes the oldest out.
+Their region is announced politely to screen readers, so the message is read without
+interrupting.
+
+## Anatomy
+
+- **`.gm-toasts`** is the region at the bottom center, created on the first toast.
+- **`gm-toast`** is each message, on glass, with its action as a [chip](/components/chip/).
+
+## Best practices
+
+- **A few words**, about something the person just did.
+- **An action only when it's useful right now**, like Undo; anything important needs a
+  [dialog](/components/dialog/) instead, since a toast can go unnoticed.
