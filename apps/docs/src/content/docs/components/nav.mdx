@@ -24,14 +24,25 @@ events:
 as it moves, and follows the pointer and keyboard focus. The sidebar and the "On this page" list
 of this site are both `gm-nav`.
 
-<Demo
-  height="12rem"
-  html={`<gm-nav aria-label="Demo">
-  <a href="#demo-home" aria-current="true">Home</a>
-  <a href="#demo-work">Work</a>
-  <a href="#demo-about">About</a>
-  <a href="#demo-contact">Contact</a>
-</gm-nav>`}
+<Playground
+  element="gm-nav"
+  height="14rem"
+  attrs={{ 'aria-label': 'Demo' }}
+  inner={`<a href="#demo-home" aria-current="true">Home</a>
+<a href="#demo-work">Work</a>
+<a href="#demo-about">About</a>`}
+  controls={[
+    {
+      name: 'orientation',
+      options: ['horizontal', 'vertical'],
+      value: 'horizontal',
+      omit: 'horizontal',
+    },
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'tier', options: ['auto', 'refract', 'blur', 'solid'], value: 'auto', omit: 'auto' },
+    { name: 'thickness', min: 0, max: 120, value: 36, omit: 36 },
+    { name: 'bezel', min: 2, max: 60, value: 18, omit: 18 },
+  ]}
 />
 
 ## Usage

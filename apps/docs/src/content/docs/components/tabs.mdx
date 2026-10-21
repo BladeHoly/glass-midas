@@ -24,14 +24,19 @@ methods:
 `<gm-tabs>` builds an accessible tab list from its `<gm-tab>` children, with a droplet under the
 selected tab. Every package-manager switch on this site is one.
 
-<Demo
+<Playground
+  element="gm-tabs"
   height="14rem"
-  column
-  html={`<gm-tabs sync="demo-pkg" style="text-align: center">
-  <gm-tab label="pnpm"><p>pnpm add @glass-midas/components</p></gm-tab>
-  <gm-tab label="npm"><p>npm install @glass-midas/components</p></gm-tab>
-  <gm-tab label="yarn"><p>yarn add @glass-midas/components</p></gm-tab>
-</gm-tabs>`}
+  attrs={{ sync: 'demo-pkg', style: 'text-align: center' }}
+  inner={`<gm-tab label="pnpm"><p>pnpm add @glass-midas/components</p></gm-tab>
+<gm-tab label="npm"><p>npm install @glass-midas/components</p></gm-tab>
+<gm-tab label="yarn"><p>yarn add @glass-midas/components</p></gm-tab>`}
+  controls={[
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'tier', options: ['auto', 'refract', 'blur', 'solid'], value: 'auto', omit: 'auto' },
+    { name: 'thickness', min: 0, max: 120, value: 28, omit: 28 },
+    { name: 'bezel', min: 2, max: 60, value: 14, omit: 14 },
+  ]}
 />
 
 ## Usage

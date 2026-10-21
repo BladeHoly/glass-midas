@@ -26,12 +26,21 @@ attributes:
 `<gm-surface>` is the simplest component: whatever you put inside, on glass. Everything else in the
 library is a surface with behavior added.
 
-<Demo
-  height="15rem"
-  html={`<gm-surface radius="28" style="padding: 1.5rem 2rem; border-radius: 28px">
-  <strong>Glass panel</strong>
-  <p style="margin: 0.25rem 0 0">The stage behind it bends at the rim.</p>
-</gm-surface>`}
+<Playground
+  element="gm-surface"
+  busy
+  attrs={{ style: 'padding: 1.5rem 2rem' }}
+  inner="<strong>Glass panel</strong>"
+  controls={[
+    { name: 'material', options: ['clear', 'frost'], value: 'clear', omit: 'clear' },
+    { name: 'tier', options: ['auto', 'refract', 'blur', 'solid'], value: 'auto', omit: 'auto' },
+    { name: 'thickness', min: 0, max: 120, value: 40, omit: 40 },
+    { name: 'bezel', min: 2, max: 60, value: 20, omit: 20 },
+    { name: 'radius', min: 0, max: 60, value: 28, style: 'border-radius' },
+    { name: 'ior', min: 1, max: 2.4, step: 0.01, value: 1.5, omit: 1.5 },
+    { name: 'blur', min: 0, max: 30, value: 1, omit: 1 },
+    { name: 'caustics', options: ['true', 'false'], value: 'true', omit: 'true' },
+  ]}
 />
 
 ## Usage
