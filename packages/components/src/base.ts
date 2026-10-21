@@ -14,6 +14,7 @@ const NUMBERS = [
   'light-angle',
   'curvature',
   'magnify',
+  'chroma',
 ] as const;
 
 export const GLASS_ATTRIBUTES = [...NUMBERS, 'tier', 'blur', 'caustics', 'variant', 'material'];

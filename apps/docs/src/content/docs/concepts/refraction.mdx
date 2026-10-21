@@ -24,6 +24,7 @@ Drag the panel over the stripes and text, and change the material:
     'curvature',
     'magnify',
     'caustics',
+    'chroma',
     'blur',
     'specular',
     'saturation',
@@ -97,6 +98,14 @@ backdrop ──► blur ──► feDisplacementMap (map) ──► + saturated 
 Frost comes first so the rim light added at the end stays sharp. Without caustics, a 0.6 px
 smoothing after the bend hides the blocky look of magnified pixels.
 
+### Dispersion
+
+Real glass bends red a little less than blue, so a strong edge splits into a thin rainbow.
+`chroma` does the same: the backdrop is bent three times, red at `1 − chroma` times the bend
+and blue at `1 + chroma`, and each pass keeps one color channel. Where the glass is flat the
+three agree, so only the rim splits. Real glass is about `0.01`; `0.05` to `0.15` shows. It
+triples the cost of the bend, so it's off by default: keep it for a few hero surfaces.
+
 ### Rim light
 
 The edge that makes the glass read as a solid object is a **hairline**, about 1.5 px wide and
@@ -126,6 +135,7 @@ filters.
 | `specular`           | `0.2`   | Opacity of the white rim hairline.                                                   |
 | `specularSaturation` | `4`     | Saturation of the backdrop seen through the hairline.                                |
 | `lightAngle`         | `-60`   | Where the rim light comes from, in degrees: `0` right, `-90` top.                    |
+| `chroma`             | `0`     | Dispersion, 0 to 0.5: the rim splits into color. Costs three bends instead of one.   |
 | `blur`               | `1px`   | Frost applied before bending. Keep it low to see the fold.                           |
 
 ```ts

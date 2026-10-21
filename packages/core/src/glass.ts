@@ -22,6 +22,11 @@ export interface GlassOptions {
   magnify?: number;
   /** Let the rim fold the image into a mirrored band, as thick glass does. */
   caustics?: boolean;
+  /**
+   * Dispersion, 0 to 0.5: red bends 1 − chroma times as far and blue 1 + chroma, so the rim
+   * splits into color. Real glass is about 0.01; 0.05 to 0.15 shows. Costs three bends.
+   */
+  chroma?: number;
   /** Frost as a CSS length. Defaults to 1px for refraction, the blur-md token otherwise. */
   blur?: string;
   /** Force a tier instead of detecting it. */
@@ -111,7 +116,8 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
     };
     const specular = options.specular ?? 0.2;
     const saturation = options.specularSaturation ?? 4;
-    const nextShape = JSON.stringify([optics, specular, saturation]);
+    const chroma = Math.min(Math.max(options.chroma ?? 0, 0), 0.5);
+    const nextShape = JSON.stringify([optics, specular, saturation, chroma]);
     const next = JSON.stringify([width, height, nextShape]);
     if (next === drawn) return setBackdrop(el, `${tail} url(#${id})`);
 
@@ -136,7 +142,23 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
     // Bend the backdrop (smoothing magnified pixels unless the rim folds on purpose), then
     // light the rim: a saturated copy of the bent backdrop masked by the hairline in the blue
     // channel, plus the hairline itself in white at the specular opacity.
-    const bend = `<feDisplacementMap in="SourceGraphic" in2="map" scale="${map.scale}" xChannelSelector="R" yChannelSelector="G" result="bent"/>`;
+    const displace = (scale: number, result: string) =>
+      `<feDisplacementMap in="SourceGraphic" in2="map" scale="${scale}" xChannelSelector="R" yChannelSelector="G" result="${result}"/>`;
+    // Dispersion: red bends 1 − chroma times as far and blue 1 + chroma, each pass keeping one
+    // channel, summed back. Where the glass is flat the passes agree, so only the rim splits.
+    const only = (c: number) =>
+      [0, 1, 2].map((row) => [0, 1, 2, 3, 4].map((col) => +(row === c && col === c))).join(' ') +
+      ' 0 0 0 1 0';
+    const channel = (c: number, scale: number) =>
+      displace(scale, `d${c}`) +
+      `<feColorMatrix in="d${c}" values="${only(c).replace(/,/g, ' ')}" result="c${c}"/>`;
+    const bend = chroma
+      ? channel(0, map.scale * (1 - chroma)) +
+        channel(1, map.scale) +
+        channel(2, map.scale * (1 + chroma)) +
+        `<feComposite in="c0" in2="c1" operator="arithmetic" k2="1" k3="1" result="c01"/>` +
+        `<feComposite in="c01" in2="c2" operator="arithmetic" k2="1" k3="1" result="bent"/>`
+      : displace(map.scale, 'bent');
     const smooth = optics.caustics
       ? ''
       : '<feGaussianBlur in="bent" stdDeviation="0.6" result="bent"/>';
