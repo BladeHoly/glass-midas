@@ -10,7 +10,9 @@ properties:
 ---
 
 `<gm-scrollbar>` is a glass thumb that mirrors the page's scroll, and drives it when dragged. Look
-at the right edge of this page.
+at the right edge of this page. It's meant to go almost unnoticed: clear glass with no rim, faint
+while the page rests, clear while it scrolls or under the pointer. The rim is left out on purpose;
+in glass-midas, a rim marks what deserves attention.
 
 ## Usage
 
@@ -18,8 +20,8 @@ at the right edge of this page.
 <gm-scrollbar></gm-scrollbar>
 ```
 
-Add it once, anywhere in the page. With a mouse, it hides the native scrollbar; on touch screens
-it stays out of the way and the native one remains. The wheel, the keyboard and touch scroll the
+Add it once, anywhere in the page. With a mouse, it hides the native scrollbar. On touch screens
+it isn't shown at all: the phone's own indicator does the job better. The wheel, the keyboard and touch scroll the
 page as always.
 
 ### With a smooth-scroll library

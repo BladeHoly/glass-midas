@@ -42,6 +42,30 @@ describe('glassOptions', () => {
   });
 });
 
+describe('materials', () => {
+  it('frosts heavily with frost, unless blur is set', () => {
+    const el = document.createElement('div');
+    el.setAttribute('material', 'frost');
+    expect(glassOptions(el).blur).toBe('var(--gm-blur-lg, 28px)');
+    el.setAttribute('blur', '12');
+    expect(glassOptions(el).blur).toBe('12px');
+  });
+
+  it('updates a live surface when the material changes', () => {
+    const el = mount('<gm-surface tier="blur"></gm-surface>');
+    el.setAttribute('material', 'frost');
+    expect(el.style.getPropertyValue('backdrop-filter')).toContain('--gm-blur-lg');
+  });
+});
+
+describe('gm-button', () => {
+  it('is a glass pill around its control', () => {
+    const el = mount('<gm-button tier="blur"><button>Go</button></gm-button>');
+    expect(el.dataset.glassTier).toBe('blur');
+    expect(el.querySelector('button')!.textContent).toBe('Go');
+  });
+});
+
 describe('gm-surface', () => {
   it('becomes glass while connected', () => {
     const el = mount('<gm-surface tier="blur">Hi</gm-surface>');

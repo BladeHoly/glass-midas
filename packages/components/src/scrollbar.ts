@@ -4,17 +4,33 @@ const MIN_THUMB = 56;
 
 /**
  * `<gm-scrollbar>`: a glass scroll thumb for the page. It mirrors and drives the page's own
- * scroll, so the keyboard, wheel and touch keep working; the stylesheet hides the native
- * scrollbar while it's present, with a mouse. With a smooth-scroll library, set `scroller`
- * so dragging goes through it.
+ * scroll, so the keyboard, wheel and touch keep working. With a mouse, the stylesheet hides the
+ * native scrollbar while it's present; on touch screens it hides the thumb instead. With a
+ * smooth-scroll library, set `scroller` so dragging goes through it.
  */
 export class GmScrollbar extends GlassElement {
-  static glassDefaults = { radius: 999, bezel: 5, thickness: 10, blur: '0px', specular: 0.5 };
+  // Clear glass with no rim light: a thumb shouldn't call attention to itself.
+  static glassDefaults = {
+    radius: 999,
+    bezel: 4,
+    thickness: 8,
+    blur: '2px',
+    specular: 0,
+    specularSaturation: 1,
+  };
 
   /** Scrolls the page to `y` immediately; replace it to route through a smooth-scroll library. */
   scroller = (y: number) => scrollTo({ top: y, behavior: 'instant' });
 
   #frame = 0;
+  #rest: ReturnType<typeof setTimeout> | undefined;
+  // Shown clearly while the page scrolls, faint again once it rests.
+  #onScroll = () => {
+    this.#sync();
+    this.toggleAttribute('active', true);
+    clearTimeout(this.#rest);
+    this.#rest = setTimeout(() => this.toggleAttribute('active', false), 900);
+  };
   #drag: { startY: number; startScroll: number } | null = null;
   #observer: ResizeObserver | undefined;
   #sync = () => {
@@ -33,7 +49,7 @@ export class GmScrollbar extends GlassElement {
 
   protected setup() {
     this.setAttribute('aria-hidden', 'true');
-    addEventListener('scroll', this.#sync, { passive: true });
+    addEventListener('scroll', this.#onScroll, { passive: true });
     addEventListener('resize', this.#sync);
     if (typeof ResizeObserver !== 'undefined') {
       this.#observer = new ResizeObserver(this.#sync);
@@ -48,7 +64,8 @@ export class GmScrollbar extends GlassElement {
 
   protected teardown() {
     cancelAnimationFrame(this.#frame);
-    removeEventListener('scroll', this.#sync);
+    clearTimeout(this.#rest);
+    removeEventListener('scroll', this.#onScroll);
     removeEventListener('resize', this.#sync);
     this.#observer?.disconnect();
   }

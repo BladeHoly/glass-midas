@@ -7,8 +7,10 @@ interface Props {
   height?: string;
   /** Lay the stage out as a column (start-aligned) instead of centering one item. */
   column?: boolean;
+  /** A busy backdrop of big type, to show how much a material lets through. */
+  busy?: boolean;
 }
-const { html, height = '16rem', column = false } = Astro.props;
+const { html, height = '16rem', column = false, busy = false } = Astro.props;
 
 // MDX strips the indentation of multiline attributes; put it back by nesting depth, counting
 // HTML tags, and brackets outside tags and strings (for scripts).
@@ -37,7 +39,7 @@ const source = indent(html);
 ---
 
 <figure class="demo">
-  <div class:list={['demo-stage', column && 'is-column']} style={`min-height: ${height}`}>
+  <div class:list={['demo-stage', column && 'is-column', busy && 'is-busy']} style={`min-height: ${height}`}>
     <Fragment set:html={source} />
   </div>
   <gm-code><Code code={source} lang="html" theme="vitesse-dark" /></gm-code>

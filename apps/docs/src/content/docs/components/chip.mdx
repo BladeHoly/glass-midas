@@ -1,0 +1,68 @@
+---
+title: Chip
+description: Controls inside a glass surface — a light fill, and a rim on the one that's on.
+order: 1.6
+element: .gm-chip
+attributes:
+  - name: class="gm-chip"
+    description: Makes a button or link a chip.
+  - name: class="gm-chip-round"
+    description: Icon only, as a circle. Use with gm-chip.
+  - name: class="gm-chip-plain"
+    description: No fill at rest, for the quieter controls of a group. Use with gm-chip.
+  - name: aria-pressed, aria-selected, aria-current
+    description: The chip that's on gets a brighter fill and the rim.
+---
+
+A chip is a control inside glass. It isn't glass itself: glass inside glass can't see the page,
+only its parent. So it's a light fill over the surface, brighter on hover, and the one that's on
+(pressed, selected or current) gets the rim. It's a class, with no script.
+
+<Demo
+  busy
+  height="14rem"
+  column
+  html={`<gm-surface material="frost" radius="999" style="display: flex; gap: 0.25rem; width: fit-content; margin: 0 auto; padding: 0.3rem; border-radius: 999px">
+  <button class="gm-chip gm-chip-plain" aria-pressed="true">Chat</button>
+  <button class="gm-chip gm-chip-plain" aria-pressed="false">Voice</button>
+  <button class="gm-chip gm-chip-round gm-chip-plain" aria-label="History"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.5-5.8M4 4v4h4M12 8v4l3 2"/></svg></button>
+</gm-surface>
+<script type="module">
+  for (const chip of document.querySelectorAll('.demo [aria-pressed]')) {
+    chip.addEventListener('click', () => {
+      for (const other of chip.parentElement.querySelectorAll('[aria-pressed]')) {
+        other.setAttribute('aria-pressed', String(other === chip));
+      }
+    });
+  }
+</script>`}
+/>
+
+## Usage
+
+```html
+<gm-surface material="frost">
+  <button class="gm-chip gm-chip-plain" aria-pressed="true">Chat</button>
+  <button class="gm-chip gm-chip-plain" aria-pressed="false">Voice</button>
+  <button class="gm-chip gm-chip-round gm-chip-plain" aria-label="History"><svg>…</svg></button>
+</gm-surface>
+```
+
+Set `aria-pressed` on toggles, `aria-selected` in a listbox or tabs, `aria-current` on links.
+The styles follow the state, so the markup stays honest.
+
+For a segmented control where the selection should slide, use [tabs](/components/tabs/): their
+droplet is the moving version of the same idea.
+
+## Theming
+
+| Property               | Use                         |
+| ---------------------- | --------------------------- |
+| `--gm-chip-fill`       | Resting fill.               |
+| `--gm-chip-fill-hover` | Under the pointer.          |
+| `--gm-chip-fill-on`    | Pressed, selected, current. |
+
+## Best practices
+
+- **The rim marks the one that's on.** Don't add it to resting chips, or nothing stands out.
+- **Floating over content on its own?** Then it's a [button](/components/button/), on glass.
