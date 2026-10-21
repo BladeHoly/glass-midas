@@ -137,6 +137,10 @@
 :where(gm-tab[hidden]) {
   display: none;
 }
+/* Before the script runs, show only the first tab rather than all of them. */
+:where(gm-tabs:not(:defined) > gm-tab:not(:first-of-type)) {
+  display: none;
+}
 :where(.gm-tablist) {
   position: relative;
   display: inline-flex;
@@ -242,6 +246,8 @@
   z-index: 10;
   max-height: min(60vh, 26rem);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.25) transparent;
   padding: 0.375rem;
   border-radius: 24px;
 }
@@ -260,6 +266,11 @@
   box-shadow: var(--gm-rim);
 }
 :where(.gm-search-result small) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   color: var(--gm-ink-muted);
 }
 :where(.gm-search-empty) {

@@ -1,16 +1,13 @@
 ---
 title: Quick start
 description: Turn an element into glass in a few lines, with plain JavaScript or React.
-sidebar:
-  order: 2
+order: 2
 ---
-
-import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Two steps: load the tokens once, then attach glass to an element.
 
 <Tabs syncKey="framework">
-  <TabItem label="JavaScript">
+  <Tab label="JavaScript">
     ```html
     <div class="panel">Hello, glass</div>
 
@@ -38,8 +35,8 @@ Two steps: load the tokens once, then attach glass to an element.
 
     Call `glass.destroy()` when the element goes away.
 
-  </TabItem>
-  <TabItem label="React">
+  </Tab>
+  <Tab label="React">
     ```tsx
     import { tokensToCss, tokenVar } from '@glass-midas/core';
     import { Glass } from '@glass-midas/react';
@@ -67,7 +64,7 @@ Two steps: load the tokens once, then attach glass to an element.
     `<Glass>` renders a `div`, accepts every `div` prop and cleans up on unmount.
     To make your own element glass, use [`useGlass`](/reference/react/#useglass).
 
-  </TabItem>
+  </Tab>
 </Tabs>
 
 ## Glass needs something behind it

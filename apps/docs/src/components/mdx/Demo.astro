@@ -1,0 +1,44 @@
+---
+import { Code } from 'astro:components';
+
+interface Props {
+  /** The demo's markup: rendered live on a colorful stage, then shown as source. */
+  html: string;
+  height?: string;
+  /** Lay the stage out as a column (start-aligned) instead of centering one item. */
+  column?: boolean;
+}
+const { html, height = '16rem', column = false } = Astro.props;
+
+// MDX strips the indentation of multiline attributes; put it back by nesting depth, counting
+// HTML tags, and brackets outside tags and strings (for scripts).
+const VOID = /^<(area|br|col|embed|hr|img|input|link|meta|source|wbr)\b/i;
+const count = (s: string, re: RegExp) => (s.match(re) ?? []).length;
+function indent(code: string) {
+  let depth = 0;
+  return code
+    .trim()
+    .split('\n')
+    .map((raw) => {
+      const line = raw.trim();
+      const bare = line.replace(/<[^>]*>/g, '').replace(/(['"`]).*?\1/g, '');
+      const tags = line.match(/<[a-z][^>]*>/gi) ?? [];
+      const opens =
+        tags.filter((t) => !VOID.test(t) && !t.endsWith('/>')).length + count(bare, /[{[(]/g);
+      const closes = count(line, /<\/[a-z][^>]*>/gi) + count(bare, /[}\])]/g);
+      const lead = /^(<\/|[}\])])/.test(line) ? 1 : 0;
+      const out = '  '.repeat(Math.max(0, depth - lead)) + line;
+      depth = Math.max(0, depth + opens - closes);
+      return out;
+    })
+    .join('\n');
+}
+const source = indent(html);
+---
+
+<figure class="demo">
+  <div class:list={['demo-stage', column && 'is-column']} style={`min-height: ${height}`}>
+    <Fragment set:html={source} />
+  </div>
+  <gm-code><Code code={source} lang="html" theme="vitesse-dark" /></gm-code>
+</figure>

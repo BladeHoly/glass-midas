@@ -1,0 +1,52 @@
+---
+title: Callout
+description: Notes, tips and warnings that stand out from the text around them.
+order: 5
+element: gm-callout
+attributes:
+  - name: type
+    type: "'note' | 'tip' | 'caution' | 'danger'"
+    default: note
+    description: Sets the accent color.
+  - name: heading
+    type: string
+    description: A heading line above the content.
+  - name: variant
+    type: "'full' | 'lite'"
+    default: lite
+    description: Callouts blur by default; full refracts.
+---
+
+`<gm-callout>` sets an aside apart from the text around it, on still glass with an accent on its
+leading edge.
+
+<Demo
+  height="20rem"
+  column
+  html={`<gm-callout type="tip" heading="Tip"><p>Match radius to border-radius.</p></gm-callout>
+<gm-callout type="danger" heading="Careful"><p>Never put a lens over text.</p></gm-callout>`}
+/>
+
+## Usage
+
+```html
+<gm-callout type="caution" heading="Early development">
+  <p>The API will change.</p>
+</gm-callout>
+```
+
+It gets `role="note"` unless you set another role.
+
+## Types
+
+| Type      | Use it for                                    |
+| --------- | --------------------------------------------- |
+| `note`    | Context worth knowing.                        |
+| `tip`     | A better way to do something.                 |
+| `caution` | Something that may not work as expected.      |
+| `danger`  | Something that loses data or breaks the page. |
+
+## Best practices
+
+- **One callout per idea**, and rarely more than one per screen; several in a row read as noise.
+- **Lead with the point** in the heading.

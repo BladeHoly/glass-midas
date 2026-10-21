@@ -1,0 +1,94 @@
+---
+title: Components
+label: Overview
+description: Glass Web Components for navigation, search, tabs, callouts and code, built on the core.
+order: 0
+---
+
+`@glass-midas/components` turns the core into ready-made elements. They're **Web Components** in
+the light DOM, so they work in plain HTML and in any framework, and your CSS reaches inside them.
+This site is built with them: the search box, the sidebar, the table of contents, every code
+block, callout and tab group.
+
+## Setup
+
+Import the package once to register every element, and load its stylesheet with the tokens:
+
+```ts
+import '@glass-midas/components';
+import '@glass-midas/components/styles.css';
+import { tokensToCss } from '@glass-midas/core';
+
+document.head.insertAdjacentHTML('beforeend', `<style>${tokensToCss()}</style>`);
+```
+
+Then write them as HTML:
+
+```html
+<gm-callout type="tip" heading="Hello">
+  <p>This box is glass.</p>
+</gm-callout>
+```
+
+Elements render on the server as their plain markup, and come to life when the script runs.
+Importing the package during server rendering is safe; it defines nothing there.
+
+## Glass options are attributes
+
+Every component accepts the core's [options](/reference/core/#glassoptions) as attributes, in
+kebab case:
+
+```html
+<gm-surface radius="28" thickness="60" bezel="30" ior="1.33" light-angle="-120">…</gm-surface>
+```
+
+Large surfaces that sit still, like callouts and code blocks, use the `blur` tier by default:
+refraction would cost more there than it shows. Add `variant="full"` to refract anyway, or
+`variant="lite"` to make any component blur. Components never step **up** a tier, so a browser or
+user that needs `solid` still gets it.
+
+## Styling
+
+The stylesheet uses only custom properties, inside `:where()`, so any selector of yours wins
+without a fight. Set the [tokens](/concepts/tokens/) and these to theme every component:
+
+| Property              | Use                                      |
+| --------------------- | ---------------------------------------- |
+| `--gm-ink`            | Text on glass.                           |
+| `--gm-ink-muted`      | Secondary text, inactive tabs and links. |
+| `--gm-rim`            | The hairline edge of every surface.      |
+| `--gm-lift`           | The shadow under every surface.          |
+| `--gm-focus`          | Keyboard focus ring.                     |
+| `--gm-callout-<type>` | Accent of each callout type.             |
+
+## Glass inside glass
+
+A `backdrop-filter` on an element hides the page from any glass inside it, which then only sees
+its parent. Don't put glass components inside another glass surface: give the container a plain
+translucent background instead, as this page's article does.
+
+## The components
+
+<CardGrid>
+  <Card title="Surface" href="/components/surface/">
+    Any block as a glass panel.
+  </Card>
+  <Card title="Navigation" href="/components/nav/">
+    Links with a liquid droplet under the current one.
+  </Card>
+  <Card title="Search" href="/components/search/">
+    kube.io's search box, with results from any source.
+  </Card>
+  <Card title="Tabs" href="/components/tabs/">
+    Tabs that stay in step across the page.
+  </Card>
+  <Card title="Callout" href="/components/callout/">
+    Notes, tips and warnings that stand out.
+  </Card>
+  <Card title="Code" href="/components/code/">
+    Code blocks with a copy button.
+  </Card>
+  <Card title="Scrollbar" href="/components/scrollbar/">
+    A glass thumb for the page's scroll.
+  </Card>
+</CardGrid>

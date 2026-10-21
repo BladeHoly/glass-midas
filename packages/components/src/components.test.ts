@@ -139,6 +139,15 @@ describe('gm-nav', () => {
     expect(links[1]!.getAttribute('aria-current')).toBe('location');
     expect(links[0]!.hasAttribute('aria-current')).toBe(false);
   });
+
+  it('moves current to the clicked link without spy', () => {
+    const el = mount('<gm-nav><a href="#a" aria-current="true">A</a><a href="#b">B</a></gm-nav>');
+    el.addEventListener('gm-navigate', (e) => e.preventDefault());
+    const links = el.querySelectorAll('a');
+    links[1]!.click();
+    expect(links[1]!.getAttribute('aria-current')).toBe('true');
+    expect(links[0]!.hasAttribute('aria-current')).toBe(false);
+  });
 });
 
 describe('gm-search', () => {

@@ -1,0 +1,72 @@
+---
+title: Navigation
+label: Nav
+description: A glass bar of links with a liquid droplet under the current one.
+order: 2
+element: gm-nav
+attributes:
+  - name: orientation
+    type: "'horizontal' | 'vertical'"
+    default: horizontal
+    description: Direction of the links.
+  - name: spy
+    type: boolean
+    description: Marks the link of the section scrolled past a third of the viewport as current.
+  - name: radius, bezel, thickness, variant, tier
+    description: Glass options. Defaults are radius 28, bezel 18, thickness 36.
+events:
+  - name: gm-navigate
+    type: 'CustomEvent<{ href, target }>'
+    description: An in-page link was clicked. Cancel it to scroll your own way, with a smooth-scroll library for example.
+---
+
+`<gm-nav>` holds links. A droplet of glass slides under the current one on a spring, stretching
+as it moves, and follows the pointer and keyboard focus. The sidebar and the "On this page" list
+of this site are both `gm-nav`.
+
+<Demo
+  height="12rem"
+  html={`<gm-nav aria-label="Demo">
+  <a href="#demo-home" aria-current="true">Home</a>
+  <a href="#demo-work">Work</a>
+  <a href="#demo-about">About</a>
+  <a href="#demo-contact">Contact</a>
+</gm-nav>`}
+/>
+
+## Usage
+
+```html
+<gm-nav orientation="vertical" spy>
+  <a href="#intro">Intro</a>
+  <a href="#install">Install</a>
+</gm-nav>
+```
+
+- **Page links:** mark the current page with `aria-current="page"`.
+- **In-page links:** add `spy`, and the current link follows the scroll. A click keeps the clicked
+  link current until the scroll arrives, so the droplet never steps back through the sections in
+  between. Without `spy`, the clicked link simply becomes current.
+
+### With a smooth-scroll library
+
+Cancel `gm-navigate` and scroll with the library. The nav still updates the URL:
+
+```ts
+nav.addEventListener('gm-navigate', (e) => {
+  e.preventDefault();
+  lenis.scrollTo(e.detail.target);
+});
+```
+
+## Anatomy
+
+- **The host** is the glass bar, with `role="navigation"` unless you give it another role.
+- **`.gm-droplet`** is the moving glass marker, under the link text.
+- **Links** are any `a[href]` inside, at any depth, so you can group them under headings.
+
+## Best practices
+
+- **Keep labels short.** The droplet stretches to the link's width.
+- **Don't put a lens over the text.** The droplet is thin, clear glass on purpose; magnifying
+  glass over a label makes it unreadable.

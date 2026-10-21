@@ -1,0 +1,18 @@
+---
+import { url } from '../../lib/site';
+
+interface Props {
+  title: string;
+  href?: string;
+}
+const { title } = Astro.props;
+const href = Astro.props.href?.startsWith('/') ? url(Astro.props.href) : Astro.props.href;
+const Tag = href ? 'a' : 'div';
+---
+
+<gm-surface variant="lite" radius="22" class="card">
+  <Tag class="card-body" href={href}>
+    <h3>{title}</h3>
+    <slot />
+  </Tag>
+</gm-surface>
