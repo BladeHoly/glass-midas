@@ -1,43 +1,57 @@
 # glass-midas
 
-A Liquid Glass style system for the web: design tokens, a refraction engine and headless primitives, plus a component library built on them.
+A Liquid Glass style system for the web: design tokens, a refraction engine, glass Web Components, and bindings for React.
 
-- **Works everywhere.** Real refraction where the browser can render it (Chromium), frosted `backdrop-filter` in Safari and Firefox, a solid surface when neither works or the user prefers reduced transparency.
-- **Framework-agnostic.** The core works on any `HTMLElement`; bindings for React (more to come).
-- **Small.** Bundle budgets are enforced in CI.
+- **Real optics.** Snell's law over a squircle bezel, caustics at the rim, a lit hairline edge and optional dispersion, where the browser can render it (Chromium).
+- **Works everywhere.** Frosted `backdrop-filter` in Safari and Firefox, a solid surface when neither works or the user prefers reduced transparency.
+- **Framework-agnostic.** The core works on any `HTMLElement`; the components are Web Components; React gets thin wrappers.
+- **Small.** Bundle budgets are enforced in CI: the core is under 4 KB gzipped.
 
-> Early development — APIs will change.
+Docs: **<https://bladeholy.github.io/glass-midas/>**
 
 ## Packages
 
-| Package              | Description                          |
-| -------------------- | ------------------------------------ |
-| `@glass-midas/core`  | Tokens, tier detection, glass engine |
-| `@glass-midas/react` | `useGlass` hook and `<Glass>`        |
+| Package                   | Description                                                              |
+| ------------------------- | ------------------------------------------------------------------------ |
+| `@glass-midas/core`       | Tokens, tier detection and the glass engine                              |
+| `@glass-midas/components` | Glass Web Components: surface, button, nav, search, tabs, callout, code… |
+| `@glass-midas/react`      | `useGlass`, `<Glass>`, and the components for React                      |
+| `@glass-midas/webgl`      | A WebGL renderer: the same optics in floating point, with dispersion     |
+| `@glass-midas/cli`        | The docs from the terminal, for people and coding agents                 |
 
 ## Usage
 
-```ts
-import { createGlass, tokensToCss } from '@glass-midas/core';
-
-document.head.insertAdjacentHTML('beforeend', `<style>${tokensToCss()}</style>`);
-const glass = createGlass(document.querySelector('.panel')!, { radius: 28 });
-// glass.tier → 'refract' | 'blur' | 'solid'
+```sh
+npm install @glass-midas/core @glass-midas/components
 ```
 
-```tsx
-import { Glass } from '@glass-midas/react';
+```ts
+import '@glass-midas/components';
+import '@glass-midas/components/styles.css';
+import { tokensToCss } from '@glass-midas/core';
 
-<Glass glass={{ radius: 28, thickness: 32 }} className="panel">
-  …
-</Glass>;
+document.head.insertAdjacentHTML('beforeend', `<style>${tokensToCss()}</style>`);
+```
+
+```html
+<gm-search hotkey="k" material="frost"></gm-search>
+<gm-callout type="tip" heading="Glass">It works.</gm-callout>
+```
+
+Any element, without the components:
+
+```ts
+import { createGlass } from '@glass-midas/core';
+
+const glass = createGlass(document.querySelector('.panel')!, { radius: 28 });
+// glass.tier → 'refract' | 'blur' | 'solid'
 ```
 
 Without a bundler:
 
 ```html
 <script type="module">
-  import { createGlass } from 'https://cdn.jsdelivr.net/npm/@glass-midas/core/+esm';
+  import { createGlass } from 'https://cdn.jsdelivr.net/npm/@glass-midas/core@0.1.0/+esm';
 </script>
 ```
 
@@ -51,6 +65,16 @@ pnpm size    # bundle budgets
 ```
 
 Working with Claude Code: the repo ships hooks, skills and a Playwright MCP server. For library docs, also set up Context7 with your own key: `npx ctx7 setup --claude`.
+
+## Credits
+
+glass-midas stands on the work of others, and owes them its look:
+
+- **[Liquid Glass in CSS and SVG](https://kube.io/blog/liquid-glass-css-svg/)** on kube.io, whose search box set the bar for the rim: the convex squircle bezel under Snell's law, and the hairline lit with a saturated copy of the backdrop. The default glass follows that recipe.
+- **[ybouane/liquidglass](https://github.com/ybouane/liquidglass)** (MIT), whose thick, rounded glass showed what makes Liquid Glass read as a solid object: the whole surface acting as a lens, and the folded band at the rim that becomes its side wall.
+- **[Astryx](https://astryx.atmeta.com/)**, whose documentation shaped ours: component pages with an overview, a live demo and the API, and docs made for agents too.
+
+The other open-source implementations we studied, and how glass-midas compares, are in [`research/`](research/).
 
 ## License
 

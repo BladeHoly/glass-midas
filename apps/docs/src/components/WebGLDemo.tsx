@@ -6,12 +6,12 @@ import {
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import Choice from './Choice';
 
-type Look = 'searchbox' | 'lens';
+type Look = 'rim' | 'lens';
 
 const LOOKS: Record<Look, Omit<WebGLGlassOptions, 'backdrop'>> = {
-  // The defaults: kube.io's search box.
-  searchbox: { radius: 28 },
-  // A thick slab with a round edge, like ybouane/liquidglass.
+  // The defaults: a crisp rim on a search-box-sized pill.
+  rim: { radius: 28 },
+  // A thick slab with a round edge, its folded band reading as the side wall.
   lens: {
     radius: 60,
     thickness: 160,
@@ -26,7 +26,7 @@ const LOOKS: Record<Look, Omit<WebGLGlassOptions, 'backdrop'>> = {
 };
 
 const SIZES: Record<Look, { width: number; height: number }> = {
-  searchbox: { width: 420, height: 56 },
+  rim: { width: 420, height: 56 },
   lens: { width: 460, height: 160 },
 };
 
@@ -69,7 +69,7 @@ export default function WebGLDemo() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const glass = useRef<WebGLGlassHandle | null>(null);
-  const [look, setLook] = useState<Look>('searchbox');
+  const [look, setLook] = useState<Look>('rim');
   const [chroma, setChroma] = useState(0.01);
   const [blur, setBlur] = useState(1);
   const [tier, setTier] = useState('…');
@@ -152,8 +152,8 @@ export default function WebGLDemo() {
           output={tier}
           value={look}
           options={[
-            { value: 'searchbox', label: 'Search box (kube.io)' },
-            { value: 'lens', label: 'Thick lens (ybouane-like)' },
+            { value: 'rim', label: 'Crisp rim' },
+            { value: 'lens', label: 'Thick lens' },
           ]}
           onChange={setLook}
         />
@@ -170,7 +170,7 @@ export default function WebGLDemo() {
             onChange={(e) => setChroma(Number(e.target.value))}
           />
         </label>
-        {look === 'searchbox' && (
+        {look === 'rim' && (
           <label className="gm-demo-control">
             <span>
               Frost <output>{blur}px</output>

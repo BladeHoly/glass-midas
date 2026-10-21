@@ -13,7 +13,7 @@ export type SearchSource = (query: string) => SearchResult[] | Promise<SearchRes
 let uid = 0;
 
 /**
- * `<gm-search placeholder="Search docs" hotkey="k">`: kube.io's glass search box with a list of
+ * `<gm-search placeholder="Search docs" hotkey="k">`: a glass search box with a list of
  * results under it. Set its `source` to a function from query to results (static data,
  * Pagefind, an API). Picking a result fires a cancelable `gm-select` event; unless canceled,
  * the page navigates to the result's `href`.

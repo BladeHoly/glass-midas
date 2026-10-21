@@ -98,12 +98,12 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       const blur = options.blur ?? 'var(--gm-blur-md, 16px)';
       return setBackdrop(el, `blur(${blur}) saturate(var(--gm-saturation-md, 160%))`);
     }
-    // Refraction carries the look, so the frost stays light, as in kube.io's search box.
+    // Refraction carries the look, so the frost stays light.
     const tail = `blur(${options.blur ?? '1px'})`;
 
     const width = el.offsetWidth;
     const height = el.offsetHeight;
-    // Defaults reproduce the search box from kube.io's liquid glass article.
+    // Defaults: a crisp rim, a thin squircle bezel over 40 px of glass that folds the backdrop.
     const optics: LensOptics = {
       radius: options.radius ?? 18,
       bezel: options.bezel ?? 20,

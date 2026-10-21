@@ -78,7 +78,7 @@ export function lensProfile(
 /**
  * Builds the displacement map for a rounded rectangle. Red and green hold the
  * horizontal and vertical shift (128 = none). Blue is the rim light: a hairline 1.25 px inside
- * the edge, as bright as (n·L)² for the light direction, like kube.io's liquid glass. The
+ * the edge, as bright as (n·L)² for the light direction. The
  * renderer uses it as a mask for a saturated copy of the backdrop and a faint white line.
  * Pure: no DOM access, so it also runs on a server or in a worker.
  */
