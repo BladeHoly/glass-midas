@@ -3,6 +3,9 @@ import { act, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it } from 'vitest';
 import { StoreAnalytics } from './analytics/StoreAnalytics';
+import { CollectionGrid } from './collection/CollectionGrid';
+import { ProductPage } from './product/ProductPage';
+import { StoreHome } from './storefront/StoreHome';
 import { ProductCatalogue } from './catalogue/ProductCatalogue';
 import { StoreOverview } from './overview/StoreOverview';
 import { OrdersTable } from './orders/OrdersTable';
@@ -32,6 +35,9 @@ const react: Record<string, ComponentType> = {
   overview: StoreOverview,
   analytics: StoreAnalytics,
   status: ServiceStatus,
+  storefront: StoreHome,
+  collection: CollectionGrid,
+  product: ProductPage,
 };
 
 afterEach(() => {

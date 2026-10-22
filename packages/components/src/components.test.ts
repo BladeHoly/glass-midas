@@ -490,6 +490,28 @@ describe('gm-table', () => {
   });
 });
 
+describe('gm-quantity', () => {
+  it('steps the number within its limits, as typing would', () => {
+    const el = mount(
+      '<gm-quantity><input type="number" min="1" max="3" value="2" aria-label="Quantity"></gm-quantity>',
+    );
+    const input = el.querySelector('input')!;
+    const [less, more] = el.querySelectorAll<HTMLButtonElement>('.gm-quantity-step');
+    const seen: string[] = [];
+    input.addEventListener('change', () => seen.push(input.value));
+    more!.click();
+    expect(input.value).toBe('3');
+    expect(more!.disabled).toBe(true);
+    more!.click();
+    less!.click();
+    less!.click();
+    expect(input.value).toBe('1');
+    expect(less!.disabled).toBe(true);
+    expect(seen).toEqual(['3', '2', '1']);
+    expect(less!.getAttribute('aria-label')).toBe('One less');
+  });
+});
+
 describe('toast', () => {
   afterEach(() => vi.useRealTimers());
 

@@ -1,0 +1,24 @@
+---
+title: Collection
+description: Every piece, a collection or a search, filtered and sorted from the address.
+order: 31
+template: collection
+---
+
+Every piece, one collection, or what a search found, in a grid. The collection, the search and the
+sort live in the page's address, so a link shares exactly this view, and Back returns to the last
+one.
+
+<Template name="collection" />
+
+## Try it
+
+- Switch collection, or sort by price: the address follows, and Back undoes it.
+- Search the bar for `walnut` or `speaker`; search for something that doesn't exist to see the
+  empty state.
+
+## Details that matter
+
+- **The filters are a row of chips** that scrolls on a phone, and the sort is a
+  [select](/components/select/) whose list matches the page.
+- **The count says how many pieces are shown,** so a filter never leaves you wondering.

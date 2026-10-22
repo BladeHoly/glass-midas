@@ -17,21 +17,6 @@
   background: color-mix(in srgb, var(--on-bg) 72%, transparent);
 }
 
-.app-skip {
-  position: absolute;
-  top: var(--gm-space-sm);
-  left: var(--gm-space-sm);
-  z-index: 10;
-  padding: var(--gm-space-sm) var(--gm-space-lg);
-  border-radius: var(--gm-radius-pill);
-  background: var(--on-ink);
-  color: var(--on-bg) !important;
-  translate: 0 -200%;
-}
-.app-skip:focus {
-  translate: 0 0;
-}
-
 .app-side {
   position: sticky;
   top: 0;

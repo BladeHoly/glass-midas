@@ -22,6 +22,7 @@ const SHEETS = [
   'table',
   'badge',
   'stat',
+  'quantity',
   'nav',
   'search',
   'scrollbar',

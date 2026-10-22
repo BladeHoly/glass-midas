@@ -134,5 +134,53 @@
       "ChartsKit.tsx"
     ],
     "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
+  },
+  {
+    "name": "storefront",
+    "title": "Storefront",
+    "group": "Store",
+    "description": "The store's home: a hero over the art, the collections, the most listened to, and the figures.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/", "resonance-dark.webp"]
+  },
+  {
+    "name": "collection",
+    "title": "Collection",
+    "group": "Store",
+    "description": "Every piece, a collection or a search, filtered and sorted from the address.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "product",
+    "title": "Product",
+    "group": "Store",
+    "description": "Pictures that follow the finish and open large, stock in words, a quantity and one button to buy.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
   }
 ]
