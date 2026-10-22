@@ -35,6 +35,8 @@ inputs.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <label for="code">Enter the code we sent to ada@example.com</label>
 <gm-otp>
@@ -45,6 +47,8 @@ inputs.
 ```js
 document.querySelector('gm-otp').addEventListener('gm-complete', (e) => verify(e.detail.value));
 ```
+
+</CodePanel>
 
 It keeps only digits unless the input has `inputmode="text"`. Mark a wrong code with
 `aria-invalid="true"` on the input: every box gets the error ring.

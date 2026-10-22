@@ -54,6 +54,8 @@ document.getElementById('demo-open').addEventListener('click', () => dialog.show
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <gm-dialog id="confirm" heading="Delete this page?">
   <p>It goes to the trash.</p>
@@ -70,6 +72,8 @@ confirm.addEventListener('gm-close', (e) => {
   if (e.detail.value === 'delete') remove();
 });
 ```
+
+</CodePanel>
 
 Buttons in a `<form method="dialog">` close it with their `value`, no script needed. Escape
 closes it as `"cancel"`, and a click on the dimmed page as `"dismiss"`.

@@ -1,0 +1,54 @@
+---
+// The code that goes with a section, as one panel: a tab per block, named by its language, and
+// in step across the site (pick React once, see React everywhere). On wide screens the page moves
+// it into the right rail, next to the prose it belongs to; on narrow ones it stays in place.
+interface Props {
+  /** A name over the panel, like a file name. */
+  title?: string;
+  /** Tab names, in order; otherwise from each block's language. */
+  labels?: string[];
+}
+const { title, labels } = Astro.props;
+
+const html = await Astro.slots.render('default');
+const blocks = [...html.matchAll(/<gm-code>[\s\S]*?<\/gm-code>/g)].map((m) => m[0]);
+const LANGUAGE: Record<string, string> = {
+  html: 'HTML',
+  js: 'JS',
+  javascript: 'JS',
+  ts: 'TS',
+  typescript: 'TS',
+  tsx: 'React',
+  jsx: 'React',
+  css: 'CSS',
+  sh: 'Shell',
+  bash: 'Shell',
+  astro: 'Astro',
+  json: 'JSON',
+};
+const names: string[] = [];
+for (const [i, block] of blocks.entries()) {
+  const language = /data-language="([\w-]+)"/.exec(block)?.[1] ?? 'text';
+  let name = labels?.[i] ?? LANGUAGE[language] ?? language.toUpperCase();
+  // Two blocks of one language: the second is "JS 2", not a second "JS".
+  if (names.includes(name)) name = `${name} ${names.filter((n) => n.startsWith(name)).length + 1}`;
+  names.push(name);
+}
+---
+
+<div class="code-panel" data-rail>
+  {title && <p class="code-panel-title">{title}</p>}
+  {
+    blocks.length === 1 ? (
+      <Fragment set:html={blocks[0]} />
+    ) : (
+      <gm-tabs sync="code-language">
+        {blocks.map((block, i) => (
+          <gm-tab label={names[i]}>
+            <Fragment set:html={block} />
+          </gm-tab>
+        ))}
+      </gm-tabs>
+    )
+  }
+</div>

@@ -46,6 +46,8 @@ toast('Page deleted', { action: { label: 'Undo', onClick: () => toast('Restored'
 
 ## Usage
 
+<CodePanel>
+
 ```ts
 import { toast } from '@glass-midas/components';
 
@@ -56,6 +58,8 @@ toast('Page deleted', {
   duration: 6000,
 });
 ```
+
+</CodePanel>
 
 Toasts stack at the bottom center, newest last, three at most: a fourth pushes the oldest out.
 Their region is announced politely to screen readers, so the message is read without

@@ -47,6 +47,8 @@ holds a value and tells you when it changes.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <gm-segmented label="Mode" value="chat">
   <button value="chat">Chat</button>
@@ -59,6 +61,8 @@ const mode = document.querySelector('gm-segmented');
 mode.addEventListener('gm-change', (e) => console.log(e.detail.value)); // 'voice'
 mode.value = 'chat'; // moves the choice, no event
 ```
+
+</CodePanel>
 
 Options can hold an icon next to their text. An option with only an icon needs an `aria-label`.
 

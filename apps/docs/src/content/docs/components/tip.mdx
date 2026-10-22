@@ -55,20 +55,14 @@ a close button. Closed with `remember`, it stays closed.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <gm-tip heading="Search everything" remember="search-tip">
   <svg slot="icon">…</svg>
   <p>Press Ctrl K anywhere to search every page.</p>
 </gm-tip>
 ```
-
-Keep it to a heading and a sentence or two. Add a `.gm-tip-actions` row of
-[chips](/components/chip/) when the tip leads somewhere.
-
-### Next to an element
-
-With `anchor`, the tip floats next to the element with that id, with an arrow pointing at it,
-and follows it as the page scrolls:
 
 ```html
 <gm-button><button id="new-doc">New</button></gm-button>
@@ -77,6 +71,16 @@ and follows it as the page scrolls:
   <p>Create a page, or drop a file anywhere.</p>
 </gm-tip>
 ```
+
+</CodePanel>
+
+Keep it to a heading and a sentence or two. Add a `.gm-tip-actions` row of
+[chips](/components/chip/) when the tip leads somewhere.
+
+### Next to an element
+
+With `anchor`, the tip floats next to the element with that id, with an arrow pointing at it,
+and follows it as the page scrolls:
 
 ## Anatomy
 

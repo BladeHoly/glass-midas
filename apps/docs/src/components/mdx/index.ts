@@ -1,6 +1,7 @@
 import Callout from './Callout.astro';
 import Card from './Card.astro';
 import CardGrid from './CardGrid.astro';
+import CodePanel from './CodePanel.astro';
 import Demo from './Demo.astro';
 import Playground from './Playground.astro';
 import Pre from './Pre.astro';
@@ -14,6 +15,7 @@ export const mdxComponents = {
   Callout,
   Card,
   CardGrid,
+  CodePanel,
   Demo,
   Playground,
   Tab,

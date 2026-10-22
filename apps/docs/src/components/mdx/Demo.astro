@@ -2,7 +2,7 @@
 import { Code } from 'astro:components';
 
 interface Props {
-  /** The demo's markup: rendered live on a colorful stage, then shown as source. */
+  /** The demo's markup: rendered live on a colorful stage, its source folded under it. */
   html: string;
   height?: string;
   /** Lay the stage out as a column (start-aligned) instead of centering one item. */
@@ -42,5 +42,9 @@ const source = indent(html);
   <div class:list={['demo-stage', column && 'is-column', busy && 'is-busy']} style={`min-height: ${height}`}>
     <Fragment set:html={source} />
   </div>
-  <gm-code><Code code={source} lang="html" theme="vitesse-dark" /></gm-code>
+  <!-- The source is there when you want it, folded away when you don't. -->
+  <details class="demo-code">
+    <summary>Code</summary>
+    <gm-code><Code code={source} lang="html" theme="vitesse-dark" /></gm-code>
+  </details>
 </figure>

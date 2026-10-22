@@ -61,6 +61,8 @@ sits on a plain fill inside the page, with hairlines between rows and the number
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <gm-table stack>
   <table>
@@ -92,14 +94,6 @@ table.addEventListener('gm-selection', (e) => {
 });
 ```
 
-Load `css/table.css` and, for the checkboxes, `css/check.css`. Add `class="gm-num"` to number
-columns to line them up on the right.
-
-### In React
-
-`GlassTable` from `@glass-midas/react/data`. Rows are React's, so with `onSort` the table leaves
-them alone: sort your data in the handler.
-
 ```tsx
 <GlassTable
   stack
@@ -109,6 +103,16 @@ them alone: sort your data in the handler.
   <table>…</table>
 </GlassTable>
 ```
+
+</CodePanel>
+
+Load `css/table.css` and, for the checkboxes, `css/check.css`. Add `class="gm-num"` to number
+columns to line them up on the right.
+
+### In React
+
+`GlassTable` from `@glass-midas/react/data`. Rows are React's, so with `onSort` the table leaves
+them alone: sort your data in the handler.
 
 ## Best practices
 

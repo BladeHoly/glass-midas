@@ -26,12 +26,16 @@ while it's held. Like a [chip](/components/chip/), it sits inside glass.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <label for="volume">Volume</label>
 <gm-slider>
   <input id="volume" type="range" min="0" max="100" value="60" />
 </gm-slider>
 ```
+
+</CodePanel>
 
 Setting the value from code doesn't fire `input`, so call `slider.sync()` after it. In React,
 `GlassSlider` does that after every render.

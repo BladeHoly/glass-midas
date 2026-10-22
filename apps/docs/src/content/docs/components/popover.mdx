@@ -53,11 +53,15 @@ the browser's popover API, so it lives in the top layer, above everything, and a
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <button popovertarget="share">Share</button>
 
 <gm-popover id="share">…</gm-popover>
 ```
+
+</CodePanel>
 
 It sits below its button, centered on it and kept inside the window, and goes above when there's
 no room below. To open it from code, call `open()`; to float it next to an element that isn't its

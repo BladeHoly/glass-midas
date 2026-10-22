@@ -20,11 +20,13 @@ const i = order.findIndex((d) => d.id === doc.id);
 const prev = order[i - 1];
 const next = order[i + 1];
 const markdown = url(`/${doc.id}.md`);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const source = `https://github.com/BladeHoly/glass-midas/blob/main/apps/docs/src/content/docs/${doc.id}.mdx`;
 ---
 
-<Docs title={title} description={description} headings={headings} markdown={markdown}>
+<Docs title={title} description={description} markdown={markdown}>
   <article class="article">
+    <div class="article-main">
     <header class="page-head">
       {element && <p class="element">&lt;{element}&gt;</p>}
       <h1>{title}</h1>
@@ -72,7 +74,48 @@ const source = `https://github.com/BladeHoly/glass-midas/blob/main/apps/docs/src
         )
       }
     </nav>
+    </div>
+
+    <!-- The right rail: where you are on the page, and the code that goes with it. -->
+    <aside class="rail" aria-label="On this page" data-pagefind-ignore>
+      {
+        toc.length > 1 && (
+          <div class="rail-toc">
+            <p>On this page</p>
+            <gm-nav orientation="vertical" variant="lite" spy>
+              {toc.map((h) => (
+                <a href={`#${h.slug}`} class:list={[h.depth === 3 && 'is-sub']}>
+                  {h.text}
+                </a>
+              ))}
+            </gm-nav>
+          </div>
+        )
+      }
+      <div class="rail-code"></div>
+    </aside>
   </article>
+  <script is:inline>
+    // Wide screens: the page's code panels move into the rail, beside the prose; narrow ones put
+    // them back where they were written. Inline, so they move before the first paint.
+    (() => {
+      const rail = document.querySelector('.rail-code');
+      const panels = [...document.querySelectorAll('.code-panel[data-rail]')];
+      if (!rail || !panels.length) return;
+      const homes = panels.map((p) => {
+        const mark = document.createComment('code-panel');
+        p.before(mark);
+        return mark;
+      });
+      const wide = matchMedia('(min-width: 80rem)');
+      const place = () => {
+        panels.forEach((p, i) => (wide.matches ? rail.append(p) : homes[i].after(p)));
+        document.documentElement.classList.toggle('has-rail-code', wide.matches);
+      };
+      place();
+      wide.addEventListener('change', place);
+    })();
+  </script>
 </Docs>
 
 <script>
