@@ -6,14 +6,7 @@ import type {
   TableSelectionDetail,
   TableSortDetail,
 } from '@glass-midas/components';
-import {
-  Children,
-  createElement,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react';
+import { Children, createElement, forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import { wrap, type Base } from './wrap.js';
 
 // Data: tables, pictures, and what goes in them. Badges, avatars, skeletons, pagination, prices,

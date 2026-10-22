@@ -599,7 +599,9 @@ describe('gm-upload', () => {
     const el = mount<GmUpload>(
       '<gm-upload max-size="1 KB" max-files="2"><input type="file" accept="image/*" multiple></gm-upload>',
     );
-    expect(el.querySelector('.gm-upload-zone small')!.textContent).toBe('Up to 1 KB each, 2 at most');
+    expect(el.querySelector('.gm-upload-zone small')!.textContent).toBe(
+      'Up to 1 KB each, 2 at most',
+    );
     const rejected: string[] = [];
     el.addEventListener('gm-reject', (e) => {
       const { file, reason } = (e as CustomEvent).detail;
