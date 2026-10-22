@@ -6,7 +6,13 @@ import '../../../templates/dist/shared/ondine.css';
 import '../../../templates/dist/shared/auth.css';
 import '../../../templates/dist/shared/app.css';
 import '../../../templates/src/catalogue/catalogue.css';
+import '../../../templates/dist/shared/charts.css';
+import '../../../templates/dist/shared/dashboard.css';
+import '../../../templates/src/status/status.css';
 import '../../../templates/src/split-sign-in/split-sign-in.css';
+import { StoreAnalytics } from '../../../templates/src/analytics/StoreAnalytics';
+import { StoreOverview } from '../../../templates/src/overview/StoreOverview';
+import { ServiceStatus } from '../../../templates/src/status/ServiceStatus';
 import { ProductCatalogue } from '../../../templates/src/catalogue/ProductCatalogue';
 import { OrdersTable } from '../../../templates/src/orders/OrdersTable';
 import { ResetPassword } from '../../../templates/src/reset-password/ResetPassword';
@@ -29,6 +35,9 @@ const templates = {
   'split-sign-in': SplitSignIn,
   orders: OrdersTable,
   catalogue: ProductCatalogue,
+  overview: StoreOverview,
+  analytics: StoreAnalytics,
+  status: ServiceStatus,
 };
 const Template = templates[(params.get('t') ?? 'sign-in') as keyof typeof templates] ?? SignIn;
 createRoot(document.getElementById('root')!).render(<Template />);

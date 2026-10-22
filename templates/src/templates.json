@@ -74,5 +74,65 @@
       "sigil-thread.svg",
       "sigil-vesper.svg"
     ]
+  },
+  {
+    "name": "overview",
+    "title": "Overview",
+    "group": "Dashboards",
+    "description": "Four numbers against the period before, revenue over time, best sellers, latest orders and low stock.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "app.css",
+      "charts.css",
+      "dashboard.css",
+      "app.js",
+      "charts.js",
+      "data.js",
+      "store.js",
+      "AppKit.tsx",
+      "ChartsKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
+  },
+  {
+    "name": "analytics",
+    "title": "Analytics",
+    "group": "Dashboards",
+    "description": "Revenue by collection, the path from visit to order, channels and cities.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "app.css",
+      "charts.css",
+      "dashboard.css",
+      "app.js",
+      "charts.js",
+      "data.js",
+      "store.js",
+      "AppKit.tsx",
+      "ChartsKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
+  },
+  {
+    "name": "status",
+    "title": "Status",
+    "group": "Dashboards",
+    "description": "Every service in a word and a color, response time against its budget, and incidents as threads.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "app.css",
+      "charts.css",
+      "dashboard.css",
+      "app.js",
+      "charts.js",
+      "data.js",
+      "store.js",
+      "AppKit.tsx",
+      "ChartsKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
   }
 ]

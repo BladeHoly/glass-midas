@@ -1,0 +1,111 @@
+/*
+ * Dashboards: one row of filters above everything they scope, a row of numbers, then cards on a
+ * grid. Cards are content, not glass: plain panels like the tables'.
+ */
+.dash {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.dash-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm) var(--gm-space-lg);
+}
+.dash-filters p {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--gm-space-md);
+}
+.dash-kpis .gm-stat {
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.dash-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--gm-space-lg);
+  align-items: start;
+}
+.dash-grid.is-even {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.dash-card {
+  display: grid;
+  gap: var(--gm-space-md);
+  min-width: 0;
+  padding: var(--gm-space-lg) var(--gm-space-xl) var(--gm-space-xl);
+}
+.dash-card > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+}
+.dash-card h2 {
+  margin: 0;
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.dash-card header a,
+.dash-card header p {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+/* While a range reloads, the numbers stay and dim: no jump, no flash. */
+.dash[aria-busy='true'] :is(.gm-stat, .dash-card) {
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+
+/* A short list in a card: a row per item, the value at the end. */
+.dash-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dash-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  min-height: 3rem;
+  border-top: 1px solid var(--on-line);
+  font-size: var(--gm-text-sm);
+}
+.dash-list li:first-child {
+  border-top: 0;
+}
+.dash-list li > :last-child {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+.dash-list small {
+  display: block;
+  color: var(--on-ink-muted);
+}
+
+@media (max-width: 64rem) {
+  .dash-grid,
+  .dash-grid.is-even {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 48rem) {
+  .dash-card {
+    padding: var(--gm-space-md) var(--gm-space-lg) var(--gm-space-lg);
+  }
+}
+
+/* A control inside a card sits at its start, and scrolls if it's wider than the card. */
+.dash-card > gm-segmented {
+  justify-self: start;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}

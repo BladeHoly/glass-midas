@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Overview · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="charts.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+    <!-- The script imports the components by name (for toast()); this says where they come from. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@glass-midas/components": "https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+        }
+      }
+    </script>
+    <script type="module" src="overview.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-tide" aria-hidden="true"></div>
+    <div class="app">
+      <a class="app-skip" href="#main">Skip to content</a>
+
+      <aside class="app-side">
+        <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+        <gm-nav class="app-nav" orientation="vertical" material="frost" aria-label="Main">
+          <a href="#" aria-current="page">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="7" height="9" rx="2" />
+              <rect x="14" y="3" width="7" height="5" rx="2" />
+              <rect x="14" y="12" width="7" height="9" rx="2" />
+              <rect x="3" y="16" width="7" height="5" rx="2" />
+            </svg>
+            Overview
+          </a>
+          <a href="orders.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" />
+              <path d="M9 8h6M9 12h6" />
+            </svg>
+            Orders
+          </a>
+          <a href="catalogue.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z" />
+              <path d="m4 7.5 8 4.5 8-4.5M12 12v9" />
+            </svg>
+            Products
+          </a>
+          <a href="analytics.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+            </svg>
+            Analytics
+          </a>
+          <a href="status.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12h4l3-8 4 16 3-8h4" />
+            </svg>
+            Status
+          </a>
+        </gm-nav>
+        <div class="app-me">
+          <span class="gm-avatar" aria-hidden="true">NH</span>
+          <span>Noor Haddad<small>Studio manager</small></span>
+        </div>
+      </aside>
+
+      <div class="app-body">
+        <header class="app-top">
+          <a class="on-brand app-top-brand" href="/"
+            ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+          >
+          <div>
+            <h1>Overview</h1>
+            <p>How the store is doing, against the period before.</p>
+          </div>
+          <div class="app-actions">
+            <gm-search
+              material="frost"
+              placeholder="Search Ondine"
+              hotkey="k"
+              label="Search Ondine"
+            ></gm-search>
+          </div>
+        </header>
+
+        <main id="main" class="app-main">
+          <div class="dash" id="dash" aria-busy="true">
+            <div class="dash-filters">
+              <gm-segmented id="range" value="30" label="Period">
+                <button value="7">7 days</button>
+                <button value="30">30 days</button>
+                <button value="90">90 days</button>
+                <button value="365">12 months</button>
+              </gm-segmented>
+              <p id="compared" aria-live="polite"></p>
+            </div>
+            <section class="dash-kpis" aria-label="Key numbers" id="kpis">
+              <article class="gm-stat" aria-hidden="true">
+                <span class="gm-skeleton gm-skeleton-text" style="width: 45%"></span
+                ><span class="gm-skeleton" style="width: 60%; height: 2rem"></span
+                ><span class="gm-skeleton gm-skeleton-text" style="width: 70%"></span>
+              </article>
+              <article class="gm-stat" aria-hidden="true">
+                <span class="gm-skeleton gm-skeleton-text" style="width: 45%"></span
+                ><span class="gm-skeleton" style="width: 60%; height: 2rem"></span
+                ><span class="gm-skeleton gm-skeleton-text" style="width: 70%"></span>
+              </article>
+              <article class="gm-stat" aria-hidden="true">
+                <span class="gm-skeleton gm-skeleton-text" style="width: 45%"></span
+                ><span class="gm-skeleton" style="width: 60%; height: 2rem"></span
+                ><span class="gm-skeleton gm-skeleton-text" style="width: 70%"></span>
+              </article>
+              <article class="gm-stat" aria-hidden="true">
+                <span class="gm-skeleton gm-skeleton-text" style="width: 45%"></span
+                ><span class="gm-skeleton" style="width: 60%; height: 2rem"></span
+                ><span class="gm-skeleton gm-skeleton-text" style="width: 70%"></span>
+              </article>
+            </section>
+            <div class="dash-grid">
+              <section class="app-panel dash-card" aria-labelledby="revenue-title">
+                <header><h2 id="revenue-title">Revenue</h2></header>
+                <div id="revenue" style="min-height: 17rem"></div>
+              </section>
+              <section class="app-panel dash-card" aria-labelledby="best-title">
+                <header>
+                  <h2 id="best-title">Best sellers</h2>
+                  <p>by revenue</p>
+                </header>
+                <div id="best"></div>
+              </section>
+            </div>
+            <div class="dash-grid is-even">
+              <section class="app-panel dash-card" aria-labelledby="recent-title">
+                <header>
+                  <h2 id="recent-title">Latest orders</h2>
+                  <a href="orders.html">All orders</a>
+                </header>
+                <ul class="dash-list" id="recent"></ul>
+              </section>
+              <section class="app-panel dash-card" aria-labelledby="low-title">
+                <header>
+                  <h2 id="low-title">Running low</h2>
+                  <a href="catalogue.html">Products</a>
+                </header>
+                <ul class="dash-list" id="low"></ul>
+              </section>
+            </div>
+            <div class="app-empty app-panel" id="error" role="alert" hidden>
+              <span class="on-sigil" aria-hidden="true"></span>
+              <h2>The numbers didn't load</h2>
+              <p id="error-message"></p>
+              <button class="gm-chip gm-chip-primary" type="button" data-action="retry">
+                Try again
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

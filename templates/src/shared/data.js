@@ -270,10 +270,13 @@ export const orders = (() => {
   const rand = random(7);
   const pick = (/** @type {any[]} */ list) => list[Math.floor(rand() * list.length)];
   const today = new Date(`${TODAY}T12:00:00Z`);
-  return Array.from({ length: 214 }, (_, i) => {
-    const number = 1214 - i;
-    // Newer orders first, a few a day; the newest are still waiting to ship.
-    const date = new Date(today.getTime() - Math.floor(i * 0.42 + rand() * 0.4) * 86400000);
+  const COUNT = 900;
+  let daysBack = 0;
+  return Array.from({ length: COUNT }, (_, i) => {
+    const number = 1000 + COUNT - i;
+    // Newer orders first, a few a day; the store has grown, so orders thin out going back.
+    daysBack += 0.3 * (1 + (i / COUNT) * 0.9) * (0.4 + rand() * 1.2);
+    const date = new Date(today.getTime() - Math.floor(daysBack) * 86400000);
     const lines = Array.from({ length: 1 + Math.floor(rand() ** 2 * 3) }, () => {
       const p = rand() < 0.3 ? pick(products.slice(5)) : pick(products);
       return {
@@ -290,12 +293,12 @@ export const orders = (() => {
         ? roll < 0.5
           ? 'pending'
           : 'paid'
-        : roll < 0.08
-          ? 'refunded'
-          : roll < 0.12
-            ? 'cancelled'
-            : roll < 0.2
-              ? 'paid'
+        : i < 24 && roll < 0.5
+          ? 'paid'
+          : roll < 0.07
+            ? 'refunded'
+            : roll < 0.1
+              ? 'cancelled'
               : 'fulfilled';
     return {
       id: `o${number}`,
@@ -308,6 +311,23 @@ export const orders = (() => {
       channel: rand() < 0.82 ? 'Online' : 'Studio',
     };
   });
+})();
+
+/** Visits to the store per day, for the last year: conversion is orders over visits. */
+export const visits = (() => {
+  const rand = random(19);
+  /** @type {Record<string, number>} */
+  const out = {};
+  const today = Date.parse(`${TODAY}T12:00:00Z`);
+  for (let d = 0; d < 400; d++) {
+    const date = new Date(today - d * 86400000);
+    const weekend = [0, 6].includes(date.getUTCDay()) ? 1.25 : 1;
+    // More visits lately, more on weekends, and some days just busier.
+    out[date.toISOString().slice(0, 10)] = Math.round(
+      (150 - d * 0.18) * weekend * (0.8 + rand() * 0.4),
+    );
+  }
+  return out;
 })();
 
 /** How each status reads, and its badge's tone. */
@@ -349,3 +369,120 @@ export const initials = (name) =>
     .map((w) => w[0])
     .join('')
     .slice(0, 2);
+
+/**
+ * The store's services, for the status dashboard: each one's state, its uptime over 30 days, and
+ * its response time every hour of the last day (ms, the 95th percentile).
+ * @typedef {'operational' | 'degraded' | 'down'} ServiceState
+ * @typedef {{ id: string, name: string, state: ServiceState, uptime: number, latency: number[], budget: number }} Service
+ */
+/** @type {Service[]} */
+export const services = (() => {
+  const rand = random(23);
+  const series = (base, spikeAt = -1) =>
+    Array.from({ length: 24 }, (_, h) => {
+      const daily = 1 + 0.35 * Math.sin(((h - 8) / 24) * Math.PI * 2);
+      const spike =
+        spikeAt >= 0 && Math.abs(h - spikeAt) < 2 ? 2.6 - Math.abs(h - spikeAt) * 0.7 : 1;
+      return Math.round(base * daily * spike * (0.9 + rand() * 0.2));
+    });
+  return [
+    {
+      id: 'storefront',
+      name: 'Storefront',
+      state: 'operational',
+      uptime: 99.98,
+      latency: series(180),
+      budget: 400,
+    },
+    {
+      id: 'checkout',
+      name: 'Checkout',
+      state: 'degraded',
+      uptime: 99.71,
+      latency: series(320, 19),
+      budget: 600,
+    },
+    {
+      id: 'payments',
+      name: 'Payments',
+      state: 'operational',
+      uptime: 99.95,
+      latency: series(260),
+      budget: 600,
+    },
+    {
+      id: 'search',
+      name: 'Search',
+      state: 'operational',
+      uptime: 99.99,
+      latency: series(90),
+      budget: 250,
+    },
+    {
+      id: 'email',
+      name: 'Order email',
+      state: 'operational',
+      uptime: 99.9,
+      latency: series(140),
+      budget: 800,
+    },
+  ];
+})();
+
+/**
+ * What went wrong lately, newest first.
+ * @typedef {{ id: string, service: string, title: string, severity: 'minor' | 'major', state: 'investigating' | 'monitoring' | 'resolved', started: string, updates: { at: string, text: string }[] }} Incident
+ */
+/** @type {Incident[]} */
+export const incidents = [
+  {
+    id: 'i42',
+    service: 'checkout',
+    title: 'Slow card payments at checkout',
+    severity: 'minor',
+    state: 'monitoring',
+    started: `${TODAY}T18:40:00Z`,
+    updates: [
+      {
+        at: `${TODAY}T20:05:00Z`,
+        text: 'A fix is out; payments are back under a second. Watching it.',
+      },
+      {
+        at: `${TODAY}T19:10:00Z`,
+        text: 'Traced to the card provider’s eastern region. Rerouting.',
+      },
+      {
+        at: `${TODAY}T18:40:00Z`,
+        text: 'Card payments take up to 3 seconds. Orders still go through.',
+      },
+    ],
+  },
+  {
+    id: 'i41',
+    service: 'email',
+    title: 'Order emails delayed',
+    severity: 'minor',
+    state: 'resolved',
+    started: '2026-10-14T09:15:00Z',
+    updates: [
+      { at: '2026-10-14T10:02:00Z', text: 'All delayed emails sent. Resolved.' },
+      { at: '2026-10-14T09:15:00Z', text: 'Confirmation emails arrive up to 40 minutes late.' },
+    ],
+  },
+  {
+    id: 'i40',
+    service: 'storefront',
+    title: 'Storefront down for 6 minutes',
+    severity: 'major',
+    state: 'resolved',
+    started: '2026-09-30T02:11:00Z',
+    updates: [
+      {
+        at: '2026-09-30T02:17:00Z',
+        text: 'Rolled back a release that broke product pages. Resolved.',
+      },
+      { at: '2026-09-30T02:11:00Z', text: 'The store doesn’t load.' },
+    ],
+  },
+];

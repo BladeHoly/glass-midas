@@ -2,10 +2,13 @@ import fs from 'node:fs';
 import { act, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it } from 'vitest';
+import { StoreAnalytics } from './analytics/StoreAnalytics';
 import { ProductCatalogue } from './catalogue/ProductCatalogue';
+import { StoreOverview } from './overview/StoreOverview';
 import { OrdersTable } from './orders/OrdersTable';
 import { ResetPassword } from './reset-password/ResetPassword';
 import { SignIn } from './sign-in/SignIn';
+import { ServiceStatus } from './status/ServiceStatus';
 import { SignUp } from './sign-up/SignUp';
 import { SplitSignIn } from './split-sign-in/SplitSignIn';
 
@@ -26,6 +29,9 @@ const react: Record<string, ComponentType> = {
   'split-sign-in': SplitSignIn,
   orders: OrdersTable,
   catalogue: ProductCatalogue,
+  overview: StoreOverview,
+  analytics: StoreAnalytics,
+  status: ServiceStatus,
 };
 
 afterEach(() => {
