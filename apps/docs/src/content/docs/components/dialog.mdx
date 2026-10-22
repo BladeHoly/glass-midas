@@ -8,9 +8,9 @@ attributes:
     type: string
     description: Its title, which also names it for screen readers.
   - name: placement
-    type: "'center' | 'bottom'"
+    type: "'center' | 'bottom' | 'end' | 'start'"
     default: center
-    description: bottom makes it a sheet that rises from the bottom edge.
+    description: bottom makes it a sheet that rises from the bottom edge; end and start, a drawer down that side, full height and scrolling inside (a cart, filters).
   - name: material
     type: "'clear' | 'frost'"
     default: frost
@@ -90,6 +90,8 @@ closes it as `"cancel"`, and a click on the dimmed page as `"dismiss"`.
 - **Say what happens** on the buttons ("Delete", not "OK"), and keep the safe one first.
 - **Don't stack dialogs.** A choice that leads to another belongs on one page.
 - **A sheet for phones:** `placement="bottom"` is easier to reach with a thumb.
+- **A drawer for what goes with the page:** a cart, filters, a record's detail. `placement="end"`
+  keeps the page in view beside it.
 
 ## Examples
 
@@ -110,5 +112,30 @@ closes it as `"cancel"`, and a click on the dimmed page as `"dismiss"`.
 await customElements.whenDefined('gm-dialog');
 const sheet = document.getElementById('demo-sheet');
 document.getElementById('demo-sheet-open').addEventListener('click', () => sheet.show());
+</script>`}
+/>
+
+### A drawer
+
+<Demo
+  busy
+  height="12rem"
+  html={`<gm-button><button id="demo-drawer-open">Filters</button></gm-button>
+<gm-dialog id="demo-drawer" heading="Filters" placement="end">
+<fieldset style="display: grid; gap: 0.5rem; margin: 0.8rem 0 0; padding: 0; border: 0">
+<legend style="margin-bottom: 0.4rem">Collection</legend>
+<label class="gm-check-label"><input type="checkbox" class="gm-check" checked> Listen</label>
+<label class="gm-check-label"><input type="checkbox" class="gm-check"> Room</label>
+<label class="gm-check-label"><input type="checkbox" class="gm-check"> Ritual</label>
+</fieldset>
+<form method="dialog">
+<button class="gm-chip gm-chip-plain" value="clear">Clear</button>
+<button class="gm-chip gm-chip-primary" value="apply">Show 12 pieces</button>
+</form>
+</gm-dialog>
+<script type="module">
+await customElements.whenDefined('gm-dialog');
+const drawer = document.getElementById('demo-drawer');
+document.getElementById('demo-drawer-open').addEventListener('click', () => drawer.show());
 </script>`}
 />

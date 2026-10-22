@@ -1,0 +1,87 @@
+---
+title: Steps and timeline
+label: Steps
+description: Where a process is, as a track, and what happened, with when. CSS only.
+order: 7.3
+element: .gm-steps
+attributes:
+  - name: class="gm-steps"
+    description: On an `<ol>`. Each `<li>` is a step; a `<small>` in it is a quieter note, like a date.
+  - name: (on a step) data-state
+    type: '"done" | "problem"'
+    description: Done fills the dot and the line after it; problem colors the dot as danger.
+  - name: (on a step) aria-current="step"
+    description: Where the process is now. A ringed dot, in bold.
+  - name: (on the list) data-orientation
+    type: '"horizontal" | "vertical"'
+    description: Across by default, stacked on narrow screens. Set it to keep one of them.
+  - name: class="gm-timeline"
+    description: On an `<ol>`. Each `<li>` holds a `<time>` and what happened.
+  - name: (on an event) data-tone
+    type: '"info" | "success" | "warning" | "danger"'
+    description: Colors its dot, when the event means something.
+  - name: class="gm-timeline-note"
+    description: A note someone wrote, on a light fill.
+---
+
+**Steps** show where a process is: an order from placed to delivered, a return from requested to
+refunded, a wizard. Done steps fill with the ink and the current one is ringed. **A timeline** is
+what happened, each event with its time: an order's history, with the notes the team left.
+
+<Demo
+  busy
+  height="28rem"
+  html={`<gm-surface material="frost" radius="24" style="display: grid; gap: 1.6rem; width: min(100%, 34rem); padding: 1.4rem; border-radius: 24px">
+<ol class="gm-steps">
+<li data-state="done">Ordered<small>Oct 18</small></li>
+<li data-state="done">Packed<small>Oct 19</small></li>
+<li aria-current="step">On its way<small>Arrives Oct 22</small></li>
+<li>Delivered</li>
+</ol>
+<ol class="gm-timeline">
+<li data-tone="info"><time datetime="2026-10-19T09:12">Oct 19, 09:12</time><p>Handed to the carrier, tracking LX 4829 1102</p></li>
+<li><time datetime="2026-10-18T16:40">Oct 18, 16:40</time><p>Ines left a note</p><p class="gm-timeline-note">Gift wrap, and no prices in the box.</p></li>
+<li data-tone="success"><time datetime="2026-10-18T16:02">Oct 18, 16:02</time><p>Paid $449.00 by card</p></li>
+</ol>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<ol class="gm-steps" aria-label="Order progress">
+  <li data-state="done">Ordered<small>Oct 18</small></li>
+  <li aria-current="step">On its way<small>Arrives Oct 22</small></li>
+  <li>Delivered</li>
+</ol>
+
+<ol class="gm-timeline">
+  <li data-tone="success">
+    <time datetime="2026-10-18T16:02">Oct 18, 16:02</time>
+    <p>Paid $449.00 by card</p>
+  </li>
+</ol>
+```
+
+</CodePanel>
+
+Both are in `css/steps.css`.
+
+## Best practices
+
+- **Name the list** (`aria-label="Order progress"`): `aria-current="step"` then reads as "current
+  step".
+- **Give the next step a date** when you know it ("Arrives Oct 22"): it's the question people
+  came with.
+- **Keep the tones for events that mean something:** a payment, a refund, a problem. Most events
+  stay gray.
+
+## Theming
+
+| Property          | Use                                         |
+| ----------------- | ------------------------------------------- |
+| `--gm-steps-fill` | Done steps and the line between them (ink). |
+| `--gm-steps-dot`  | The dot's size.                             |
+| `--gm-status-*`   | The timeline's tones.                       |

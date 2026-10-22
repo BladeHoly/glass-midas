@@ -1,6 +1,6 @@
 ---
 title: Slider
-description: A range for inside glass, filled up to its value, on the native range input.
+description: A range for inside glass, filled up to its value, or between two, on the native range input.
 order: 6.2
 element: gm-slider
 attributes:
@@ -39,6 +39,54 @@ while it's held. Like a [chip](/components/chip/), it sits inside glass.
 
 Setting the value from code doesn't fire `input`, so call `slider.sync()` after it. In React,
 `GlassSlider` does that after every render.
+
+### A range
+
+Put two inputs inside, with the same `min`, `max` and `step`, and it's a range: the fill runs
+between the knobs, and neither knob passes the other. Label each one, since they're two controls.
+
+<Demo
+  busy
+  height="11rem"
+  html={`<gm-surface material="frost" radius="22" style="width: min(100%, 20rem); padding: 1rem 1.1rem; border-radius: 22px">
+<p id="demo-price-label" style="margin: 0 0 0.4rem">Price, <output id="demo-price-out">$200 – $900</output></p>
+<gm-slider id="demo-price"><input type="range" min="0" max="1400" step="50" value="200" aria-label="Lowest price"><input type="range" min="0" max="1400" step="50" value="900" aria-label="Highest price"></gm-slider>
+</gm-surface>
+<script type="module">
+const range = document.getElementById('demo-price');
+range.addEventListener('input', () => {
+  const [low, high] = range.querySelectorAll('input');
+  document.getElementById('demo-price-out').textContent = '$' + low.value + ' – $' + high.value;
+});
+</script>`}
+/>
+
+<CodePanel>
+
+```html
+<gm-slider>
+  <input
+    type="range"
+    name="min"
+    min="0"
+    max="1400"
+    step="50"
+    value="200"
+    aria-label="Lowest price"
+  />
+  <input
+    type="range"
+    name="max"
+    min="0"
+    max="1400"
+    step="50"
+    value="900"
+    aria-label="Highest price"
+  />
+</gm-slider>
+```
+
+</CodePanel>
 
 ## Theming
 

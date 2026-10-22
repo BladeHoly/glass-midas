@@ -1,0 +1,57 @@
+---
+title: Accordion
+description: Native details and summary, with hairlines, a turning chevron and a sliding open. CSS only.
+order: 7.4
+element: .gm-accordion
+attributes:
+  - name: class="gm-accordion"
+    description: Around the `<details>` elements.
+  - name: (on each details) name
+    description: The same name on all of them, and only one stays open at a time (the browser does it).
+  - name: (on each details) open
+    description: Open to start with.
+---
+
+An accordion is a stack of `<details>`: the browser brings the keyboard, find-in-page (a search
+opens the section that holds the match) and, with a shared `name`, one-at-a-time. The class draws
+hairlines between them and a chevron that turns, and where the browser can animate to an auto
+height, the content slides open.
+
+<Demo
+  busy
+  height="20rem"
+  html={`<gm-surface material="frost" radius="24" style="width: min(100%, 28rem); padding: 0.2rem 1.3rem; border-radius: 24px">
+<div class="gm-accordion">
+<details name="demo-faq" open><summary>Specifications</summary><p>50 mm beryllium drivers, 40 hours a charge, 310 g.</p></details>
+<details name="demo-faq"><summary>In the box</summary><p>The headphones, a case, a USB-C cable and a 3.5 mm cable.</p></details>
+<details name="demo-faq"><summary>Shipping and returns</summary><p>Free over $150. Send it back within 60 days for a full refund.</p></details>
+</div>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<div class="gm-accordion">
+  <details name="faq" open>
+    <summary>Specifications</summary>
+    <p>50 mm beryllium drivers, 40 hours a charge, 310 g.</p>
+  </details>
+  <details name="faq">
+    <summary>Shipping and returns</summary>
+    <p>Free over $150. Send it back within 60 days.</p>
+  </details>
+</div>
+```
+
+</CodePanel>
+
+It's in `css/accordion.css`. The slide needs `interpolate-size` and `::details-content`; elsewhere
+the section opens at once, and with reduced motion it always does.
+
+## Best practices
+
+- **Leave the first section open** when it holds what most people came for.
+- **Don't hide the price or the main button** in one: an accordion is for detail.

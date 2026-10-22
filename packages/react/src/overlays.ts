@@ -25,11 +25,14 @@ export const GlassMenu = wrap<
   GmMenu
 >('gm-menu', [], { onSelect: 'gm-select' });
 
-/** `<gm-dialog>`: a modal of frosted glass; `placement="bottom"` for a sheet. Open it with `ref.current.show()`. */
+/**
+ * `<gm-dialog>`: a modal of frosted glass; `placement="bottom"` for a sheet, `"end"` or `"start"`
+ * for a drawer down that side. Open it with `ref.current.show()`.
+ */
 export const GlassDialog = wrap<
   {
     heading?: string;
-    placement?: 'center' | 'bottom';
+    placement?: 'center' | 'bottom' | 'end' | 'start';
     /** It closed: `detail.value` is the button's value, `"cancel"` (Escape) or `"dismiss"`. */
     onClose?: (e: CustomEvent<{ value: string }>) => void;
   },

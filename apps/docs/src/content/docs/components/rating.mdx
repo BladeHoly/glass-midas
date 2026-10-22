@@ -1,0 +1,78 @@
+---
+title: Rating
+description: Five stars filled to any value, and five radios to give one. CSS only.
+order: 7.2
+element: .gm-rating
+attributes:
+  - name: class="gm-rating"
+    description: On a span with `role="img"` and an `aria-label` that says the value in words.
+  - name: --gm-rating
+    type: number
+    description: The value, 0 to 5. Fractions fill part of a star.
+  - name: class="gm-rating-input"
+    description: On a `<fieldset>` of five radios, values 1 to 5 in order, each with an `aria-label`.
+---
+
+Stars, two ways. **To show** a rating, a span filled to a value: 4.6 fills four stars and most of
+the fifth. **To give** one, five radios: the checked star and those before it fill, and hovering
+previews. The size follows the font in both.
+
+<Demo
+  busy
+  height="13rem"
+  html={`<gm-surface material="frost" radius="24" style="display: grid; gap: 1rem; padding: 1.2rem; border-radius: 24px">
+<p style="display: flex; align-items: center; gap: 0.5rem; margin: 0"><span class="gm-rating" style="--gm-rating: 4.6" role="img" aria-label="4.6 out of 5"></span><span>4.6 · 128 reviews</span></p>
+<fieldset class="gm-rating-input">
+<legend>Your rating</legend>
+<input type="radio" name="demo-stars" value="1" aria-label="1 star">
+<input type="radio" name="demo-stars" value="2" aria-label="2 stars">
+<input type="radio" name="demo-stars" value="3" aria-label="3 stars">
+<input type="radio" name="demo-stars" value="4" aria-label="4 stars" checked>
+<input type="radio" name="demo-stars" value="5" aria-label="5 stars">
+</fieldset>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<span class="gm-rating" style="--gm-rating: 4.6" role="img" aria-label="4.6 out of 5"></span>
+
+<fieldset class="gm-rating-input">
+  <legend>Your rating</legend>
+  <input type="radio" name="stars" value="1" aria-label="1 star" required />
+  <input type="radio" name="stars" value="2" aria-label="2 stars" />
+  <input type="radio" name="stars" value="3" aria-label="3 stars" />
+  <input type="radio" name="stars" value="4" aria-label="4 stars" />
+  <input type="radio" name="stars" value="5" aria-label="5 stars" />
+</fieldset>
+```
+
+```tsx
+<span
+  className="gm-rating"
+  style={{ '--gm-rating': average } as React.CSSProperties}
+  role="img"
+  aria-label={`${average} out of 5`}
+/>
+```
+
+</CodePanel>
+
+Both are in `css/rating.css`. In forced colors mode the stars draw in the text color.
+
+## Best practices
+
+- **Show the count beside the stars.** 4.9 from 3 reviews means less than 4.6 from 300.
+- **Make `required` the first radio** when a review needs stars, so the form says so before it's
+  sent.
+
+## Theming
+
+| Property            | Use                              |
+| ------------------- | -------------------------------- |
+| `--gm-rating-fill`  | The filled stars (the ink).      |
+| `--gm-rating-empty` | The empty ones.                  |
+| `--gm-rating-size`  | The input's star size (1.75rem). |

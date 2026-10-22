@@ -5,28 +5,47 @@ import { Base, define } from './base.js';
  * track, filled up to its value, with a knob that stretches while held. The native input does the
  * work (keyboard, forms, screen readers); this paints the fill. It isn't glass: like a chip, it
  * sits inside glass.
+ *
+ * With two inputs inside (same `min`, `max` and `step`; label each), it's a range from one to
+ * the other, like a price filter: the fill runs between the knobs, and neither knob passes the
+ * other.
  */
 export class GmSlider extends Base {
-  #input: HTMLInputElement | null = null;
+  #inputs: HTMLInputElement[] = [];
 
   connectedCallback() {
-    this.#input = this.querySelector('input[type="range"]');
-    this.#input?.addEventListener('input', this.sync);
+    this.#inputs = [...this.querySelectorAll<HTMLInputElement>(':scope > input[type="range"]')];
+    this.toggleAttribute('data-range', this.#inputs.length > 1);
+    for (const input of this.#inputs) input.addEventListener('input', this.#onInput);
     this.sync();
   }
 
   disconnectedCallback() {
-    this.#input?.removeEventListener('input', this.sync);
+    for (const input of this.#inputs) input.removeEventListener('input', this.#onInput);
   }
 
-  /** Repaints the fill; call it after setting the input's value from code. */
+  #onInput = (e: Event) => {
+    const [low, high] = this.#inputs;
+    if (low && high) {
+      // The knob being moved stops where the other one is.
+      if (e.target === low && Number(low.value) > Number(high.value)) low.value = high.value;
+      if (e.target === high && Number(high.value) < Number(low.value)) high.value = low.value;
+      // The one moved last sits on top, so two knobs at the same spot can still part.
+      low.style.zIndex = e.target === low ? '1' : '';
+    }
+    this.sync();
+  };
+
+  /** Repaints the fill; call it after setting a value from code. */
   sync = () => {
-    const input = this.#input;
-    if (!input) return;
-    const min = Number(input.min || 0);
-    const max = Number(input.max || 100);
-    const ratio = max > min ? (Number(input.value) - min) / (max - min) : 0;
-    this.style.setProperty('--gm-fill', `${ratio * 100}%`);
+    const [first, second] = this.#inputs;
+    if (!first) return;
+    const min = Number(first.min || 0);
+    const max = Number(first.max || 100);
+    const at = (input: HTMLInputElement) =>
+      `${max > min ? ((Number(input.value) - min) / (max - min)) * 100 : 0}%`;
+    this.style.setProperty('--gm-from', second ? at(first) : '0%');
+    this.style.setProperty('--gm-fill', at(second ?? first));
   };
 }
 
