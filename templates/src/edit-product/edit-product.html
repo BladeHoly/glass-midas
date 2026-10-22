@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit product · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="edit-product.css" />
+    <!-- The script imports the components by name (for toast()); this says where they come from. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@glass-midas/components": "https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+        }
+      }
+    </script>
+    <script type="module" src="edit-product.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-tide" aria-hidden="true"></div>
+    <div class="app">
+      <a class="app-skip" href="#main">Skip to content</a>
+
+      <aside class="app-side">
+        <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+        <gm-nav class="app-nav" orientation="vertical" material="frost" aria-label="Main">
+          <a href="overview.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="7" height="9" rx="2" />
+              <rect x="14" y="3" width="7" height="5" rx="2" />
+              <rect x="14" y="12" width="7" height="9" rx="2" />
+              <rect x="3" y="16" width="7" height="5" rx="2" />
+            </svg>
+            Overview
+          </a>
+          <a href="orders.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" />
+              <path d="M9 8h6M9 12h6" />
+            </svg>
+            Orders
+          </a>
+          <a href="catalogue.html" aria-current="page">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z" />
+              <path d="m4 7.5 8 4.5 8-4.5M12 12v9" />
+            </svg>
+            Products
+          </a>
+          <a href="analytics.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+            </svg>
+            Analytics
+          </a>
+          <a href="status.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12h4l3-8 4 16 3-8h4" />
+            </svg>
+            Status
+          </a>
+        </gm-nav>
+        <div class="app-me">
+          <span class="gm-avatar" aria-hidden="true">NH</span>
+          <span>Noor Haddad<small>Studio manager</small></span>
+        </div>
+      </aside>
+
+      <div class="app-body">
+        <header class="app-top">
+          <a class="on-brand app-top-brand" href="/"
+            ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+          >
+          <div>
+            <h1 id="title">Product</h1>
+            <p id="lede">Everything the store shows about it, and what only the team sees.</p>
+          </div>
+          <div class="app-actions">
+            <gm-search
+              material="frost"
+              placeholder="Search Ondine"
+              hotkey="k"
+              label="Search Ondine"
+            ></gm-search>
+          </div>
+        </header>
+
+        <main id="main" class="app-main">
+          <nav class="gm-breadcrumbs ep-crumbs" aria-label="Breadcrumb">
+            <ol>
+              <li><a href="catalogue.html">Products</a></li>
+              <li><span aria-current="page" id="crumb">Product</span></li>
+            </ol>
+          </nav>
+
+          <div id="loading" class="ep-loading" aria-busy="true">
+            <span class="gm-skeleton gm-skeleton-text"></span>
+            <span class="gm-skeleton ep-skeleton"></span>
+          </div>
+          <div class="gm-empty" id="missing" hidden>
+            <span class="on-sigil gm-empty-art" aria-hidden="true"></span>
+            <h2>No product here</h2>
+            <p>It may have been removed. The catalogue has every piece.</p>
+            <a class="gm-chip gm-chip-primary" href="catalogue.html">All products</a>
+          </div>
+
+          <form class="ep" id="form" hidden novalidate>
+            <!-- What needs fixing before it saves, each a link to its field. -->
+            <div class="ep-summary" id="summary" role="alert" tabindex="-1" hidden>
+              <h2 id="summary-title"></h2>
+              <ul id="summary-list"></ul>
+            </div>
+
+            <div class="ep-grid">
+              <div class="ep-main">
+                <section class="ep-card" aria-labelledby="basics-title">
+                  <h2 id="basics-title">Basics</h2>
+                  <div class="gm-field">
+                    <label for="name">Name</label>
+                    <input
+                      class="gm-input"
+                      id="name"
+                      name="name"
+                      required
+                      aria-describedby="name-error"
+                    />
+                    <p class="gm-field-error" id="name-error"></p>
+                  </div>
+                  <div class="gm-field">
+                    <label for="kind">What it is</label>
+                    <input class="gm-input" id="kind" name="kind" aria-describedby="kind-hint" />
+                    <p class="gm-field-hint" id="kind-hint">
+                      Shown above the name: "Over-ear headphones".
+                    </p>
+                  </div>
+                  <div class="gm-field">
+                    <label for="blurb">Description</label>
+                    <textarea
+                      class="gm-input"
+                      id="blurb"
+                      name="blurb"
+                      rows="3"
+                      maxlength="300"
+                      aria-describedby="blurb-count"
+                    ></textarea>
+                    <p class="gm-field-hint ep-count" id="blurb-count" aria-live="polite"></p>
+                  </div>
+                </section>
+
+                <section class="ep-card" aria-labelledby="pictures-title">
+                  <h2 id="pictures-title">Pictures</h2>
+                  <ul class="ep-pictures" id="pictures"></ul>
+                  <gm-upload max-size="10 MB" max-files="8">
+                    <input
+                      type="file"
+                      name="pictures"
+                      accept="image/*"
+                      multiple
+                      aria-label="Add pictures"
+                    />
+                  </gm-upload>
+                  <p class="gm-field-error" id="pictures-error" aria-live="polite"></p>
+                </section>
+
+                <section class="ep-card" aria-labelledby="finishes-title">
+                  <header class="ep-card-head">
+                    <h2 id="finishes-title">Finishes</h2>
+                    <p class="ep-small" id="stock-total"></p>
+                  </header>
+                  <gm-table class="ep-finishes" density="compact">
+                    <table>
+                      <caption class="on-sr-only">
+                        Finishes, with their SKU and stock
+                      </caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Color</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">SKU</th>
+                          <th scope="col" class="gm-num">In stock</th>
+                          <th scope="col"><span class="on-sr-only">Remove</span></th>
+                        </tr>
+                      </thead>
+                      <tbody id="finishes"></tbody>
+                    </table>
+                  </gm-table>
+                  <p class="gm-field-error" id="finishes-error"></p>
+                  <button class="gm-chip" type="button" id="add-finish">Add a finish</button>
+                </section>
+
+                <section class="ep-card" aria-labelledby="pricing-title">
+                  <h2 id="pricing-title">Pricing</h2>
+                  <div class="ep-row">
+                    <div class="gm-field">
+                      <label for="price">Price</label>
+                      <div class="gm-input-group">
+                        <span aria-hidden="true">$</span>
+                        <input
+                          class="gm-input"
+                          id="price"
+                          name="price"
+                          inputmode="decimal"
+                          required
+                          aria-describedby="price-error"
+                        />
+                      </div>
+                      <p class="gm-field-error" id="price-error"></p>
+                    </div>
+                    <div class="gm-field">
+                      <label for="was"
+                        >Price before <span class="ep-optional">(for a sale)</span></label
+                      >
+                      <div class="gm-input-group">
+                        <span aria-hidden="true">$</span>
+                        <input
+                          class="gm-input"
+                          id="was"
+                          name="was"
+                          inputmode="decimal"
+                          aria-describedby="was-error"
+                        />
+                      </div>
+                      <p class="gm-field-error" id="was-error"></p>
+                    </div>
+                    <div class="gm-field">
+                      <label for="cost">Cost to make</label>
+                      <div class="gm-input-group">
+                        <span aria-hidden="true">$</span>
+                        <input
+                          class="gm-input"
+                          id="cost"
+                          name="cost"
+                          inputmode="decimal"
+                          aria-describedby="cost-hint cost-error"
+                        />
+                      </div>
+                      <p class="gm-field-hint" id="cost-hint">Only the team sees it.</p>
+                      <p class="gm-field-error" id="cost-error"></p>
+                    </div>
+                  </div>
+                  <dl class="gm-totals ep-margin" id="margin"></dl>
+                  <label class="gm-check-label ep-switch">
+                    <span>Charge tax on it</span>
+                    <input type="checkbox" class="gm-toggle" role="switch" name="taxable" />
+                  </label>
+                </section>
+
+                <section class="ep-card" aria-labelledby="shipping-title">
+                  <h2 id="shipping-title">Shipping</h2>
+                  <div class="gm-field ep-narrow">
+                    <label for="weight">Weight, packed</label>
+                    <div class="gm-input-group">
+                      <input class="gm-input" id="weight" name="weight" inputmode="numeric" />
+                      <span aria-hidden="true">g</span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <aside class="ep-side">
+                <section class="ep-card" aria-labelledby="status-title">
+                  <h2 id="status-title">Status</h2>
+                  <fieldset class="gm-options" aria-labelledby="status-title">
+                    <label class="gm-option">
+                      <input type="radio" class="gm-check" name="status" value="active" />
+                      <span>Active<small>In the store, for sale</small></span>
+                    </label>
+                    <label class="gm-option">
+                      <input type="radio" class="gm-check" name="status" value="draft" />
+                      <span>Draft<small>Only the team sees it</small></span>
+                    </label>
+                    <label class="gm-option">
+                      <input type="radio" class="gm-check" name="status" value="archived" />
+                      <span>Archived<small>Out of the store; orders keep it</small></span>
+                    </label>
+                  </fieldset>
+                </section>
+
+                <section class="ep-card" aria-labelledby="org-title">
+                  <h2 id="org-title">Where it lives</h2>
+                  <div class="gm-field">
+                    <label for="ep-collection">Collection</label>
+                    <gm-select>
+                      <select id="ep-collection" name="collection">
+                        <option value="listen">Listen</option>
+                        <option value="room">Room</option>
+                        <option value="ritual">Ritual</option>
+                      </select>
+                    </gm-select>
+                  </div>
+                  <div class="gm-field">
+                    <label for="tag-input">Tags</label>
+                    <ul class="ep-tags" id="tags" aria-label="Tags"></ul>
+                    <input
+                      class="gm-input"
+                      id="tag-input"
+                      autocomplete="off"
+                      placeholder="Type a tag, then Enter"
+                      aria-describedby="tag-hint"
+                    />
+                    <p class="gm-field-hint" id="tag-hint">
+                      For search and filters. Backspace takes off the last.
+                    </p>
+                  </div>
+                </section>
+
+                <section class="ep-card" aria-labelledby="seo-title">
+                  <h2 id="seo-title">In search results</h2>
+                  <div class="ep-snippet" aria-hidden="true">
+                    <span class="ep-snippet-url" id="snippet-url"></span>
+                    <span class="ep-snippet-title" id="snippet-title"></span>
+                    <span class="ep-snippet-text" id="snippet-text"></span>
+                  </div>
+                  <div class="gm-field">
+                    <label for="seoTitle">Title</label>
+                    <input
+                      class="gm-input"
+                      id="seoTitle"
+                      name="seoTitle"
+                      aria-describedby="seoTitle-count seoTitle-error"
+                    />
+                    <p class="gm-field-hint ep-count" id="seoTitle-count"></p>
+                    <p class="gm-field-error" id="seoTitle-error"></p>
+                  </div>
+                  <div class="gm-field">
+                    <label for="seoDescription">Description</label>
+                    <textarea
+                      class="gm-input"
+                      id="seoDescription"
+                      name="seoDescription"
+                      rows="3"
+                      aria-describedby="seoDescription-count seoDescription-error"
+                    ></textarea>
+                    <p class="gm-field-hint ep-count" id="seoDescription-count"></p>
+                    <p class="gm-field-error" id="seoDescription-error"></p>
+                  </div>
+                </section>
+              </aside>
+            </div>
+
+            <!-- Unsaved changes: the one glass on the page, floating where the hand is. -->
+            <gm-surface class="ep-bar" material="frost" radius="999" id="bar" hidden>
+              <p id="bar-text">Unsaved changes</p>
+              <button class="gm-chip gm-chip-plain" type="button" id="discard">Discard</button>
+              <button class="gm-chip gm-chip-primary" type="submit" id="save">Save</button>
+            </gm-surface>
+          </form>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

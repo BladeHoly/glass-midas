@@ -1,0 +1,35 @@
+---
+title: Edit product
+description: Every field of a product, saved together. Pictures, finishes with SKUs and stock, price and margin, status, tags and the search preview.
+order: 50
+template: edit-product
+---
+
+The team's editor for one product, in the app shell. It covers:
+
+- the basics and the pictures, with [upload](/components/upload/) for new ones;
+- the finishes as a [table](/components/table/) of inputs: color, name, SKU and stock;
+- the price, with what's left after the cost;
+- the status as [options](/components/choice/), the collection and tags;
+- a live preview of how it reads in search results.
+
+Nothing saves on its own. A frosted bar floats up with the first change, and leaving the page
+asks first.
+
+<Template name="edit-product" />
+
+## Try it
+
+- Change the price: the margin follows, and the **Unsaved changes** bar appears.
+- Set the price above the **Price before**, or give two finishes the same SKU, then save.
+  A summary at the top lists each problem as a link to its field.
+- Add a tag with Enter and take it off with Backspace. Remove a finish and undo it.
+
+## Details that matter
+
+- **One save for everything,** with **Discard** beside it, instead of fields that save as you type
+  and can't be taken back.
+- **The error summary takes focus** and links to each field; the fields are marked and say what's
+  wrong under them.
+- **Counters for what search engines cut:** 60 characters for the title, 160 for the description.
+- **The one glass is the save bar,** floating over the page; the cards are content.

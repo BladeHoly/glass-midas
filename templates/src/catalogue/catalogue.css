@@ -48,6 +48,13 @@
   gap: var(--gm-space-md);
   line-height: 1.25;
 }
+.cat-product a {
+  font-weight: 600;
+  text-decoration: none;
+}
+.cat-product a:hover {
+  text-decoration: underline;
+}
 .cat-product small {
   display: block;
   color: var(--on-ink-muted);

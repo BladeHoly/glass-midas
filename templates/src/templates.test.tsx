@@ -12,6 +12,7 @@ import { AccountPage } from './account/AccountPage';
 import { OrderDetail } from './order/OrderDetail';
 import { ReturnRequest } from './returns/ReturnRequest';
 import { OrderAdmin } from './manage-order/OrderAdmin';
+import { ProductEditor } from './edit-product/ProductEditor';
 import { CollectionGrid } from './collection/CollectionGrid';
 import { ProductPage } from './product/ProductPage';
 import { StoreHome } from './storefront/StoreHome';
@@ -55,6 +56,7 @@ const react: Record<string, ComponentType> = {
   account: AccountPage,
   order: OrderDetail,
   returns: ReturnRequest,
+  'edit-product': ProductEditor,
   'manage-order': OrderAdmin,
 };
 

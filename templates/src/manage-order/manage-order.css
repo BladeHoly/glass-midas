@@ -246,20 +246,40 @@
   .mo-card {
     padding: var(--gm-space-lg);
   }
-  .mo-line,
-  .mo-line:not(:has(.gm-check)) {
+  /* On a phone: the name and total on top, the quantity under the name, no picture. */
+  .mo-line {
     grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'check name total'
+      'check qty qty';
+    row-gap: var(--gm-space-2xs);
+  }
+  .mo-line:not(:has(.gm-check)) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name total'
+      'qty qty';
+  }
+  .mo-line .gm-check {
+    grid-area: check;
+  }
+  .mo-line-name {
+    grid-area: name;
+  }
+  .mo-line-total {
+    grid-area: total;
+  }
+  .mo-line-qty {
+    grid-area: qty;
+    color: var(--on-ink-muted);
+    font-size: var(--gm-text-sm);
+    text-align: start;
   }
   .mo-line img {
     display: none;
   }
-  .mo-line-qty {
-    grid-column: 2;
-    text-align: start;
-  }
 }
 
-/* The packing slip: the pieces and where they go, nothing else. */
 @media print {
   .on-art,
   .app-side,

@@ -322,7 +322,7 @@ export function ProductCatalogue() {
                                         />
                                       </span>
                                       <span>
-                                        {p.name}
+                                        <a href={`edit-product.html?id=${p.id}`}>{p.name}</a>
                                         <small>{p.kind}</small>
                                       </span>
                                     </span>
