@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your order · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="shop.css" />
+    <link rel="stylesheet" href="order.css" />
+    <!-- The script imports the components by name (for toast()); this says where they come from. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@glass-midas/components": "https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+        }
+      }
+    </script>
+    <script type="module" src="order.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-tide" aria-hidden="true"></div>
+    <div class="shop">
+      <a class="app-skip" href="#main">Skip to content</a>
+
+      <!-- The bar: the one glass that stays, floating over the page. -->
+      <header class="shop-top shop-wrap">
+        <gm-surface class="shop-bar" material="frost" radius="999">
+          <a class="on-brand" href="storefront.html"
+            ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+          >
+          <nav class="shop-links" aria-label="Collections">
+            <a class="gm-chip gm-chip-plain" href="collection.html?c=listen">Listen</a>
+            <a class="gm-chip gm-chip-plain" href="collection.html?c=room">Room</a>
+            <a class="gm-chip gm-chip-plain" href="collection.html?c=ritual">Ritual</a>
+          </nav>
+          <form class="shop-search" action="collection.html" role="search">
+            <input
+              class="gm-input"
+              type="search"
+              name="q"
+              placeholder="Search pieces"
+              aria-label="Search pieces"
+            />
+          </form>
+          <div class="shop-actions">
+            <button
+              class="gm-chip gm-chip-plain gm-chip-round shop-menu-button"
+              type="button"
+              popovertarget="shop-menu"
+              aria-label="Menu"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </button>
+            <a
+              class="gm-chip gm-chip-plain gm-chip-round"
+              href="account.html"
+              aria-label="Account"
+              aria-current="page"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" /></svg
+            ></a>
+            <a
+              class="gm-chip gm-chip-plain gm-chip-round"
+              href="wishlist.html"
+              data-saved-link
+              aria-label="Saved"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"
+                /></svg
+              ><span class="shop-count" aria-hidden="true"></span
+            ></a>
+            <button
+              class="gm-chip gm-chip-plain gm-chip-round"
+              type="button"
+              popovertarget="mini-cart"
+              data-cart-button
+              aria-label="Cart"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" />
+                <path d="M9 8V6.5a3 3 0 0 1 6 0V8" /></svg
+              ><span class="shop-count" aria-hidden="true"></span>
+            </button>
+          </div>
+        </gm-surface>
+      </header>
+
+      <gm-menu id="shop-menu" aria-label="Collections">
+        <a href="collection.html?c=listen">Listen</a>
+        <a href="collection.html?c=room">Room</a>
+        <a href="collection.html?c=ritual">Ritual</a>
+        <hr />
+        <a href="collection.html">All pieces</a>
+      </gm-menu>
+
+      <!-- The mini cart: what's in it and what it costs, without leaving the page. -->
+      <gm-popover id="mini-cart" class="shop-cart" aria-label="Cart">
+        <h2>Your cart</h2>
+        <div id="mini-cart-empty">
+          <p class="shop-cart-empty">Nothing here yet.</p>
+          <a class="gm-chip" href="collection.html">Browse the pieces</a>
+        </div>
+        <div id="mini-cart-full" hidden>
+          <ul class="shop-cart-lines" id="mini-cart-lines"></ul>
+          <p class="shop-cart-total"><span>Subtotal</span><span id="mini-cart-subtotal"></span></p>
+          <p class="shop-cart-note" id="mini-cart-note"></p>
+          <div class="shop-cart-actions">
+            <a class="gm-chip gm-chip-primary" href="checkout.html">Check out</a>
+            <a class="gm-chip" href="cart.html">View cart</a>
+          </div>
+        </div>
+      </gm-popover>
+
+      <main id="main" class="shop-main shop-wrap">
+        <nav class="gm-breadcrumbs od-crumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="account.html">Account</a></li>
+            <li><a href="account.html#orders">Orders</a></li>
+            <li><span aria-current="page" id="crumb">Order</span></li>
+          </ol>
+        </nav>
+
+        <div id="loading" class="od-loading" aria-busy="true">
+          <h1 class="on-sr-only">Loading your order</h1>
+          <span class="gm-skeleton gm-skeleton-text"></span>
+          <span class="gm-skeleton od-skeleton"></span>
+          <span class="gm-skeleton od-skeleton"></span>
+        </div>
+
+        <div class="gm-empty" id="missing" hidden>
+          <span class="on-sigil gm-empty-art" aria-hidden="true"></span>
+          <h1>We can't find that order</h1>
+          <p>It may be on another account. Your orders are all in one place.</p>
+          <a class="gm-chip gm-chip-primary" href="account.html#orders">See your orders</a>
+        </div>
+
+        <article id="order" hidden>
+          <header class="od-head">
+            <div>
+              <h1 class="on-display" id="title" tabindex="-1"></h1>
+              <p class="od-placed" id="placed"></p>
+            </div>
+            <div class="od-actions" id="actions">
+              <button class="gm-chip" type="button" id="print">Print receipt</button>
+              <a class="gm-chip" href="mailto:help@example.com" id="help">Get help</a>
+            </div>
+          </header>
+
+          <!-- Where it is: the sentence people came for, the steps, and the tracking. -->
+          <section class="od-card od-progress" aria-labelledby="where">
+            <p class="od-where" id="where"></p>
+            <ol class="gm-steps" id="steps" aria-label="Order progress"></ol>
+            <div class="od-tracking" id="tracking" hidden>
+              <p>
+                <span>Lusa Express</span>
+                <strong id="tracking-number"></strong>
+              </p>
+              <button class="gm-chip gm-chip-plain" type="button" id="copy-tracking">
+                Copy the number
+              </button>
+              <a class="gm-chip" href="#" id="track">Track with the carrier</a>
+            </div>
+          </section>
+
+          <div class="od-grid">
+            <section class="od-card" aria-labelledby="items-title">
+              <h2 id="items-title">What's in it</h2>
+              <ul class="od-lines" id="lines"></ul>
+              <dl class="gm-totals" id="totals"></dl>
+            </section>
+
+            <div class="od-side">
+              <section class="od-card" aria-labelledby="delivery-title">
+                <h2 id="delivery-title">Delivery</h2>
+                <address id="address"></address>
+                <p class="od-small" id="method"></p>
+              </section>
+              <section class="od-card" aria-labelledby="payment-title">
+                <h2 id="payment-title">Payment</h2>
+                <p id="payment"></p>
+              </section>
+              <section class="od-card" aria-labelledby="history-title">
+                <h2 id="history-title">What happened</h2>
+                <ol class="gm-timeline" id="history"></ol>
+              </section>
+            </div>
+          </div>
+        </article>
+
+        <gm-dialog id="cancel-dialog" heading="Cancel this order?">
+          <p id="cancel-text"></p>
+          <form method="dialog">
+            <button class="gm-chip gm-chip-plain" value="keep">Keep it</button>
+            <button class="gm-chip od-danger" value="cancel">Cancel the order</button>
+          </form>
+        </gm-dialog>
+      </main>
+
+      <footer class="shop-foot">
+        <div class="shop-wrap">
+          <div class="shop-foot-grid">
+            <div>
+              <a class="on-brand" href="storefront.html"
+                ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+              >
+              <p>Audio pieces, each tuned to its own figure.</p>
+            </div>
+            <div>
+              <h2>Shop</h2>
+              <ul>
+                <li><a href="collection.html?c=listen">Listen</a></li>
+                <li><a href="collection.html?c=room">Room</a></li>
+                <li><a href="collection.html?c=ritual">Ritual</a></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Help</h2>
+              <ul>
+                <li><a href="#">Shipping</a></li>
+                <li><a href="returns.html">Returns</a></li>
+                <li><a href="#">Warranty</a></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Ondine</h2>
+              <ul>
+                <li><a href="#">The studio</a></li>
+                <li><a href="#">Journal</a></li>
+                <li><a href="#">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+          <p class="shop-small">Free shipping over $150. 60 days to return anything.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

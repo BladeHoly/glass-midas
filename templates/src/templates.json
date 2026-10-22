@@ -279,5 +279,22 @@
       "account-store.js"
     ],
     "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "order",
+    "title": "Order",
+    "group": "Account",
+    "description": "One order: where it is in a sentence and steps, tracking, what's in it, what happened, cancel or return.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx",
+      "account-store.js"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
   }
 ]

@@ -9,6 +9,7 @@ import { OrderConfirmation } from './confirmation/OrderConfirmation';
 import { ComparePieces } from './compare/ComparePieces';
 import { SavedPieces } from './wishlist/SavedPieces';
 import { AccountPage } from './account/AccountPage';
+import { OrderDetail } from './order/OrderDetail';
 import { CollectionGrid } from './collection/CollectionGrid';
 import { ProductPage } from './product/ProductPage';
 import { StoreHome } from './storefront/StoreHome';
@@ -50,6 +51,7 @@ const react: Record<string, ComponentType> = {
   compare: ComparePieces,
   wishlist: SavedPieces,
   account: AccountPage,
+  order: OrderDetail,
 };
 
 afterEach(() => {
