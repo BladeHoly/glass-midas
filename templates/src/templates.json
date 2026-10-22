@@ -262,5 +262,22 @@
       "ShopKit.tsx"
     ],
     "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "account",
+    "title": "Account",
+    "group": "Account",
+    "description": "Orders with where each one is, addresses in a drawer, kept cards and details, a tab each.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx",
+      "account-store.js"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
   }
 ]

@@ -1,0 +1,283 @@
+/* The account: who's signed in, then a tab each for orders, addresses, cards and details. */
+.ac-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gm-space-lg);
+  margin-bottom: var(--gm-space-xl);
+}
+.ac-head h1 {
+  margin: 0;
+}
+.ac-head p {
+  margin: var(--gm-space-2xs) 0 0;
+  color: var(--on-ink-muted);
+}
+.ac-tabs {
+  margin: 0;
+}
+.ac-tabs > gm-tab {
+  padding-top: var(--gm-space-xl);
+}
+.ac-tabs > gm-tab:focus-visible {
+  outline: 0;
+}
+
+.ac-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+  margin-bottom: var(--gm-space-lg);
+}
+.ac-count,
+.ac-small {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.ac-small {
+  max-width: 40rem;
+  margin-top: var(--gm-space-lg);
+}
+
+/* An order: number, status and total on one line; when it comes; what's in it; what to do. */
+.ac-orders {
+  display: grid;
+  gap: var(--gm-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ac-order,
+.ac-card,
+.ac-panel {
+  padding: var(--gm-space-lg) var(--gm-space-xl);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.ac-order {
+  display: grid;
+  gap: var(--gm-space-sm);
+}
+.ac-skeleton {
+  height: 4rem;
+  border-radius: 12px;
+}
+.ac-order-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm) var(--gm-space-md);
+}
+.ac-order-top h3 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.ac-order-top h3 a {
+  text-decoration: none;
+}
+.ac-order-total {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.ac-order-when {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.ac-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gm-space-sm);
+  margin: var(--gm-space-xs) 0;
+  padding: 0;
+  list-style: none;
+}
+.ac-thumbs li {
+  position: relative;
+}
+.ac-thumbs img {
+  display: block;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 12px;
+  background: #121019;
+}
+.ac-thumbs span {
+  position: absolute;
+  right: 0.25rem;
+  bottom: 0.25rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--on-bg) 80%, transparent);
+  font-size: var(--gm-text-xs);
+  font-weight: 600;
+}
+.ac-thumbs-more {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 12px;
+  background: var(--gm-chip-fill);
+  color: var(--on-ink-muted);
+  font-weight: 600;
+}
+.ac-order-actions,
+.ac-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gm-space-xs);
+}
+.ac-more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--gm-space-xl);
+}
+
+/* Addresses and cards: a card each, the default marked. */
+.ac-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: var(--gm-space-md);
+  margin: 0 0 var(--gm-space-lg);
+  padding: 0;
+  list-style: none;
+}
+.ac-card {
+  display: grid;
+  align-content: start;
+  gap: var(--gm-space-sm);
+}
+.ac-card p,
+.ac-card address {
+  margin: 0;
+  font-style: normal;
+}
+.ac-card address {
+  color: var(--on-ink-muted);
+  line-height: 1.6;
+}
+.ac-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm);
+}
+.ac-card-actions {
+  margin: var(--gm-space-xs) 0 0 calc(-1 * var(--gm-space-sm));
+}
+
+/* Details: three panels, side by side when there's room. */
+.ac-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--gm-space-lg);
+  align-items: start;
+}
+.ac-panel {
+  display: grid;
+  gap: var(--gm-space-md);
+}
+.ac-panel h2 {
+  margin: 0;
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.ac-panel p {
+  margin: 0;
+}
+.ac-panel > .gm-chip {
+  justify-self: start;
+}
+.ac-switches {
+  display: grid;
+  gap: var(--gm-space-xs);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ac-switches legend {
+  margin-bottom: var(--gm-space-xs);
+  font-weight: 600;
+}
+.ac-switches .gm-check-label {
+  justify-content: space-between;
+}
+.ac-leave p {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+/* Danger: the words in the danger tone, so it's never mistaken for the main action. */
+.ac-danger {
+  color: var(--gm-status-danger);
+}
+.ac-optional {
+  color: var(--on-ink-muted);
+  font-weight: 400;
+}
+
+.ac-address-form {
+  display: grid;
+  gap: var(--gm-space-md);
+  margin-top: var(--gm-space-md);
+}
+.ac-address-form .gm-field-error:empty {
+  display: none;
+}
+.ac-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gm-space-md);
+}
+.ac-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gm-space-sm);
+}
+
+/* With room: the pictures to the right of what the order is and what to do with it. */
+@media (min-width: 52rem) {
+  .ac-order {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'top top'
+      'when thumbs'
+      'actions thumbs';
+    align-items: center;
+  }
+  .ac-order-top {
+    grid-area: top;
+  }
+  .ac-order-when {
+    grid-area: when;
+  }
+  .ac-thumbs {
+    grid-area: thumbs;
+    justify-content: end;
+    margin: 0;
+  }
+  .ac-order-actions {
+    grid-area: actions;
+    align-self: end;
+  }
+}
+
+@media (max-width: 40rem) {
+  .ac-head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .ac-out {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .ac-order,
+  .ac-card,
+  .ac-panel {
+    padding: var(--gm-space-lg);
+  }
+}

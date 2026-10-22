@@ -122,10 +122,13 @@ function Brand() {
 
 export function ShopShell({
   current,
+  here,
   query = '',
   children,
 }: {
   current?: string;
+  /** The account or saved page, to mark its link in the bar. */
+  here?: 'account' | 'saved';
   query?: string;
   children: ReactNode;
 }) {
@@ -174,7 +177,12 @@ export function ShopShell({
               >
                 {icon(<path d="M4 7h16M4 12h16M4 17h16" />)}
               </button>
-              <a className="gm-chip gm-chip-plain gm-chip-round" href="#" aria-label="Account">
+              <a
+                className="gm-chip gm-chip-plain gm-chip-round"
+                href="account.html"
+                aria-label="Account"
+                aria-current={here === 'account' ? 'page' : undefined}
+              >
                 {icon(
                   <>
                     <circle cx="12" cy="8" r="4" />
@@ -186,6 +194,7 @@ export function ShopShell({
                 className="gm-chip gm-chip-plain gm-chip-round"
                 href="wishlist.html"
                 aria-label={saved.length ? `Saved, ${saved.length}` : 'Saved, none yet'}
+                aria-current={here === 'saved' ? 'page' : undefined}
               >
                 {icon(heart)}
                 <span className="shop-count" aria-hidden="true">
@@ -299,7 +308,7 @@ export function ShopShell({
                     <a href="#">Shipping</a>
                   </li>
                   <li>
-                    <a href="#">Returns</a>
+                    <a href="returns.html">Returns</a>
                   </li>
                   <li>
                     <a href="#">Warranty</a>

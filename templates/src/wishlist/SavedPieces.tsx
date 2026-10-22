@@ -68,7 +68,7 @@ export function SavedPieces() {
   };
 
   return (
-    <ShopShell>
+    <ShopShell here="saved">
       <main id="main" className="shop-main shop-wrap">
         <header className="col-head wl-head">
           <div>
