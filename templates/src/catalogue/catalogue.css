@@ -1,0 +1,115 @@
+/*
+ * Catalogue: products grouped by collection, each opening into its finishes. Group rows span the
+ * table; finish rows sit indented under their product.
+ */
+.cat-group > th {
+  height: 2.75rem;
+  padding: var(--gm-space-md) var(--gm-space-md) var(--gm-space-xs);
+  border-top: 0;
+}
+.cat-group button,
+.cat-expand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  padding: 0.3em 0.5em;
+  margin-left: -0.5em;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--on-ink);
+  font: inherit;
+  cursor: pointer;
+}
+.cat-group button {
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.cat-group small {
+  color: var(--on-ink-muted);
+  font: 400 var(--gm-text-sm) / 1 var(--on-font);
+}
+.cat-group button:hover,
+.cat-expand:hover {
+  background: var(--gm-chip-fill);
+}
+.cat-chevron {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  transition: rotate 0.2s;
+}
+[aria-expanded='false'] > .cat-chevron {
+  rotate: -90deg;
+}
+
+.cat-product {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  line-height: 1.25;
+}
+.cat-product small {
+  display: block;
+  color: var(--on-ink-muted);
+}
+/* The piece's figure, on a small tile. */
+.cat-figure {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  background: var(--gm-chip-fill);
+  color: var(--on-accent);
+}
+.cat-figure .on-sigil {
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.cat-swatches {
+  display: inline-flex;
+  gap: 4px;
+}
+.cat-swatch {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.25),
+    0 0 0 1px rgb(0 0 0 / 0.2);
+  vertical-align: middle;
+}
+
+/* The swatch lines up under the product's name: past the expand button and the figure. */
+.cat-variant > td:first-child {
+  padding-left: calc(var(--gm-space-md) + 5.6rem);
+}
+.cat-variant .cat-swatch {
+  margin-right: var(--gm-space-sm);
+}
+.cat-stock {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+}
+.cat-stock .gm-input {
+  width: 5.5rem;
+  min-height: 2.1rem;
+  padding: 0.3em 0.6em;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 40rem) {
+  .cat-variant > td:first-child {
+    padding-left: 0;
+  }
+  .cat-group > th {
+    display: block;
+    padding-inline: 0;
+  }
+}

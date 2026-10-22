@@ -1,0 +1,301 @@
+/*
+ * The app shell: what the store's team works in. The navigation is the glass, a frosted bar down
+ * the side that becomes a floating tab bar on a phone. Everything else is content, on plain
+ * translucent panels over a dimmed tide.
+ */
+.app {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  min-height: 100dvh;
+}
+/* The tide stays, dimmed under a scrim, so the glass has color to bend and the content reads. */
+.app::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--on-bg) 72%, transparent);
+}
+
+.app-skip {
+  position: absolute;
+  top: var(--gm-space-sm);
+  left: var(--gm-space-sm);
+  z-index: 10;
+  padding: var(--gm-space-sm) var(--gm-space-lg);
+  border-radius: var(--gm-radius-pill);
+  background: var(--on-ink);
+  color: var(--on-bg) !important;
+  translate: 0 -200%;
+}
+.app-skip:focus {
+  translate: 0 0;
+}
+
+.app-side {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gm-space-xl);
+  height: 100dvh;
+  padding: var(--gm-space-xl) var(--gm-space-lg);
+}
+.app-side > .on-brand {
+  padding-inline: var(--gm-space-sm);
+}
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  border-radius: 24px;
+}
+.app-nav a {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  padding: 0.6rem 0.9rem;
+  font-size: var(--gm-text-sm);
+  font-weight: 500;
+}
+.app-nav svg {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.app-me {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  margin-top: auto;
+  padding: var(--gm-space-sm);
+  font-size: var(--gm-text-sm);
+  line-height: 1.3;
+}
+.app-me small {
+  display: block;
+  color: var(--on-ink-muted);
+}
+
+.app-body {
+  min-width: 0;
+  padding: var(--gm-space-xl) var(--gm-space-xl) var(--gm-space-2xl) 0;
+}
+.app-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-md) var(--gm-space-lg);
+  margin-bottom: var(--gm-space-xl);
+}
+.app-top h1 {
+  margin: 0;
+  font: 500 var(--gm-text-3xl) / 1.1 var(--on-font-display);
+}
+.app-top p {
+  margin: var(--gm-space-2xs) 0 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.app-top-brand {
+  display: none;
+}
+.app-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  margin-left: auto;
+}
+.app-actions gm-search {
+  width: min(18rem, 40vw);
+}
+
+/* A panel: content, not glass. */
+.app-panel {
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+
+/* A row of tools above a table: search, filters, view. */
+.app-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm) var(--gm-space-md);
+  padding: var(--gm-space-lg);
+}
+.app-toolbar .gm-input-group {
+  flex: 1 1 14rem;
+  max-width: 22rem;
+}
+.app-filters {
+  display: flex;
+  gap: var(--gm-space-xs);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.app-filters .gm-chip {
+  flex: none;
+  min-height: 2.25rem;
+  padding-inline: 0.9em;
+  font-size: var(--gm-text-sm);
+}
+.app-toolbar-end {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  margin-left: auto;
+}
+
+/* What's selected, and what to do with it: takes the toolbar's place while rows are checked. */
+.app-bulk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  padding: var(--gm-space-md) var(--gm-space-lg);
+  border-bottom: 1px solid var(--on-line);
+  font-size: var(--gm-text-sm);
+}
+.app-bulk[hidden] {
+  display: none;
+}
+.app-bulk strong {
+  margin-right: auto;
+}
+.app-bulk .gm-chip {
+  min-height: 2.25rem;
+  font-size: var(--gm-text-sm);
+}
+
+.app-table {
+  padding: 0 var(--gm-space-sm);
+}
+.app-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+  padding: var(--gm-space-lg);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+
+/* Nothing to show, or it failed: a sentence and a way out, where the rows would be. */
+.app-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--gm-space-sm);
+  padding: var(--gm-space-3xl) var(--gm-space-lg);
+  text-align: center;
+}
+.app-empty[hidden] {
+  display: none;
+}
+.app-empty .on-sigil {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: var(--gm-space-sm);
+  opacity: 0.5;
+}
+.app-empty h2 {
+  margin: 0;
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.app-empty p {
+  margin: 0 0 var(--gm-space-sm);
+  color: var(--on-ink-muted);
+}
+
+/* A dialog's buttons, at its end. */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gm-space-sm);
+  margin-top: var(--gm-space-lg);
+}
+
+/* A person in a cell: initials, name, and email under it. */
+.app-person {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  line-height: 1.25;
+}
+.app-person small {
+  display: block;
+  color: var(--on-ink-muted);
+}
+
+/* Tablet: a narrower side. Phone: the nav floats at the bottom as a tab bar. */
+@media (max-width: 64rem) {
+  .app {
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+  }
+  .app-side {
+    padding-inline: var(--gm-space-sm);
+    align-items: center;
+  }
+  .app-side > .on-brand {
+    font-size: 0;
+    padding: 0;
+  }
+  .app-nav a {
+    padding: 0.7rem;
+    font-size: 0;
+  }
+  .app-me {
+    display: none;
+  }
+}
+@media (max-width: 48rem) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-side {
+    position: static;
+    height: auto;
+    padding: 0;
+  }
+  .app-side > .on-brand {
+    display: none;
+  }
+  .app-nav {
+    position: fixed;
+    bottom: max(var(--gm-space-md), env(safe-area-inset-bottom));
+    left: 50%;
+    z-index: 5;
+    flex-direction: row;
+    translate: -50% 0;
+    border-radius: var(--gm-radius-pill);
+  }
+  .app-nav a {
+    flex-direction: column;
+    gap: 2px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.65rem;
+  }
+  .app-body {
+    padding: var(--gm-space-lg) var(--gm-space-md) 7rem;
+  }
+  .app-top-brand {
+    display: inline-flex;
+    width: 100%;
+  }
+  .app-actions {
+    width: 100%;
+    margin: 0;
+  }
+  .app-actions gm-search {
+    flex: 1;
+    width: auto;
+  }
+  .app-toolbar,
+  .app-foot {
+    padding: var(--gm-space-md);
+  }
+  .app-toolbar-end {
+    margin-left: 0;
+  }
+}

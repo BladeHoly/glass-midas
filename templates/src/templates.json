@@ -30,5 +30,49 @@
     "description": "Email and password together on a frosted panel, beside the art.",
     "shared": ["tokens.css", "ondine.css", "auth.css", "auth.js", "AuthKit.tsx"],
     "art": ["sigil.svg", "resonance-dark.webp", "resonance-light.webp"]
+  },
+  {
+    "name": "orders",
+    "title": "Orders",
+    "group": "Tables",
+    "description": "Search, filters, sorting and pages together; select rows and act on them, with every state.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "app.css",
+      "app.js",
+      "data.js",
+      "store.js",
+      "AppKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp"]
+  },
+  {
+    "name": "catalogue",
+    "title": "Catalogue",
+    "group": "Tables",
+    "description": "Products grouped by collection, each opening into its finishes, with stock to change in place.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "app.css",
+      "app.js",
+      "data.js",
+      "store.js",
+      "AppKit.tsx"
+    ],
+    "art": [
+      "sigil.svg",
+      "tide-dark.webp",
+      "tide-light.webp",
+      "sigil-tide.svg",
+      "sigil-ripple.svg",
+      "sigil-choir.svg",
+      "sigil-ember.svg",
+      "sigil-orbit.svg",
+      "sigil-lantern.svg",
+      "sigil-thread.svg",
+      "sigil-vesper.svg"
+    ]
   }
 ]

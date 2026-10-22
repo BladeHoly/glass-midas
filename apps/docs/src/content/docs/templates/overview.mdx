@@ -31,8 +31,9 @@ The art is drawn by code, from a seed, so nothing in it is a photo:
 - **Glass where it belongs.** Glass is the navigation layer, the card a form sits on, dialogs.
   Content and controls are fills. Glass is never nested inside glass.
 - **Fewer pieces, shared.** Templates of a kind share a kit: the auth screens use `auth.css` and
-  `auth.js` (`AuthKit.tsx` in React). So a field, an error or a busy button looks and behaves the
-  same on every screen.
+  `auth.js` (`AuthKit.tsx` in React), the app screens `app.css` and `app.js` (`AppKit.tsx`), over
+  one dataset, `data.js`. So a field, an error or a busy button looks and behaves the same on
+  every screen.
 - **A stand-in server.** Each template calls `server`, which waits a moment and answers like an
   API would, wrong passwords included. Replace its methods with calls to yours.
 
@@ -61,4 +62,15 @@ CSS once in your app, along with `@glass-midas/components/styles.css`.
   </Card>
 </CardGrid>
 
-Tables, dashboards and the store come next.
+## Tables
+
+<CardGrid>
+  <Card title="Orders" href="/templates/orders/">
+    Search, filters, sorting and pages together; act on selected rows.
+  </Card>
+  <Card title="Catalogue" href="/templates/catalogue/">
+    Products by collection, opening into finishes and their stock.
+  </Card>
+</CardGrid>
+
+Dashboards and the store come next.

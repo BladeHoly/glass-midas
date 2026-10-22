@@ -1,0 +1,37 @@
+---
+title: Orders
+description: Search, filters, sorting and pages together; select rows and act on them, with every state.
+order: 10
+template: orders
+---
+
+The store's orders, newest first, in the app shell. Search, the status filter, the date range,
+sorting and pages all work together, and the server does the work, so sorting covers every page,
+not just the one on screen. Checking rows swaps the toolbar for what you can do with them.
+
+<Template name="orders" />
+
+## Try it
+
+- Search for a name, an order number (`1207`) or a product (`lantern`).
+- Check a few rows: **Mark fulfilled** offers undo, and **Refund** asks first, since it can't be
+  undone.
+- Change the row height, or sort by total.
+- Add `?state=error` to the preview's address to see the error, or `?state=slow` for loading.
+
+## States
+
+| State   | Shows                                                      |
+| ------- | ---------------------------------------------------------- |
+| Loading | Skeleton rows shaped like the real ones, then the page.    |
+| Empty   | "No orders match", and **Clear filters** to get back.      |
+| Error   | What went wrong, and **Try again**.                        |
+| Phone   | Each order is a card, every value labeled with its column. |
+
+## Details that matter
+
+- **The counts on the filters follow the search,** so you know what a filter will show before
+  choosing it.
+- **One request at a time:** a slower, older answer never overwrites a newer one.
+- **The navigation is the glass;** the table sits on a plain panel. On a phone the side bar
+  becomes a floating tab bar.
