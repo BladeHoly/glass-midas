@@ -296,5 +296,22 @@
       "account-store.js"
     ],
     "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "returns",
+    "title": "Returns",
+    "group": "Account",
+    "description": "Sending something back in four steps: which pieces, why, how it travels and the refund, then the code to show.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx",
+      "account-store.js"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
   }
 ]

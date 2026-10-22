@@ -1,0 +1,32 @@
+---
+title: Returns
+description: 'Sending something back in four steps: which pieces, why, how it travels and the refund, then the code to show.'
+order: 42
+template: returns
+---
+
+Sending something back, in four steps on one page, with the [steps](/components/steps/) on top.
+
+1. **Pieces:** which ones and how many.
+2. **Why:** a reason for each; damage asks for a photo through [upload](/components/upload/).
+3. **How:** drop-off or collection, card or store credit. The refund is worked out before
+   anything is sent.
+4. **Done:** the code to show at the counter, the date to drop it by, and what happens next.
+
+<Template name="returns" />
+
+## Try it
+
+- Continue without choosing a piece, then choose one and say it arrived damaged: it asks for a
+  photo before going on.
+- Switch between drop-off and collection, and between the card and store credit; the refund
+  follows.
+- Open it without an order (`returns.html`), and it lists the orders that can still go back.
+
+## Details that matter
+
+- **Each step checks itself** and focuses what needs fixing; **Back keeps** everything chosen.
+- **Each step's heading takes focus,** so a screen reader hears where it is.
+- **No printer needed:** the code works at the counter, and the label prints on its own if wanted.
+- **An order that can't go back says why:** too late, not delivered yet, or a return already
+  started.

@@ -28,6 +28,7 @@ import { ComparePieces } from '../../../templates/src/compare/ComparePieces';
 import { SavedPieces } from '../../../templates/src/wishlist/SavedPieces';
 import { AccountPage } from '../../../templates/src/account/AccountPage';
 import { OrderDetail } from '../../../templates/src/order/OrderDetail';
+import { ReturnRequest } from '../../../templates/src/returns/ReturnRequest';
 import { CollectionGrid } from '../../../templates/src/collection/CollectionGrid';
 import { ProductPage } from '../../../templates/src/product/ProductPage';
 import { StoreHome } from '../../../templates/src/storefront/StoreHome';
@@ -66,6 +67,7 @@ const templates = {
   wishlist: SavedPieces,
   account: AccountPage,
   order: OrderDetail,
+  returns: ReturnRequest,
 };
 const Template = templates[(params.get('t') ?? 'sign-in') as keyof typeof templates] ?? SignIn;
 createRoot(document.getElementById('root')!).render(<Template />);
