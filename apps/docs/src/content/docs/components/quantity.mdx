@@ -1,0 +1,63 @@
+---
+title: Quantity
+description: A number with a button either side to take one off or add one, on the native number input.
+order: 6.97
+element: gm-quantity
+attributes:
+  - name: (on the input) min, max, step, value
+    description: As on any number input; the buttons stop at the limits.
+  - name: label-decrease, label-increase
+    type: string
+    default: '"One less", "One more"'
+    description: The buttons' names, for screen readers.
+methods:
+  - name: sync()
+    description: Turns the buttons on or off by where the value is. Call it after setting the value from code.
+---
+
+`<gm-quantity>` wraps a native `<input type="number">` with a button either side. Typing, the arrow
+keys, forms and the limits all come from the input. The buttons step it and fire `input` and
+`change`, like typing would, so frameworks see the change too.
+
+<Demo
+  busy
+  height="9rem"
+  html={`<gm-surface material="frost" radius="999" style="padding: 0.4rem; border-radius: 999px">
+<gm-quantity>
+<input type="number" min="1" max="9" value="1" aria-label="Quantity" />
+</gm-quantity>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<gm-quantity>
+  <input type="number" name="quantity" min="1" max="9" value="1" aria-label="Quantity" />
+</gm-quantity>
+```
+
+```tsx
+<GlassQuantity>
+  <input
+    type="number"
+    min={1}
+    max={9}
+    value={quantity}
+    aria-label="Quantity"
+    onChange={(e) => setQuantity(Number(e.target.value))}
+  />
+</GlassQuantity>
+```
+
+</CodePanel>
+
+Load `css/quantity.css` after the base. In React, `GlassQuantity` from `@glass-midas/react/forms`
+redraws after every render, so a controlled value keeps the buttons right.
+
+## Best practices
+
+- **Set a `max`** that means something, like what's in stock, so the plus stops there.
+- **Label it** with what's being counted.

@@ -106,12 +106,14 @@ for (const t of templates) {
     .replace(/href="([\w-]+\.css)"/g, (m, f) =>
       t.shared.includes(f) ? `href="../shared/${f}"` : m,
     )
-    .replace(/href="art\//g, 'href="../shared/art/')
+    .replace(/(href|src)="art\//g, '$1="../shared/art/')
     // The brand links home; in a preview that would leave the frame.
     .replace(/href="\/"/g, 'href="#"')
     // Links to other templates go to their previews.
     .replace(/href="([\w-]+)\.html"/g, (m, n) => (names.has(n) ? `href="../${n}/preview.html"` : m))
-    .replace('</head>', `${PREVIEW_SCRIPT}\n  </head>`);
+    .replace('</head>', `${PREVIEW_SCRIPT}\n  </head>`)
+    // Pictures the scripts draw come from the shared art folder, not one beside the page.
+    .replace('<html lang="en">', '<html lang="en" data-art="../shared/art/">');
   write(`${DIST}/${t.name}/preview.html`, html);
 
   manifest.push({
@@ -131,7 +133,14 @@ for (const t of templates) {
               to: f.replace(/\.js$/, '.d.ts'),
             }))
         : []),
-      ...t.art.map((f) => ({ from: `shared/art/${f}`, to: `art/${f}` })),
+      // An entry ending in / is a folder of art, every file in it.
+      ...t.art
+        .flatMap((f) =>
+          f.endsWith('/')
+            ? fs.readdirSync(`${DIST}/shared/art/${f}`).map((name) => `${f}${name}`)
+            : [f],
+        )
+        .map((f) => ({ from: `shared/art/${f}`, to: `art/${f}` })),
     ],
   });
 }

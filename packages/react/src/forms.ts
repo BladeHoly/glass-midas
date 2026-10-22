@@ -1,7 +1,14 @@
 import '@glass-midas/components/slider';
 import '@glass-midas/components/select';
 import '@glass-midas/components/otp';
-import type { GmOtp, GmSelect, GmSlider, SelectChangeDetail } from '@glass-midas/components';
+import '@glass-midas/components/quantity';
+import type {
+  GmOtp,
+  GmQuantity,
+  GmSelect,
+  GmSlider,
+  SelectChangeDetail,
+} from '@glass-midas/components';
 import { forwardRef, useEffect, useImperativeHandle, useRef, createElement } from 'react';
 import { synced, type Base } from './wrap.js';
 
@@ -38,5 +45,11 @@ export const GlassOtp = forwardRef<
   }, []);
   return createElement('gm-otp', { ...props, ref: el });
 });
+
+/**
+ * `<gm-quantity>`: put an `<input type="number">` inside; the buttons step it and fire its
+ * `onChange`. It redraws after every render, for a controlled value.
+ */
+export const GlassQuantity = synced<GmQuantity>('gm-quantity');
 
 export type { SelectChangeDetail };

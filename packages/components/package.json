@@ -84,6 +84,10 @@
       "types": "./dist/table.d.ts",
       "default": "./dist/table.js"
     },
+    "./quantity": {
+      "types": "./dist/quantity.d.ts",
+      "default": "./dist/quantity.js"
+    },
     "./styles.css": "./dist/styles.css",
     "./css/*": "./dist/css/*"
   },
@@ -118,7 +122,8 @@
     "dist/slider.js": 4608,
     "dist/select.js": 4608,
     "dist/otp.js": 4608,
-    "dist/table.js": 4608
+    "dist/table.js": 4608,
+    "dist/quantity.js": 4608
   },
   "scripts": {
     "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/css.mjs",

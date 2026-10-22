@@ -1,0 +1,327 @@
+/*
+ * The store shell: one bar of frosted glass floating at the top (the brand, the collections, a
+ * search, the account and the cart), the page's content on the brand's deep ground, and a plain
+ * footer. The bar is the only glass that stays; product pictures and cards are content.
+ */
+.shop {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100dvh;
+}
+/* The tide stays behind the store, dimmed, so the bar has color to bend and the pieces stand out. */
+.shop::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--on-bg) 82%, transparent);
+}
+.shop-wrap {
+  width: min(100% - 2 * var(--gm-space-xl), 76rem);
+  margin-inline: auto;
+}
+
+.shop-top {
+  position: sticky;
+  top: var(--gm-space-md);
+  z-index: 10;
+  margin-top: var(--gm-space-md);
+}
+.shop-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  padding: var(--gm-space-xs) var(--gm-space-xs) var(--gm-space-xs) var(--gm-space-lg);
+  border-radius: var(--gm-radius-pill);
+}
+.shop-links {
+  display: flex;
+  gap: var(--gm-space-2xs);
+  margin-left: var(--gm-space-md);
+}
+.shop-links .gm-chip {
+  min-height: 2.3rem;
+  font-size: var(--gm-text-sm);
+}
+.shop-search {
+  flex: 1;
+  max-width: 18rem;
+  margin-left: auto;
+}
+.shop-search .gm-input {
+  min-height: 2.3rem;
+  border-radius: var(--gm-radius-pill);
+  font-size: var(--gm-text-sm);
+}
+.shop-actions {
+  display: flex;
+  gap: var(--gm-space-2xs);
+}
+.shop-actions .gm-chip {
+  position: relative;
+}
+/* The cart's count, on its corner. */
+.shop-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  display: grid;
+  place-items: center;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  padding: 0 0.3rem;
+  border-radius: var(--gm-radius-pill);
+  background: var(--on-accent);
+  color: var(--gm-ink-inverse);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.shop-count:empty {
+  display: none;
+}
+.shop-menu-button {
+  display: none;
+}
+
+/* The mini cart: a popover from the cart button. */
+.shop-cart {
+  width: min(24rem, calc(100vw - 2rem));
+  padding: var(--gm-space-lg);
+}
+.shop-cart h2 {
+  margin: 0 0 var(--gm-space-md);
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.shop-cart-lines {
+  display: grid;
+  gap: var(--gm-space-md);
+  max-height: 50vh;
+  margin: 0 0 var(--gm-space-lg);
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.shop-cart-lines li {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto;
+  align-items: center;
+  gap: var(--gm-space-md);
+  font-size: var(--gm-text-sm);
+}
+.shop-cart-lines img {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 12px;
+}
+.shop-cart-lines small {
+  display: block;
+  color: var(--on-ink-muted);
+}
+.shop-cart-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 var(--gm-space-md);
+  font-weight: 600;
+}
+.shop-cart-note {
+  margin: 0 0 var(--gm-space-md);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+.shop-cart-actions {
+  display: grid;
+  gap: var(--gm-space-sm);
+}
+.shop-cart-actions .gm-chip {
+  width: 100%;
+}
+.shop-cart-empty {
+  margin: 0 0 var(--gm-space-md);
+  color: var(--on-ink-muted);
+}
+
+.shop-main {
+  padding: var(--gm-space-2xl) 0 var(--gm-space-4xl);
+}
+
+/* A product as a card: its picture, its name and kind, its price, its finishes. */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--gm-space-xl) var(--gm-space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shop-card {
+  position: relative;
+  display: grid;
+  gap: var(--gm-space-xs);
+}
+.shop-card a {
+  text-decoration: none;
+}
+/* The whole card is the link; its own buttons sit above it. */
+.shop-card a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+}
+.shop-card a:focus-visible::after {
+  box-shadow: var(--gm-focus);
+}
+.shop-card a:focus-visible {
+  box-shadow: none;
+}
+.shop-card-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  margin-bottom: var(--gm-space-sm);
+  border-radius: 20px;
+  background: #121019;
+}
+.shop-card-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition:
+    opacity 0.35s,
+    scale 0.5s;
+}
+.shop-card-media img + img {
+  opacity: 0;
+}
+.shop-card:hover .shop-card-media img + img {
+  opacity: 1;
+  scale: 1.03;
+}
+.shop-card h3 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.shop-card p {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.shop-card .shop-price {
+  color: var(--on-ink);
+  font-variant-numeric: tabular-nums;
+}
+.shop-swatches {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: var(--gm-space-xs);
+  margin-top: var(--gm-space-xs);
+}
+/* A finish: a dot of its color, ringed when it's the one shown. */
+.shop-swatch {
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.2),
+    0 0 0 1px rgb(0 0 0 / 0.25);
+  cursor: pointer;
+}
+.shop-swatch[aria-pressed='true'],
+.shop-swatch[aria-checked='true'] {
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.2),
+    0 0 0 2px var(--on-bg),
+    0 0 0 3.5px var(--on-ink);
+}
+
+.shop-section {
+  margin-top: var(--gm-space-4xl);
+}
+.shop-section > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gm-space-lg);
+  margin-bottom: var(--gm-space-xl);
+}
+.shop-section h2 {
+  margin: 0;
+  font: 500 var(--gm-text-3xl) / 1.1 var(--on-font-display);
+}
+.shop-section > header a {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+
+.shop-foot {
+  padding: var(--gm-space-3xl) 0 var(--gm-space-2xl);
+  border-top: 1px solid var(--on-line);
+  background: color-mix(in srgb, var(--on-bg) 80%, transparent);
+  font-size: var(--gm-text-sm);
+}
+.shop-foot-grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, 1fr);
+  gap: var(--gm-space-2xl);
+}
+.shop-foot h2 {
+  margin: 0 0 var(--gm-space-md);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.shop-foot ul {
+  display: grid;
+  gap: var(--gm-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.shop-foot a {
+  color: var(--on-ink);
+  text-decoration: none;
+}
+.shop-foot a:hover {
+  text-decoration: underline;
+}
+.shop-foot p {
+  color: var(--on-ink-muted);
+}
+.shop-small {
+  margin-top: var(--gm-space-2xl);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+
+@media (max-width: 60rem) {
+  .shop-links,
+  .shop-search {
+    display: none;
+  }
+  .shop-menu-button {
+    display: inline-flex;
+  }
+  .shop-actions {
+    margin-left: auto;
+  }
+  .shop-foot-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 30rem) {
+  .shop-wrap {
+    width: calc(100% - 2 * var(--gm-space-md));
+  }
+  .shop-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gm-space-lg) var(--gm-space-md);
+  }
+}

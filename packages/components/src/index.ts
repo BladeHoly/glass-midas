@@ -6,6 +6,7 @@ import { GmMenu } from './menu.js';
 import { GmNav } from './nav.js';
 import { GmPopover } from './popover.js';
 import { GmOtp } from './otp.js';
+import { GmQuantity } from './quantity.js';
 import { GmScrollbar } from './scrollbar.js';
 import { GmSearch } from './search.js';
 import { GmSelect } from './select.js';
@@ -42,6 +43,7 @@ export {
   GmSelect,
   GmOtp,
   GmTable,
+  GmQuantity,
 };
 export { toast, type ToastOptions } from './toast.js';
 export type { CalloutType } from './callout.js';
