@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Order · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="manage-order.css" />
+    <!-- The script imports the components by name (for toast()); this says where they come from. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@glass-midas/components": "https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+        }
+      }
+    </script>
+    <script type="module" src="manage-order.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-tide" aria-hidden="true"></div>
+    <div class="app">
+      <a class="app-skip" href="#main">Skip to content</a>
+
+      <aside class="app-side">
+        <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+        <gm-nav class="app-nav" orientation="vertical" material="frost" aria-label="Main">
+          <a href="overview.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="7" height="9" rx="2" />
+              <rect x="14" y="3" width="7" height="5" rx="2" />
+              <rect x="14" y="12" width="7" height="9" rx="2" />
+              <rect x="3" y="16" width="7" height="5" rx="2" />
+            </svg>
+            Overview
+          </a>
+          <a href="orders.html" aria-current="page">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" />
+              <path d="M9 8h6M9 12h6" />
+            </svg>
+            Orders
+          </a>
+          <a href="catalogue.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z" />
+              <path d="m4 7.5 8 4.5 8-4.5M12 12v9" />
+            </svg>
+            Products
+          </a>
+          <a href="analytics.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+            </svg>
+            Analytics
+          </a>
+          <a href="status.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12h4l3-8 4 16 3-8h4" />
+            </svg>
+            Status
+          </a>
+        </gm-nav>
+        <div class="app-me">
+          <span class="gm-avatar" aria-hidden="true">NH</span>
+          <span>Noor Haddad<small>Studio manager</small></span>
+        </div>
+      </aside>
+
+      <div class="app-body">
+        <header class="app-top">
+          <a class="on-brand app-top-brand" href="/"
+            ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+          >
+          <div>
+            <h1 id="title">Order</h1>
+            <p id="lede">What the store knows about it, and what to do next.</p>
+          </div>
+          <div class="app-actions">
+            <gm-search
+              material="frost"
+              placeholder="Search Ondine"
+              hotkey="k"
+              label="Search Ondine"
+            ></gm-search>
+          </div>
+        </header>
+
+        <main id="main" class="app-main">
+          <nav class="gm-breadcrumbs mo-crumbs" aria-label="Breadcrumb">
+            <ol>
+              <li><a href="orders.html">Orders</a></li>
+              <li><span aria-current="page" id="crumb">Order</span></li>
+            </ol>
+          </nav>
+
+          <div id="loading" class="mo-loading" aria-busy="true">
+            <span class="gm-skeleton gm-skeleton-text"></span>
+            <span class="gm-skeleton mo-skeleton"></span>
+          </div>
+          <div class="gm-empty" id="missing" hidden>
+            <span class="on-sigil gm-empty-art" aria-hidden="true"></span>
+            <h2>No order with that number</h2>
+            <p>Look it up in the orders, by number, name or email.</p>
+            <a class="gm-chip gm-chip-primary" href="orders.html">All orders</a>
+          </div>
+
+          <div id="order" hidden>
+            <!-- Where the order stands, and the one thing to do next. -->
+            <div class="mo-bar">
+              <p class="mo-states" id="states"></p>
+              <div class="mo-actions">
+                <button class="gm-chip gm-chip-primary" type="button" id="capture" hidden>
+                  Capture payment
+                </button>
+                <button class="gm-chip gm-chip-primary" type="button" id="open-fulfil" hidden>
+                  Fulfil
+                </button>
+                <button class="gm-chip" type="button" id="open-refund" hidden>Refund</button>
+                <button
+                  class="gm-chip gm-chip-round"
+                  type="button"
+                  popovertarget="more"
+                  aria-label="More actions"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <circle cx="5" cy="12" r="1.8" />
+                    <circle cx="12" cy="12" r="1.8" />
+                    <circle cx="19" cy="12" r="1.8" />
+                  </svg>
+                </button>
+                <gm-menu id="more" aria-label="More actions">
+                  <button value="slip">Print packing slip</button>
+                  <button value="link">Copy a link to this order</button>
+                  <hr />
+                  <button value="cancel" id="menu-cancel">Cancel order</button>
+                </gm-menu>
+              </div>
+            </div>
+
+            <div class="mo-grid">
+              <div class="mo-main">
+                <section class="mo-card mo-pack" aria-labelledby="pack-title">
+                  <header class="mo-card-head">
+                    <h2 id="pack-title">Pieces</h2>
+                    <p id="pack-count" aria-live="polite"></p>
+                  </header>
+                  <ul class="mo-lines" id="lines"></ul>
+                  <div class="mo-shipment" id="shipment" hidden></div>
+                </section>
+
+                <section class="mo-card" aria-labelledby="money-title">
+                  <h2 id="money-title">Payment</h2>
+                  <dl class="gm-totals" id="totals"></dl>
+                </section>
+
+                <section class="mo-card" aria-labelledby="history-title">
+                  <h2 id="history-title">History</h2>
+                  <form class="mo-note" id="note-form" novalidate>
+                    <label for="note" class="on-sr-only">A note for the team</label>
+                    <textarea
+                      class="gm-input"
+                      id="note"
+                      rows="2"
+                      placeholder="A note for the team: only the team sees it"
+                      aria-describedby="note-error"
+                    ></textarea>
+                    <p class="gm-field-error" id="note-error" aria-live="polite"></p>
+                    <button class="gm-chip" type="submit" id="add-note">Add note</button>
+                  </form>
+                  <ol class="gm-timeline" id="history"></ol>
+                </section>
+              </div>
+
+              <aside class="mo-side">
+                <section class="mo-card" aria-labelledby="customer-title">
+                  <h2 id="customer-title">Customer</h2>
+                  <div class="mo-customer" id="customer"></div>
+                </section>
+                <section class="mo-card" aria-labelledby="ship-title">
+                  <header class="mo-card-head">
+                    <h2 id="ship-title">Ship to</h2>
+                    <button class="gm-chip gm-chip-plain" type="button" id="copy-address">
+                      Copy
+                    </button>
+                  </header>
+                  <address id="address"></address>
+                </section>
+                <section class="mo-card" aria-labelledby="risk-title">
+                  <h2 id="risk-title">Checks</h2>
+                  <p class="mo-risk">
+                    <span class="gm-badge" data-tone="success">Low risk</span>
+                  </p>
+                  <ul class="mo-checks">
+                    <li>The card's address matches</li>
+                    <li>The security code matches</li>
+                    <li id="returning"></li>
+                  </ul>
+                </section>
+              </aside>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Fulfil: how it leaves, and whether the customer hears. -->
+    <gm-dialog id="fulfil" heading="Fulfil the order" placement="end">
+      <form class="mo-form" id="fulfil-form" novalidate>
+        <p class="mo-small" id="fulfil-summary"></p>
+        <div class="gm-field">
+          <label for="fulfil-carrier">Carrier</label>
+          <gm-select>
+            <select id="fulfil-carrier" name="carrier">
+              <option>Lusa Express</option>
+              <option>DHL</option>
+              <option>UPS</option>
+              <option>FedEx</option>
+            </select>
+          </gm-select>
+        </div>
+        <div class="gm-field">
+          <label for="tracking">Tracking number</label>
+          <input
+            class="gm-input"
+            id="tracking"
+            name="tracking"
+            autocomplete="off"
+            spellcheck="false"
+            required
+            aria-describedby="tracking-error"
+          />
+          <p class="gm-field-error" id="tracking-error" aria-live="polite"></p>
+        </div>
+        <label class="gm-check-label mo-switch">
+          <span>Email the customer the tracking link</span>
+          <input type="checkbox" class="gm-toggle" role="switch" name="notify" checked />
+        </label>
+        <div class="mo-form-actions">
+          <button class="gm-chip gm-chip-plain" type="button" data-close>Cancel</button>
+          <button class="gm-chip gm-chip-primary" type="submit" id="fulfil-send">
+            Mark as fulfilled
+          </button>
+        </div>
+      </form>
+    </gm-dialog>
+
+    <!-- Refund: which pieces, the shipping, why; the amount before anything moves. -->
+    <gm-dialog id="refund" heading="Refund" placement="end">
+      <form class="mo-form" id="refund-form" novalidate>
+        <ul class="mo-refund-lines" id="refund-lines"></ul>
+        <label class="gm-check-label">
+          <input type="checkbox" class="gm-check" name="shipping" id="refund-shipping" />
+          <span id="refund-shipping-label">Refund the shipping</span>
+        </label>
+        <div class="gm-field">
+          <label for="refund-reason">Reason</label>
+          <gm-select>
+            <select id="refund-reason" name="reason">
+              <option>Returned</option>
+              <option>Arrived damaged</option>
+              <option>Wrong piece sent</option>
+              <option>Goodwill</option>
+              <option>Something else</option>
+            </select>
+          </gm-select>
+        </div>
+        <dl class="gm-totals" id="refund-total"></dl>
+        <p class="gm-field-error" id="refund-error" aria-live="polite"></p>
+        <div class="mo-form-actions">
+          <button class="gm-chip gm-chip-plain" type="button" data-close>Cancel</button>
+          <button class="gm-chip gm-chip-primary" type="submit" id="refund-send">Refund</button>
+        </div>
+      </form>
+    </gm-dialog>
+
+    <gm-dialog id="cancel" heading="Cancel this order?">
+      <p id="cancel-text"></p>
+      <form method="dialog" class="dialog-actions">
+        <button class="gm-chip" value="keep">Keep it</button>
+        <button class="gm-chip mo-danger" value="cancel">Cancel the order</button>
+      </form>
+    </gm-dialog>
+  </body>
+</html>
