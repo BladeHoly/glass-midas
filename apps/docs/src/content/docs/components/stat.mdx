@@ -1,0 +1,77 @@
+---
+title: Stat and meter
+label: Stat
+description: One number with how it moved, and a share of a whole on a track. CSS only.
+order: 6.95
+element: .gm-stat
+attributes:
+  - name: class="gm-stat"
+    description: A tile with gm-stat-label, gm-stat-value, gm-stat-delta and an optional sparkline (gm-stat-trend).
+  - name: (on gm-stat-delta) data-direction
+    type: '"up" | "down"'
+    description: The arrow.
+  - name: (on gm-stat-delta) data-tone
+    type: '"good" | "bad"'
+    description: The color. Whether up is good depends on the number, so it's yours to say.
+  - name: class="gm-meter"
+    description: A track filled to --value (0 to 1). Give it role="meter" and its aria values.
+  - name: (on a meter) data-tone
+    type: '"success" | "warning" | "danger"'
+    description: A status color, when the value means trouble.
+---
+
+A stat is one number: what it is, its value, how it moved against a period you name, and,
+optionally, its recent shape. A meter is a share of a whole: a fill on a lighter track of the same
+color. Both are content, so they're plain fills, not glass.
+
+<Demo
+  busy
+  height="13rem"
+  html={`<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 13rem)); gap: 0.75rem">
+<article class="gm-stat" style="background: rgb(14 12 24 / 0.72)">
+<p class="gm-stat-label">Revenue</p>
+<p class="gm-stat-value">$81.3K</p>
+<p class="gm-stat-delta" data-direction="up" data-tone="good">+23.8% <span>vs. last month</span></p>
+</article>
+<article class="gm-stat" style="background: rgb(14 12 24 / 0.72)">
+<p class="gm-stat-label">Checkout uptime</p>
+<p class="gm-stat-value">99.71%</p>
+<span class="gm-meter" data-tone="warning" role="meter" aria-label="Checkout uptime" aria-valuemin="99" aria-valuemax="100" aria-valuenow="99.71" style="--value: 0.71"></span>
+</article>
+</div>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<article class="gm-stat">
+  <p class="gm-stat-label">Revenue</p>
+  <p class="gm-stat-value">$81.3K</p>
+  <p class="gm-stat-delta" data-direction="up" data-tone="good">
+    +23.8% <span>vs. last month</span>
+  </p>
+</article>
+
+<span
+  class="gm-meter"
+  role="meter"
+  aria-label="Disk used"
+  aria-valuemin="0"
+  aria-valuemax="100"
+  aria-valuenow="72"
+  style="--value: 0.72"
+></span>
+```
+
+</CodePanel>
+
+Both are in `css/stat.css`.
+
+## Best practices
+
+- **Name the period** the change is against: "vs. last month", never just "+23.8%".
+- **Say whether up is good.** More revenue is good, but more refunds aren't; `data-tone` is yours
+  to set.
+- **Compact big numbers** ($81.3K) in a tile, and keep the exact one in a table or a tooltip.

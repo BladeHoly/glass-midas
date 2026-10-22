@@ -24,7 +24,7 @@ const NAV = [
   {
     id: 'overview',
     label: 'Overview',
-    href: '#',
+    href: 'overview.html',
     icon: icon(
       <>
         <rect x="3" y="3" width="7" height="9" rx="2" />
@@ -57,16 +57,16 @@ const NAV = [
     ),
   },
   {
-    id: 'customers',
-    label: 'Customers',
-    href: '#',
-    icon: icon(
-      <>
-        <circle cx="9" cy="8" r="3.5" />
-        <path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5" />
-        <path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.7 3 2.5 3.5 5.2" />
-      </>,
-    ),
+    id: 'analytics',
+    label: 'Analytics',
+    href: 'analytics.html',
+    icon: icon(<path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />),
+  },
+  {
+    id: 'status',
+    label: 'Status',
+    href: 'status.html',
+    icon: icon(<path d="M3 12h4l3-8 4 16 3-8h4" />),
   },
 ];
 

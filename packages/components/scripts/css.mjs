@@ -21,6 +21,7 @@ const SHEETS = [
   'otp',
   'table',
   'badge',
+  'stat',
   'nav',
   'search',
   'scrollbar',

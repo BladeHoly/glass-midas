@@ -73,4 +73,23 @@ CSS once in your app, along with `@glass-midas/components/styles.css`.
   </Card>
 </CardGrid>
 
-Dashboards and the store come next.
+## Dashboards
+
+<CardGrid>
+  <Card title="Overview" href="/templates/overview-dashboard/">
+    Four numbers against the period before, revenue, best sellers.
+  </Card>
+  <Card title="Analytics" href="/templates/analytics/">
+    Revenue by collection, visit to order, channels and cities.
+  </Card>
+  <Card title="Status" href="/templates/status/">
+    Services in a word and a color, latency against budget, incidents.
+  </Card>
+</CardGrid>
+
+The dashboards' charts are a small kit of their own (`charts.js`, `charts.css`; `ChartsKit.tsx` in
+React): thin lines and bars, one axis, a hover layer that works from the keyboard, and a table view
+of every chart. Their three colors were chosen together and checked for color blindness in both
+themes.
+
+The store comes next.

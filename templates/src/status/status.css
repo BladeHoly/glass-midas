@@ -1,0 +1,113 @@
+/*
+ * Status: the state in a sentence first, then a tile per service, then the detail. States always
+ * come as a word and a color together.
+ */
+.status-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-md);
+  margin: 0;
+  padding: var(--gm-space-md) var(--gm-space-lg);
+  border-radius: 16px;
+  background: color-mix(
+    in srgb,
+    var(--gm-status-success) 14%,
+    color-mix(in srgb, var(--on-bg) 62%, transparent)
+  );
+  font-weight: 500;
+}
+.status-summary[data-tone='warning'] {
+  background: color-mix(
+    in srgb,
+    var(--gm-status-warning) 16%,
+    color-mix(in srgb, var(--on-bg) 62%, transparent)
+  );
+}
+.status-summary::before {
+  content: '';
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--gm-status-success);
+}
+.status-summary[data-tone='warning']::before {
+  background: var(--gm-status-warning);
+}
+.status-summary:empty {
+  display: none;
+}
+
+.status-services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--gm-space-md);
+}
+.status-service {
+  display: grid;
+  gap: var(--gm-space-sm);
+  padding: var(--gm-space-lg);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.status-service header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-sm);
+}
+.status-service h2 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.status-service p {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.status-service strong {
+  color: var(--on-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-incidents {
+  display: grid;
+  gap: var(--gm-space-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.status-incident header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm) var(--gm-space-md);
+}
+.status-incident h3 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.status-meta {
+  margin: var(--gm-space-2xs) 0 var(--gm-space-md);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+/* Updates as a thread: newest first, joined by a line. */
+.status-incident ol {
+  display: grid;
+  gap: var(--gm-space-md);
+  margin: 0;
+  padding: 0 0 0 var(--gm-space-lg);
+  border-left: 1px solid var(--on-line);
+  list-style: none;
+  font-size: var(--gm-text-sm);
+}
+.status-incident time {
+  display: block;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
