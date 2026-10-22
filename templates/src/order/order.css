@@ -1,0 +1,184 @@
+/* One order: where it is first, then what's in it beside where it goes and what happened. */
+.od-crumbs {
+  margin-bottom: var(--gm-space-xl);
+}
+.od-loading {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.od-skeleton {
+  height: 10rem;
+  border-radius: 24px;
+}
+.od-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--gm-space-lg);
+  margin-bottom: var(--gm-space-xl);
+}
+.od-head h1 {
+  margin: 0;
+}
+.od-head h1:focus {
+  outline: 0;
+}
+.od-placed {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  margin: var(--gm-space-xs) 0 0;
+  color: var(--on-ink-muted);
+}
+.od-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gm-space-sm);
+}
+.od-danger {
+  color: var(--gm-status-danger);
+}
+
+.od-card {
+  display: grid;
+  align-content: start;
+  gap: var(--gm-space-md);
+  padding: var(--gm-space-xl);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.od-card h2 {
+  margin: 0;
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.od-card p,
+.od-card address {
+  margin: 0;
+  font-style: normal;
+}
+.od-progress {
+  gap: var(--gm-space-xl);
+  margin-bottom: var(--gm-space-lg);
+}
+.od-where {
+  font: 500 var(--gm-text-2xl) / 1.25 var(--on-font-display);
+}
+.od-tracking {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm) var(--gm-space-md);
+  padding-top: var(--gm-space-lg);
+  border-top: 1px solid var(--on-line);
+}
+.od-tracking p {
+  display: grid;
+  margin-right: auto;
+}
+.od-tracking span {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.od-tracking strong {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.od-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--gm-space-lg);
+  align-items: start;
+}
+.od-side {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.od-lines {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.od-line {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) auto;
+  gap: var(--gm-space-md);
+  align-items: start;
+  padding: var(--gm-space-md) 0;
+  border-top: 1px solid var(--on-line);
+}
+.od-line:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.od-line img {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 14px;
+  background: #121019;
+}
+.od-line h3 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.od-line h3 a {
+  text-decoration: none;
+}
+.od-line p {
+  margin: var(--gm-space-2xs) 0 var(--gm-space-xs);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.od-review {
+  font-size: var(--gm-text-sm);
+}
+.od-line-total {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+.od-small {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.od-card address {
+  line-height: 1.6;
+}
+
+@media (max-width: 52rem) {
+  .od-grid {
+    grid-template-columns: 1fr;
+  }
+  .od-card {
+    padding: var(--gm-space-lg);
+  }
+  .od-where {
+    font-size: var(--gm-text-xl);
+  }
+}
+
+/* The receipt, printed: the order alone, in black on white. */
+@media print {
+  .on-art,
+  .shop-top,
+  .shop-foot,
+  .od-crumbs,
+  .od-actions,
+  .od-tracking .gm-chip,
+  gm-popover,
+  gm-menu {
+    display: none !important;
+  }
+  .od-card {
+    background: none;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+  .od-grid {
+    grid-template-columns: 1.4fr 1fr;
+  }
+}

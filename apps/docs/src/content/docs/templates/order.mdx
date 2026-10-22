@@ -1,0 +1,28 @@
+---
+title: Order
+description: "One order: where it is in a sentence and steps, tracking, what's in it, what happened, cancel or return."
+order: 41
+template: order
+---
+
+One order from the shopper's side. It starts with the sentence people come for ("On its way. It
+arrives Saturday, October 24."). Then come the [steps](/components/steps/) with their dates and
+the tracking number, what's in it with the [totals](/components/price/), the delivery and payment,
+and a [timeline](/components/steps/) of everything that happened.
+
+<Template name="order" />
+
+## Try it
+
+- Order `1894` is on its way: copy the tracking number.
+- Order `1892` hasn't shipped: cancel it, and the steps, the timeline and the actions all change.
+- Order `1836` was delivered: it offers a return, a review for each piece, and buying it again.
+- **Print receipt** prints the order alone, without the store around it.
+
+## Details that matter
+
+- **The actions follow the order:** cancelling only before it ships, returning only within 60
+  days of delivery.
+- **Cancelling asks first** and says where the money goes and when.
+- **An order that isn't theirs** gets a kind "we can't find it", with the way back to their
+  orders.

@@ -1,0 +1,31 @@
+---
+title: Account
+description: Orders with where each one is, addresses in a drawer, kept cards and details, a tab each.
+order: 40
+template: account
+---
+
+The shopper's own page, in four [tabs](/components/tabs/), each with its own address (`#orders`,
+`#addresses`, `#payment`, `#details`) so a link opens the right one.
+
+- **Orders:** where each one is, in a line ("Arrives by Saturday", "Delivered Oct 6 · return by
+  Dec 5"), with the pieces, the total and what can be done now: track, return, or buy again.
+- **Addresses:** edited in a [drawer](/components/dialog/).
+- **Payment:** the cards kept, with the ones about to expire marked.
+- **Details:** name, email, which emails to get, the password, and a way to leave.
+
+<Template name="account" />
+
+## Try it
+
+- Filter the orders by **In progress** or **Delivered**, then **Show more**.
+- Edit an address and empty a required field; the drawer says which, and focuses it.
+- Change the password with `wrong` as the current one.
+
+## Details that matter
+
+- **Loading shows skeletons in the shape of orders,** so nothing jumps when they arrive.
+- **"Show more" moves focus to the first new order,** so keyboard users carry on from there.
+- **Removing an address can be undone,** and a card shows only its brand, last four digits and
+  expiry.
+- **Deleting the account asks first,** and says what stays (orders) and what goes.

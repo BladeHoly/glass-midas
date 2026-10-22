@@ -196,6 +196,16 @@ tokens, so templates never hard-code them. Check core's 4 KB budget when we do.
 
 That makes 20 templates over the 2 shells.
 
+**Added later (October 2026), to cover the whole purchase flow:**
+
+- **Commerce primitives** in the components: gallery, upload, swatches and options, price and
+  totals, rating, steps and timeline, accordion, breadcrumbs, empty state, a two-knob range and a
+  drawer.
+- **Saved** (a wishlist, shared as a link), reviews on the product page, filters in a drawer on
+  the collection, and save for later in the cart.
+- **Returns**: the account side gets three templates (account, order, returns) instead of two.
+- **Admin**: a product editor and one order.
+
 ## Format
 
 - **Docs:**

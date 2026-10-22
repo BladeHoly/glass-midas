@@ -262,5 +262,56 @@
       "ShopKit.tsx"
     ],
     "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "account",
+    "title": "Account",
+    "group": "Account",
+    "description": "Orders with where each one is, addresses in a drawer, kept cards and details, a tab each.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx",
+      "account-store.js"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "order",
+    "title": "Order",
+    "group": "Account",
+    "description": "One order: where it is in a sentence and steps, tracking, what's in it, what happened, cancel or return.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx",
+      "account-store.js"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "returns",
+    "title": "Returns",
+    "group": "Account",
+    "description": "Sending something back in four steps: which pieces, why, how it travels and the refund, then the code to show.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx",
+      "account-store.js"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
   }
 ]
