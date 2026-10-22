@@ -2,18 +2,93 @@ import type { GmPopover } from '@glass-midas/components';
 import { GlassMenu, GlassPopover } from '@glass-midas/react/overlays';
 import { GlassSurface } from '@glass-midas/react/surfaces';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { image, onCart, readCart, totals } from './cart-store.js';
-import { money, product, type Finish, type Product } from './data.js';
+import { image, onCart, onSaved, readCart, readSaved, toggleSaved, totals } from './cart-store.js';
+import { money, product, reviews, type Finish, type Product } from './data.js';
 
-// The store shell for React: the frosted bar (brand, collections, search, account, cart), the
-// mini cart behind the cart button, the footer, and the product card. Load tokens.css,
-// ondine.css and shop.css once in your app.
+// The store shell for React: the frosted bar (brand, collections, search, account, saved, cart),
+// the mini cart behind the cart button, the footer, and the product card with its price, stars
+// and heart. Load tokens.css, ondine.css and shop.css once in your app.
 
 /** The cart's lines, kept in step with every change, here or in another tab. */
 export function useCart() {
   const [lines, setLines] = useState(readCart);
   useEffect(() => onCart(setLines), []);
   return lines;
+}
+
+/** The saved pieces, kept in step with every change, here or in another tab. */
+export function useSaved() {
+  const [list, setList] = useState(readSaved);
+  useEffect(() => onSaved(setList), []);
+  return list;
+}
+
+/** A price, and what it was when it's on sale (with "was" for screen readers). */
+export function Price({ p }: { p: Product }) {
+  return (
+    <span className="gm-price">
+      <data value={p.price}>{money(p.price)}</data>
+      {p.was && (
+        <>
+          <s>
+            <span className="on-sr-only">was </span>
+            {money(p.was)}
+          </s>
+          <span className="gm-price-off">−{Math.round((1 - p.price / p.was) * 100)}%</span>
+        </>
+      )}
+    </span>
+  );
+}
+
+/** Stars and how many reviews they come from. */
+export function Stars({ value, label = `${value} out of 5` }: { value: number; label?: string }) {
+  return (
+    <span
+      className="gm-rating"
+      style={{ '--gm-rating': value } as CSSProperties}
+      role="img"
+      aria-label={label}
+    />
+  );
+}
+
+export function RatingLine({ id, long = false }: { id: string; long?: boolean }) {
+  const { average, count } = reviews[id]!.rating;
+  return (
+    <>
+      <Stars value={average} />{' '}
+      <span>{long ? `${average} · ${count} reviews` : `${average} (${count})`}</span>
+    </>
+  );
+}
+
+const heart = <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />;
+
+/** The heart that saves a piece for later, pressed when it's saved. */
+export function SaveButton({
+  p,
+  finish,
+  className = 'shop-save',
+  onToggle,
+}: {
+  p: Product;
+  finish: Finish;
+  className?: string;
+  onToggle?: (saved: boolean) => void;
+}) {
+  const saved = useSaved().some((s) => s.product === p.id);
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-pressed={saved}
+      aria-label={className === 'shop-save' ? `Save ${p.name} for later` : 'Save for later'}
+      onClick={() => onToggle?.(toggleSaved(p.id, finish.name))}
+    >
+      {icon(heart)}
+    </button>
+  );
 }
 
 const LINKS = [
@@ -55,6 +130,7 @@ export function ShopShell({
   children: ReactNode;
 }) {
   const lines = useCart();
+  const saved = useSaved();
   const t = totals(lines);
   const cartRef = useRef<GmPopover>(null);
   return (
@@ -105,6 +181,16 @@ export function ShopShell({
                     <path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" />
                   </>,
                 )}
+              </a>
+              <a
+                className="gm-chip gm-chip-plain gm-chip-round"
+                href="wishlist.html"
+                aria-label={saved.length ? `Saved, ${saved.length}` : 'Saved, none yet'}
+              >
+                {icon(heart)}
+                <span className="shop-count" aria-hidden="true">
+                  {saved.length || ''}
+                </span>
               </a>
               <button
                 className="gm-chip gm-chip-plain gm-chip-round"
@@ -243,7 +329,7 @@ export function ShopShell({
   );
 }
 
-/** A product as a card: two pictures (the second on hover), name, kind, price, and its finishes. */
+/** A product as a card: two pictures (the second on hover), its heart, name, kind, stars, price and finishes. */
 export function ProductCard({ p }: { p: Product }) {
   const [finish, setFinish] = useState<Finish>(p.finishes[0]!);
   return (
@@ -257,12 +343,19 @@ export function ProductCard({ p }: { p: Product }) {
           width={400}
           height={400}
         />
+        {p.was && <span className="gm-badge shop-card-flag">On sale</span>}
       </div>
+      <SaveButton p={p} finish={finish} />
       <h3>
         <a href={`product.html?id=${p.id}&finish=${finish.name.toLowerCase()}`}>{p.name}</a>
       </h3>
       <p>{p.kind}</p>
-      <p className="shop-price">{money(p.price)}</p>
+      <p className="shop-rating">
+        <RatingLine id={p.id} />
+      </p>
+      <p className="shop-price">
+        <Price p={p} />
+      </p>
       {p.finishes.length > 1 && (
         <div className="shop-swatches" role="group" aria-label={`${p.name} finishes`}>
           {p.finishes.map((f) => (

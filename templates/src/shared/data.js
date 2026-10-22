@@ -4,7 +4,7 @@
 
 /**
  * @typedef {{ name: string, color: string }} Finish
- * @typedef {{ id: string, name: string, kind: string, collection: string, price: number,
+ * @typedef {{ id: string, name: string, kind: string, collection: string, price: number, was?: number,
  *   finishes: Finish[], blurb: string, figure: [number, number], specs: Record<string, string> }} Product
  * @typedef {{ id: string, name: string, email: string, city: string, since: string }} Customer
  * @typedef {'paid' | 'fulfilled' | 'pending' | 'refunded' | 'cancelled'} OrderStatus
@@ -101,6 +101,7 @@ export const products = [
     kind: 'Portable speaker',
     collection: 'room',
     price: 279,
+    was: 329,
     finishes: finishes('Ember', 'Moonstone', 'Verdigris'),
     blurb: 'Takes a fall and a rain shower, and still sounds bigger than it is.',
     figure: [2, 9],
@@ -349,6 +350,92 @@ export const stock = (() => {
     for (const f of p.finishes)
       out[p.id][f.name] = rand() < 0.12 ? 0 : Math.floor(rand() ** 1.6 * 140);
   }
+  return out;
+})();
+
+/**
+ * What people said about each piece: a few written reviews, and how many stars every review gave.
+ * @typedef {{ id: string, product: string, name: string, city: string, date: string, stars: number,
+ *   title: string, body: string, finish: string, verified: boolean }} Review
+ * @typedef {{ average: number, count: number, spread: [number, number, number, number, number] }} Rating
+ */
+const SAID = [
+  [
+    5,
+    'Worth the wait',
+    'It arrived a day early and sounds better than the one I tried in the studio.',
+  ],
+  [
+    5,
+    'Quietly perfect',
+    'Nothing about it asks for attention, which is the point. The finish is lovely in daylight.',
+  ],
+  [
+    4,
+    'Very good, one small thing',
+    'I wish the cable were a little longer, but the sound is warm and wide.',
+  ],
+  [5, 'A gift that stayed', 'Bought it for my partner and now we argue about whose turn it is.'],
+  [
+    4,
+    'Beautifully made',
+    'The box alone felt like an event. Took a week to get used to how open it sounds.',
+  ],
+  [3, 'Good, not for me', 'Lovely build, but I prefer more bass. Returning it was easy and quick.'],
+  [
+    5,
+    'Records sound like records',
+    'I hear the room on old jazz recordings now. Set up in ten minutes.',
+  ],
+  [4, 'Holds up', 'Six months in, daily use, still looks new. The figure card is a nice touch.'],
+  [
+    2,
+    'Arrived scratched',
+    'A small mark on the side. Support sent a new one within three days, so two stars for the box, five for them.',
+  ],
+  [5, 'Better than the price', 'I compared it with pieces twice the cost and kept this one.'],
+];
+/** @type {Record<string, { rating: Rating, reviews: Review[] }>} */
+export const reviews = (() => {
+  const rand = random(31);
+  /** @type {Record<string, { rating: Rating, reviews: Review[] }>} */
+  const out = {};
+  products.forEach((p, k) => {
+    const count = 14 + Math.floor(rand() * 180);
+    // Mostly fives and fours, a few lower: the spread of a piece people like.
+    const weights = [0.62 + rand() * 0.15, 0.22, 0.07, 0.03, 0.02];
+    const total = weights.reduce((a, b) => a + b, 0);
+    const counts = weights.map((w) => Math.round((w / total) * count));
+    counts[0] += count - counts.reduce((a, b) => a + b, 0);
+    const average = counts.reduce((sum, c, i) => sum + c * (5 - i), 0) / count;
+    const written = Array.from({ length: 4 + (k % 3) }, (_, i) => {
+      const [stars, title, body] = SAID[(k * 3 + i * 7) % SAID.length];
+      const c = customers[(k * 13 + i * 7 + 2) % customers.length];
+      const days = Math.floor(3 + i * 17 + rand() * 12);
+      return {
+        id: `${p.id}-r${i + 1}`,
+        product: p.id,
+        name: c.name,
+        city: c.city,
+        date: new Date(Date.parse(`${TODAY}T12:00:00Z`) - days * 86400000)
+          .toISOString()
+          .slice(0, 10),
+        stars,
+        title,
+        body,
+        finish: p.finishes[i % p.finishes.length].name,
+        verified: i % 4 !== 3,
+      };
+    });
+    out[p.id] = {
+      rating: {
+        average: Math.round(average * 10) / 10,
+        count,
+        spread: /** @type {[number, number, number, number, number]} */ (counts),
+      },
+      reviews: written,
+    };
+  });
   return out;
 })();
 

@@ -9,7 +9,7 @@
  */
   :where(.gm-steps) {
     --gm-steps-dot: 0.8rem;
-    --gm-steps-line: var(--gm-chip-fill-on, rgb(255 255 255 / 0.22));
+    --gm-steps-line: color-mix(in srgb, var(--gm-ink) 20%, transparent);
     --gm-steps-on: var(--gm-steps-fill, var(--gm-ink));
     display: grid;
     grid-auto-columns: 1fr;
@@ -143,7 +143,7 @@
     bottom: -0.25em;
     left: calc(0.3rem - 0.5px);
     width: 1px;
-    background: var(--gm-chip-fill-on, rgb(255 255 255 / 0.22));
+    background: color-mix(in srgb, var(--gm-ink) 20%, transparent);
   }
   :where(.gm-timeline > li)::after {
     content: '';

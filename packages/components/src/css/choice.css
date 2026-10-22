@@ -40,7 +40,7 @@
     --gm-swatch-size: 2.6rem;
   }
   :where(.gm-swatch:hover) {
-    outline-color: var(--gm-chip-fill-on, rgb(255 255 255 / 0.22));
+    outline-color: color-mix(in srgb, var(--gm-ink) 20%, transparent);
   }
   :where(.gm-swatch:checked) {
     outline-color: var(--gm-ink);

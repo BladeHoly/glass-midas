@@ -18,7 +18,10 @@
     background: linear-gradient(
       to right,
       var(--gm-rating-fill, var(--gm-ink)) calc(var(--gm-rating, 0) / 5 * 100%),
-      var(--gm-rating-empty, var(--gm-chip-fill-on, rgb(255 255 255 / 0.22)))
+      var(
+          --gm-rating-empty,
+          color-mix(in srgb, var(--gm-rating-fill, var(--gm-ink)) 22%, transparent)
+        )
         calc(var(--gm-rating, 0) / 5 * 100%)
     );
     vertical-align: -0.12em;
@@ -59,7 +62,10 @@
   }
   /* After the checked one, and all of them before any is checked: empty. */
   :where(.gm-rating-input > input:checked ~ input, .gm-rating-input:not(:has(:checked)) > input) {
-    background: var(--gm-rating-empty, var(--gm-chip-fill-on, rgb(255 255 255 / 0.22)));
+    background: var(
+      --gm-rating-empty,
+      color-mix(in srgb, var(--gm-rating-fill, var(--gm-ink)) 22%, transparent)
+    );
   }
   /* While hovering: fill up to the pointer, whatever is checked. */
   @media (hover: hover) {
@@ -67,7 +73,10 @@
       background: var(--gm-rating-fill, var(--gm-ink));
     }
     :where(.gm-rating-input > input:hover ~ input) {
-      background: var(--gm-rating-empty, var(--gm-chip-fill-on, rgb(255 255 255 / 0.22)));
+      background: var(
+        --gm-rating-empty,
+        color-mix(in srgb, var(--gm-rating-fill, var(--gm-ink)) 22%, transparent)
+      );
     }
     :where(.gm-rating-input > input:hover) {
       scale: 1.12;
@@ -77,10 +86,6 @@
     outline: 0;
     scale: 1.12;
     filter: drop-shadow(0 0 2px var(--gm-ink));
-  }
-  :where(.gm-rating-input:has(> input:focus-visible)) {
-    border-radius: 8px;
-    box-shadow: var(--gm-focus);
   }
   @media (forced-colors: active) {
     :where(.gm-rating, .gm-rating-input > input) {

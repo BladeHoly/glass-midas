@@ -86,6 +86,25 @@
                 <circle cx="12" cy="8" r="4" />
                 <path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" /></svg
             ></a>
+            <a
+              class="gm-chip gm-chip-plain gm-chip-round"
+              href="wishlist.html"
+              data-saved-link
+              aria-label="Saved"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"
+                /></svg
+              ><span class="shop-count" aria-hidden="true"></span
+            ></a>
             <button
               class="gm-chip gm-chip-plain gm-chip-round"
               type="button"
@@ -137,38 +156,35 @@
       </gm-popover>
 
       <main id="main" class="shop-main shop-wrap">
-        <nav class="pd-crumbs" aria-label="Breadcrumb">
-          <a href="storefront.html">Ondine</a> /
-          <a id="crumb-collection" href="collection.html"></a> /
-          <span id="crumb-name" aria-current="page"></span>
+        <nav class="gm-breadcrumbs pd-crumbs" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="storefront.html">Ondine</a></li>
+            <li><a id="crumb-collection" href="collection.html"></a></li>
+            <li><span id="crumb-name" aria-current="page"></span></li>
+          </ol>
         </nav>
         <div class="pd">
-          <!-- The pictures: the main one opens large; the thumbnails choose. -->
-          <section class="pd-gallery" aria-label="Pictures">
-            <button class="pd-main" type="button" id="zoom" aria-label="See it larger">
-              <img id="main-image" alt="" width="800" height="800" />
-            </button>
-            <div class="pd-thumbs" role="group" aria-label="Choose a picture" id="thumbs"></div>
-          </section>
+          <!-- The pictures: swiped or chosen below, and opened large. They follow the finish. -->
+          <gm-gallery class="pd-gallery" zoom id="gallery" aria-label="Pictures">
+            <img alt="" width="800" height="800" />
+            <img alt="" width="800" height="800" />
+            <img alt="" width="800" height="800" />
+            <img alt="" width="800" height="800" />
+          </gm-gallery>
 
           <section class="pd-info" aria-labelledby="name">
             <p class="pd-kind" id="kind"></p>
             <h1 class="on-display" id="name"></h1>
+            <p class="pd-rating"><a href="#reviews" id="rating"></a></p>
             <p class="pd-price" id="price"></p>
             <p class="pd-blurb" id="blurb"></p>
 
             <form class="pd-buy" id="buy">
-              <fieldset class="pd-finishes">
-                <legend id="finish-legend">Finish: <strong id="finish-name"></strong></legend>
-                <div
-                  class="shop-swatches"
-                  role="radiogroup"
-                  aria-labelledby="finish-legend"
-                  id="finishes"
-                ></div>
+              <fieldset class="gm-swatches pd-finishes" id="finishes">
+                <legend>Finish: <strong id="finish-name"></strong></legend>
               </fieldset>
               <p class="pd-stock" id="stock" aria-live="polite"></p>
-              <div class="pd-row">
+              <div class="pd-row" id="buy-row">
                 <gm-quantity>
                   <input
                     type="number"
@@ -180,37 +196,170 @@
                   />
                 </gm-quantity>
                 <button class="gm-chip gm-chip-primary" type="submit" id="add">Add to cart</button>
+                <button
+                  type="button"
+                  class="gm-chip gm-chip-round pd-save"
+                  id="save"
+                  data-save
+                  aria-pressed="false"
+                  aria-label="Save for later"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
+                  </svg>
+                </button>
               </div>
               <p class="pd-ship">Free shipping over $150 · 60 days to return it</p>
             </form>
 
-            <details class="pd-more" open>
-              <summary>Specifications</summary>
-              <dl id="specs"></dl>
-            </details>
-            <details class="pd-more">
-              <summary>In the box</summary>
-              <p id="box-text"></p>
-            </details>
-            <details class="pd-more">
-              <summary>Shipping and returns</summary>
-              <p>
-                Ships in 2 working days from Lisbon. Free over $150, otherwise $12. Send it back
-                within 60 days, in any condition that isn't damage, for a full refund.
-              </p>
-            </details>
+            <!-- Sold out in this finish: ask to be told when it's back, instead of buying. -->
+            <form class="pd-notify" id="notify" hidden novalidate>
+              <label for="notify-email">Tell me when it's back</label>
+              <div class="pd-notify-row">
+                <input
+                  class="gm-input"
+                  type="email"
+                  name="email"
+                  id="notify-email"
+                  autocomplete="email"
+                  placeholder="name@example.com"
+                  required
+                  aria-describedby="notify-message"
+                />
+                <button class="gm-chip" type="submit">Notify me</button>
+              </div>
+              <p class="gm-field-error" id="notify-message" aria-live="polite"></p>
+            </form>
+
+            <div class="gm-accordion pd-more">
+              <details name="pd-more" open>
+                <summary>Specifications</summary>
+                <dl class="pd-specs" id="specs"></dl>
+              </details>
+              <details name="pd-more">
+                <summary>In the box</summary>
+                <p id="box-text"></p>
+              </details>
+              <details name="pd-more">
+                <summary>Shipping and returns</summary>
+                <p>
+                  Ships in 2 working days from Lisbon. Free over $150, otherwise $12. Send it back
+                  within 60 days, in any condition that isn't damage, for a full refund.
+                </p>
+              </details>
+            </div>
           </section>
         </div>
+
+        <!-- Reviews: the stars and how they spread, then what people wrote. -->
+        <section class="shop-section pd-reviews" id="reviews" aria-labelledby="reviews-title">
+          <header>
+            <h2 id="reviews-title">Reviews</h2>
+            <button class="gm-chip" type="button" id="write">Write a review</button>
+          </header>
+          <div class="pd-reviews-grid">
+            <div class="pd-summary">
+              <p class="pd-average" id="average"></p>
+              <ol class="pd-spread" id="spread" aria-label="How the stars spread"></ol>
+            </div>
+            <div>
+              <div class="pd-reviews-tools">
+                <p id="reviews-count"></p>
+                <gm-select>
+                  <select id="review-sort" aria-label="Sort reviews">
+                    <option value="recent" selected>Most recent</option>
+                    <option value="high">Highest rated</option>
+                    <option value="low">Lowest rated</option>
+                  </select>
+                </gm-select>
+              </div>
+              <ul class="pd-review-list" id="review-list"></ul>
+            </div>
+          </div>
+        </section>
 
         <section class="shop-section" aria-labelledby="related-title">
           <header><h2 id="related-title">From the same collection</h2></header>
           <ul class="shop-grid" id="related"></ul>
         </section>
 
-        <gm-dialog id="large" aria-label="Picture, large">
-          <img id="large-image" alt="" width="800" height="800" />
-          <form method="dialog" class="dialog-actions">
-            <button class="gm-chip" value="close">Close</button>
+        <!-- Writing a review: a drawer, so the piece stays in view beside it. -->
+        <gm-dialog id="review-dialog" heading="Write a review" placement="end">
+          <form class="pd-review-form" id="review-form" novalidate>
+            <fieldset class="gm-rating-input" id="stars" aria-describedby="stars-error">
+              <legend>Your rating</legend>
+              <input type="radio" name="stars" value="1" aria-label="1 star" required />
+              <input type="radio" name="stars" value="2" aria-label="2 stars" />
+              <input type="radio" name="stars" value="3" aria-label="3 stars" />
+              <input type="radio" name="stars" value="4" aria-label="4 stars" />
+              <input type="radio" name="stars" value="5" aria-label="5 stars" />
+            </fieldset>
+            <p class="gm-field-error" id="stars-error" aria-live="polite"></p>
+            <div class="gm-field">
+              <label for="review-title">Title</label>
+              <input
+                class="gm-input"
+                id="review-title"
+                name="title"
+                maxlength="80"
+                required
+                aria-describedby="review-title-error"
+              />
+              <p class="gm-field-error" id="review-title-error"></p>
+            </div>
+            <div class="gm-field">
+              <label for="review-body">Your review</label>
+              <textarea
+                class="gm-input"
+                id="review-body"
+                name="body"
+                rows="5"
+                maxlength="1200"
+                required
+                aria-describedby="review-body-error"
+              ></textarea>
+              <p class="gm-field-error" id="review-body-error"></p>
+            </div>
+            <div class="gm-field">
+              <label for="review-photos">Photos <span class="pd-optional">(optional)</span></label>
+              <gm-upload max-size="5 MB" max-files="4">
+                <input
+                  type="file"
+                  id="review-photos"
+                  name="photos"
+                  accept="image/*"
+                  multiple
+                  aria-describedby="review-photos-error"
+                />
+              </gm-upload>
+              <p class="gm-field-error" id="review-photos-error" aria-live="polite"></p>
+            </div>
+            <div class="gm-field">
+              <label for="review-name">Name shown</label>
+              <input
+                class="gm-input"
+                id="review-name"
+                name="name"
+                autocomplete="given-name"
+                required
+                aria-describedby="review-name-error"
+              />
+              <p class="gm-field-error" id="review-name-error"></p>
+            </div>
+            <div class="pd-review-actions">
+              <button class="gm-chip gm-chip-plain" type="button" id="review-cancel">Cancel</button>
+              <button class="gm-chip gm-chip-primary" type="submit" id="review-send">
+                Send review
+              </button>
+            </div>
           </form>
         </gm-dialog>
       </main>
