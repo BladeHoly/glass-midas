@@ -3,6 +3,10 @@ import { act, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it } from 'vitest';
 import { StoreAnalytics } from './analytics/StoreAnalytics';
+import { CartPage } from './cart/CartPage';
+import { CheckoutPage } from './checkout/CheckoutPage';
+import { OrderConfirmation } from './confirmation/OrderConfirmation';
+import { ComparePieces } from './compare/ComparePieces';
 import { CollectionGrid } from './collection/CollectionGrid';
 import { ProductPage } from './product/ProductPage';
 import { StoreHome } from './storefront/StoreHome';
@@ -38,6 +42,10 @@ const react: Record<string, ComponentType> = {
   storefront: StoreHome,
   collection: CollectionGrid,
   product: ProductPage,
+  cart: CartPage,
+  checkout: CheckoutPage,
+  confirmation: OrderConfirmation,
+  compare: ComparePieces,
 };
 
 afterEach(() => {
@@ -61,6 +69,10 @@ describe.each(templates)('$name', (t) => {
       .replace('.tsx', '')
       .toLowerCase();
     expect(lower.filter((n) => n === tsx)).toHaveLength(1);
+  });
+
+  it('has no file named like a shared one, which a copy would overwrite', () => {
+    for (const file of own) expect(t.shared, file).not.toContain(file);
   });
 
   it('links what it uses, and shares only files that exist', () => {

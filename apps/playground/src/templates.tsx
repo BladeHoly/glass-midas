@@ -13,10 +13,18 @@ import '../../../templates/dist/shared/shop.css';
 import '../../../templates/src/storefront/storefront.css';
 import '../../../templates/src/collection/collection.css';
 import '../../../templates/src/product/product.css';
+import '../../../templates/src/cart/cart.css';
+import '../../../templates/src/checkout/checkout.css';
+import '../../../templates/src/confirmation/confirmation.css';
+import '../../../templates/src/compare/compare.css';
 import '../../../templates/src/split-sign-in/split-sign-in.css';
 import { StoreAnalytics } from '../../../templates/src/analytics/StoreAnalytics';
 import { StoreOverview } from '../../../templates/src/overview/StoreOverview';
 import { ServiceStatus } from '../../../templates/src/status/ServiceStatus';
+import { CartPage } from '../../../templates/src/cart/CartPage';
+import { CheckoutPage } from '../../../templates/src/checkout/CheckoutPage';
+import { OrderConfirmation } from '../../../templates/src/confirmation/OrderConfirmation';
+import { ComparePieces } from '../../../templates/src/compare/ComparePieces';
 import { CollectionGrid } from '../../../templates/src/collection/CollectionGrid';
 import { ProductPage } from '../../../templates/src/product/ProductPage';
 import { StoreHome } from '../../../templates/src/storefront/StoreHome';
@@ -48,6 +56,10 @@ const templates = {
   storefront: StoreHome,
   collection: CollectionGrid,
   product: ProductPage,
+  cart: CartPage,
+  checkout: CheckoutPage,
+  confirmation: OrderConfirmation,
+  compare: ComparePieces,
 };
 const Template = templates[(params.get('t') ?? 'sign-in') as keyof typeof templates] ?? SignIn;
 createRoot(document.getElementById('root')!).render(<Template />);

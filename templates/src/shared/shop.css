@@ -259,6 +259,64 @@
   font-size: var(--gm-text-sm);
 }
 
+/* A row of filter chips that scrolls sideways on a phone; a sentence and a way out when empty. */
+.app-filters {
+  display: flex;
+  gap: var(--gm-space-xs);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.app-filters .gm-chip {
+  flex: none;
+  min-height: 2.25rem;
+  font-size: var(--gm-text-sm);
+}
+.app-empty {
+  display: grid;
+  justify-items: center;
+  gap: var(--gm-space-sm);
+  padding: var(--gm-space-3xl) var(--gm-space-lg);
+  text-align: center;
+}
+.app-empty .on-sigil {
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 0.5;
+}
+.app-empty :is(h1, h2) {
+  margin: 0;
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.app-empty p {
+  margin: 0 0 var(--gm-space-sm);
+  color: var(--on-ink-muted);
+}
+
+/* Totals: a row per line, the last one the total, bold. */
+.cart-totals {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--gm-space-sm) 0;
+  margin: 0;
+  font-size: var(--gm-text-sm);
+}
+.cart-totals dt {
+  color: var(--on-ink-muted);
+}
+.cart-totals dd {
+  margin: 0;
+  padding-left: var(--gm-space-lg);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+.cart-totals .is-total {
+  padding-top: var(--gm-space-sm);
+  border-top: 1px solid var(--on-line);
+  color: var(--on-ink);
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+
 .shop-foot {
   padding: var(--gm-space-3xl) 0 var(--gm-space-2xl);
   border-top: 1px solid var(--on-line);

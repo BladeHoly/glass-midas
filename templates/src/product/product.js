@@ -1,6 +1,6 @@
 import { toast } from '@glass-midas/components';
-import { addToCart, extra, image } from '../shared/cart.js';
-import { collections, money, products, stock } from '../shared/data.js';
+import { addToCart, extra, image } from '../shared/cart-store.js';
+import { collections, money, pageUrl, products, stock } from '../shared/data.js';
 import { cardSwatches, escape, productCard, shopShell } from '../shared/shop.js';
 
 // A product: pictures that follow the finish and open large, the finish as a radio group that
@@ -60,7 +60,7 @@ function choose(f, { focus = false } = {}) {
 
 document.title = `${p.name} · Ondine`;
 $('#crumb-collection').textContent = collections[p.collection].name;
-$('#crumb-collection').href = `collection.html?c=${p.collection}`;
+$('#crumb-collection').href = pageUrl('collection', `c=${p.collection}`);
 $('#crumb-name').textContent = p.name;
 $('#kind').textContent = p.kind;
 $('#name').textContent = p.name;

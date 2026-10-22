@@ -486,3 +486,13 @@ export const incidents = [
     ],
   },
 ];
+
+/**
+ * A page's address: `name.html` beside this one, unless <html data-pages="…{name}…"> says
+ * otherwise (the docs' previews do). Scripts build every link with it.
+ */
+export function pageUrl(name, query = '') {
+  const pattern =
+    (typeof document !== 'undefined' && document.documentElement.dataset.pages) || '{name}.html';
+  return `${pattern.replace('{name}', name)}${query ? `?${query}` : ''}`;
+}

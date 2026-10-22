@@ -1,5 +1,5 @@
-import { image, onCart, readCart, totals } from './cart.js';
-import { money, product } from './data.js';
+import { image, onCart, readCart, totals } from './cart-store.js';
+import { money, pageUrl, product } from './data.js';
 
 // The store shell: the cart's count in the header and the mini cart behind it, kept in step with
 // the cart; and the product card every store page shows pieces with.
@@ -8,7 +8,7 @@ export const escape = (s) => String(s).replace(/[&<>"']/g, (c) => `&#${c.charCod
 
 /** A product as a card: two pictures (the second on hover), name, kind, price, and its finishes. */
 export function productCard(p, finish = p.finishes[0]) {
-  const href = `product.html?id=${p.id}&finish=${finish.name.toLowerCase()}`;
+  const href = pageUrl('product', `id=${p.id}&finish=${finish.name.toLowerCase()}`);
   return `<li class="shop-card" data-product="${p.id}">
     <div class="shop-card-media">
       <img src="${image(p.id, finish.name)}" alt="" loading="lazy" width="400" height="400">
@@ -41,7 +41,7 @@ export function cardSwatches(root) {
     const [front, detail] = card.querySelectorAll('img');
     front.src = image(id, finish);
     detail.src = image(id, finish, 'detail');
-    card.querySelector('a').href = `product.html?id=${id}&finish=${finish.toLowerCase()}`;
+    card.querySelector('a').href = pageUrl('product', `id=${id}&finish=${finish.toLowerCase()}`);
     for (const s of card.querySelectorAll('.shop-swatch'))
       s.setAttribute('aria-pressed', String(s === swatch));
   });

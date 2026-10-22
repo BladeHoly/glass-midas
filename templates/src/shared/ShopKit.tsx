@@ -2,7 +2,7 @@ import type { GmPopover } from '@glass-midas/components';
 import { GlassMenu, GlassPopover } from '@glass-midas/react/overlays';
 import { GlassSurface } from '@glass-midas/react/surfaces';
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { image, onCart, readCart, totals } from './cart.js';
+import { image, onCart, readCart, totals } from './cart-store.js';
 import { money, product, type Finish, type Product } from './data.js';
 
 // The store shell for React: the frosted bar (brand, collections, search, account, cart), the

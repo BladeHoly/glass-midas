@@ -145,7 +145,7 @@
       "ondine.css",
       "shop.css",
       "shop.js",
-      "cart.js",
+      "cart-store.js",
       "data.js",
       "ShopKit.tsx"
     ],
@@ -161,7 +161,7 @@
       "ondine.css",
       "shop.css",
       "shop.js",
-      "cart.js",
+      "cart-store.js",
       "data.js",
       "ShopKit.tsx"
     ],
@@ -177,7 +177,71 @@
       "ondine.css",
       "shop.css",
       "shop.js",
-      "cart.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "cart",
+    "title": "Cart",
+    "group": "Store",
+    "description": "Every piece with its quantity, removed with an undo, and every cost before checkout.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "checkout",
+    "title": "Checkout",
+    "group": "Store",
+    "description": "One page, as a guest: express first, then contact, delivery and payment, with a summary that folds on a phone.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "confirmation",
+    "title": "Confirmation",
+    "group": "Store",
+    "description": "Thanks by name, what happens next and when, the order, and an offer to save the details.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "compare",
+    "title": "Compare",
+    "group": "Store",
+    "description": "Up to three pieces side by side, the first column pinned, with only the differences on request.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
       "data.js",
       "ShopKit.tsx"
     ],
