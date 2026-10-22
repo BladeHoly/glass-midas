@@ -42,6 +42,8 @@ export function toMarkdown(doc: Doc) {
     // Demos become their source; playgrounds go (their markup is under Usage).
     .replace(/<Demo[\s\S]*?html=\{`([\s\S]*?)`\}[\s\S]*?\/>/g, '```html\n$1\n```')
     .replace(/<Playground[\s\S]*?\n\/>/g, '')
+    // Code panels are a layout: their code stays, the wrapper goes.
+    .replace(/^<\/?CodePanel[^>]*>\n/gm, '')
     // Templates become where they run and their files.
     .replace(/<Template name="([\w-]+)"\s*\/>/g, (_, name: string) => templateMarkdown(name, url))
     .replace(/\n{3,}/g, '\n\n')

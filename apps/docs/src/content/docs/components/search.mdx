@@ -61,7 +61,7 @@ The search at the top of this page is one, over a Pagefind index.
 
 ## Usage
 
-Give it a `source`: any function from the query to results, synchronous or not.
+<CodePanel>
 
 ```ts
 interface SearchResult {
@@ -76,19 +76,23 @@ search.source = async (query) => {
 };
 ```
 
-Answers that arrive after a newer query are dropped, so a slow request never overwrites a fast
-one. Typing is debounced.
-
-### Routing
-
-Cancel `gm-select` to navigate your own way, with a client-side router for example:
-
 ```ts
 search.addEventListener('gm-select', (e) => {
   e.preventDefault();
   router.push(e.detail.href);
 });
 ```
+
+</CodePanel>
+
+Give it a `source`: any function from the query to results, synchronous or not.
+
+Answers that arrive after a newer query are dropped, so a slow request never overwrites a fast
+one. Typing is debounced.
+
+### Routing
+
+Cancel `gm-select` to navigate your own way, with a client-side router for example:
 
 ## Anatomy
 

@@ -44,6 +44,8 @@ select.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <div class="gm-field">
   <label for="country">Country</label>
@@ -59,6 +61,17 @@ select.
   </gm-select>
 </div>
 ```
+
+```tsx
+<GlassSelect>
+  <select id="size" value={size} onChange={(e) => setSize(e.target.value)}>
+    <option value="s">Small</option>
+    <option value="m">Medium</option>
+  </select>
+</GlassSelect>
+```
+
+</CodePanel>
 
 Load `css/field.css` and `css/select.css` after the base. `<optgroup>` labels become headings in
 the list, and disabled options can't be picked.
@@ -78,15 +91,6 @@ the list, and disabled options can't be picked.
 `GlassSelect` from `@glass-midas/react/forms` redraws after every render, so a controlled
 `<select value={…} onChange={…}>` inside it just works: React's `onChange` fires when an option is
 picked from the glass list.
-
-```tsx
-<GlassSelect>
-  <select id="size" value={size} onChange={(e) => setSize(e.target.value)}>
-    <option value="s">Small</option>
-    <option value="m">Medium</option>
-  </select>
-</GlassSelect>
-```
 
 ## Best practices
 

@@ -39,6 +39,8 @@ and form validation work as they always do.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <div class="gm-field">
   <label for="email">Email</label>
@@ -53,12 +55,6 @@ and form validation work as they always do.
 </div>
 ```
 
-Point `aria-describedby` at the hint and the error, so screen readers read them with the field.
-When the field is wrong, set `aria-invalid="true"` and write the error into `.gm-field-error`;
-an empty error takes no room, so it can stay in the page.
-
-### An icon or a button inside
-
 ```html
 <div class="gm-input-group">
   <svg aria-hidden="true">…</svg>
@@ -72,6 +68,14 @@ an empty error takes no room, so it can stay in the page.
   </button>
 </div>
 ```
+
+</CodePanel>
+
+Point `aria-describedby` at the hint and the error, so screen readers read them with the field.
+When the field is wrong, set `aria-invalid="true"` and write the error into `.gm-field-error`;
+an empty error takes no room, so it can stay in the page.
+
+### An icon or a button inside
 
 The first child before the input sits at the start, the last one after it at the end, and the
 input makes room for them.

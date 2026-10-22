@@ -1,5 +1,4 @@
 ---
-import type { MarkdownHeading } from 'astro';
 import { tokensToCss } from '@glass-midas/core';
 import '@glass-midas/components/styles.css';
 import '../styles/site.css';
@@ -8,18 +7,15 @@ import { docPath, readingOrder, sidebar, url } from '../lib/site';
 interface Props {
   title: string;
   description: string;
-  /** Headings for "On this page". */
-  headings?: MarkdownHeading[];
   /** A landing page: no sidebars. */
   splash?: boolean;
   /** The page's Markdown twin, for agents. */
   markdown?: string;
 }
 
-const { title, description, headings = [], splash = false, markdown } = Astro.props;
+const { title, description, splash = false, markdown } = Astro.props;
 const sections = await sidebar();
 const here = Astro.url.pathname;
-const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const pages = (await readingOrder()).map((d) => ({
   label: d.data.title,
   href: url(docPath(d)),
@@ -145,20 +141,6 @@ const fullTitle = title === 'glass-midas' ? title : `${title} · glass-midas`;
         <slot />
       </main>
 
-      {
-        !splash && toc.length > 1 && (
-          <aside class="toc" aria-label="On this page">
-            <p>On this page</p>
-            <gm-nav orientation="vertical" variant="lite" spy>
-              {toc.map((h) => (
-                <a href={`#${h.slug}`} class:list={[h.depth === 3 && 'is-sub']}>
-                  {h.text}
-                </a>
-              ))}
-            </gm-nav>
-          </aside>
-        )
-      }
     </div>
 
     <gm-scrollbar></gm-scrollbar>

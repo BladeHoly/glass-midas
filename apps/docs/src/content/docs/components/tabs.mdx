@@ -45,12 +45,16 @@ selected tab. Every package-manager switch on this site is one.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <gm-tabs sync="pkg">
   <gm-tab label="pnpm">…</gm-tab>
   <gm-tab label="npm">…</gm-tab>
 </gm-tabs>
 ```
+
+</CodePanel>
 
 With `sync`, choosing npm in one group switches every group with the same key, and the next visit
 starts on npm. Groups without the chosen label keep their selection.

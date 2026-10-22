@@ -47,12 +47,23 @@ of this site are both `gm-nav`.
 
 ## Usage
 
+<CodePanel>
+
 ```html
 <gm-nav orientation="vertical" spy>
   <a href="#intro">Intro</a>
   <a href="#install">Install</a>
 </gm-nav>
 ```
+
+```ts
+nav.addEventListener('gm-navigate', (e) => {
+  e.preventDefault();
+  lenis.scrollTo(e.detail.target);
+});
+```
+
+</CodePanel>
 
 - **Page links:** mark the current page with `aria-current="page"`.
 - **In-page links:** add `spy`, and the current link follows the scroll. A click keeps the clicked
@@ -62,13 +73,6 @@ of this site are both `gm-nav`.
 ### With a smooth-scroll library
 
 Cancel `gm-navigate` and scroll with the library. The nav still updates the URL:
-
-```ts
-nav.addEventListener('gm-navigate', (e) => {
-  e.preventDefault();
-  lenis.scrollTo(e.detail.target);
-});
-```
 
 ## Anatomy
 

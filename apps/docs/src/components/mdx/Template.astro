@@ -16,7 +16,10 @@ const order = ['.html', '.js', '.css', '.tsx'];
 const own = template.files
   .filter((f: TemplateEntry['files'][number]) => f.from.startsWith(`${name}/`))
   .sort((a, b) => order.findIndex((e) => a.to.endsWith(e)) - order.findIndex((e) => b.to.endsWith(e)));
-const shared = template.files.filter((f) => !f.from.startsWith(`${name}/`));
+// Shared: the kit's code, not each piece of art (a folder you copy whole).
+const shared = template.files.filter(
+  (f) => !f.from.startsWith(`${name}/`) && !f.to.startsWith('art/'),
+);
 const lang = (file: string) => file.split('.').pop() as 'html' | 'js' | 'css' | 'tsx';
 const preview = url(`/t/${name}/preview.html`);
 ---
@@ -40,6 +43,9 @@ const preview = url(`/t/${name}/preview.html`);
   </div>
 </figure>
 
+<!-- The files: in the right rail on wide screens, beside the preview; under it otherwise. -->
+<div class="code-panel" data-rail>
+<p class="code-panel-title">{own.length} files, plus the shared kit</p>
 <gm-tabs sync="template-file">
   {
     own.map((f) => (
@@ -53,7 +59,7 @@ const preview = url(`/t/${name}/preview.html`);
 </gm-tabs>
 
 <p class="template-shared">
-  Shared with the other templates:
+  Shared:
   {
     shared.map((f, i) => (
       <>
@@ -63,8 +69,9 @@ const preview = url(`/t/${name}/preview.html`);
         </a>
       </>
     ))
-  }.
+  }, and the <a href={url(`/t/shared/art/`)}><code>art</code></a> folder.
 </p>
+</div>
 
 <script>
   // Width and tier switch the frame; the site's theme reaches into it, now and when it changes.
@@ -74,8 +81,24 @@ const preview = url(`/t/${name}/preview.html`);
     const theme = () => document.documentElement.dataset.theme ?? 'dark';
     const base = frame.getAttribute('src')!;
     frame.src = `${base}?theme=${theme()}`;
+    // The frame renders at the device's real width and is scaled down to fit, so "Desktop" is a
+    // desktop, not a squeezed phone.
+    const stage = figure.querySelector<HTMLElement>('.template-stage')!;
+    const WIDTHS: Record<string, number> = { phone: 390, tablet: 820, desktop: 1280 };
+    const HEIGHT = 820;
+    const fit = () => {
+      const width = WIDTHS[figure.dataset.width ?? 'desktop']!;
+      const scale = Math.min(1, stage.clientWidth / width);
+      frame.style.width = `${width}px`;
+      frame.style.height = `${HEIGHT}px`;
+      frame.style.scale = String(scale);
+      stage.style.height = `${HEIGHT * scale}px`;
+    };
+    new ResizeObserver(fit).observe(stage);
+    figure.dataset.width = 'desktop';
     figure.querySelector('.template-width')!.addEventListener('gm-change', (e) => {
       figure.dataset.width = (e as CustomEvent<{ value: string }>).detail.value;
+      fit();
     });
     figure.querySelector('.template-tier')!.addEventListener('gm-change', (e) => {
       const tier = (e as CustomEvent<{ value: string }>).detail.value;
