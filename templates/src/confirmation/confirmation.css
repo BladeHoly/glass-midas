@@ -32,54 +32,10 @@
   text-transform: uppercase;
 }
 
-/* What happens next, as a track: the steps done filled in. */
+/* What happens next, as a track. */
 .cf-steps {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
   margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: step;
 }
-.cf-steps li {
-  position: relative;
-  display: grid;
-  gap: var(--gm-space-2xs);
-  padding-top: var(--gm-space-xl);
-  font-size: var(--gm-text-sm);
-}
-.cf-steps li::before {
-  content: '';
-  position: absolute;
-  top: 0.35rem;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--on-line);
-}
-.cf-steps li::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0.8rem;
-  height: 0.8rem;
-  border-radius: 50%;
-  background: var(--on-bg);
-  box-shadow: inset 0 0 0 2px var(--on-ink-muted);
-}
-.cf-steps li.is-done::before {
-  background: var(--on-accent);
-}
-.cf-steps li.is-done::after {
-  background: var(--on-accent);
-  box-shadow: none;
-}
-.cf-steps span {
-  color: var(--on-ink-muted);
-  font-size: var(--gm-text-xs);
-}
-
 .cf-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -123,23 +79,5 @@
 @media (max-width: 52rem) {
   .cf-grid {
     grid-template-columns: 1fr;
-  }
-  .cf-steps {
-    grid-template-columns: 1fr;
-    gap: var(--gm-space-md);
-  }
-  .cf-steps li {
-    padding: 0 0 0 var(--gm-space-xl);
-  }
-  .cf-steps li::before {
-    top: 0;
-    bottom: calc(-1 * var(--gm-space-md));
-    left: 0.35rem;
-    right: auto;
-    width: 2px;
-    height: auto;
-  }
-  .cf-steps li:last-child::before {
-    display: none;
   }
 }

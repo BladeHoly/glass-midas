@@ -92,32 +92,6 @@
 .co-form .gm-check-label {
   font-size: var(--gm-text-sm);
 }
-.co-methods {
-  display: grid;
-  gap: var(--gm-space-sm);
-}
-/* A delivery option: the whole row is the target, the chosen one marked by its rim. */
-.co-method {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: var(--gm-space-md);
-  padding: var(--gm-space-md) var(--gm-space-lg);
-  border-radius: var(--gm-radius-sm);
-  background: var(--gm-chip-fill);
-  cursor: pointer;
-}
-.co-method:has(:checked) {
-  box-shadow: inset 0 0 0 1.5px var(--on-ink);
-}
-.co-method small {
-  display: block;
-  color: var(--on-ink-muted);
-  font-size: var(--gm-text-xs);
-}
-.co-method-price {
-  font-variant-numeric: tabular-nums;
-}
 .co-pay {
   min-height: 3.2rem;
   font-size: var(--gm-text-md);

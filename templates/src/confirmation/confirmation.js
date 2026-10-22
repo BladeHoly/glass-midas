@@ -39,7 +39,7 @@ if (!order) {
     ${t.discount ? `<dt>Discount</dt><dd>−${money(t.discount)}</dd>` : ''}
     <dt>Shipping</dt><dd>${t.shipping ? money(t.shipping) : 'Free'}</dd>
     <dt>Tax</dt><dd>${money(t.tax)}</dd>
-    <dt class="is-total">Paid</dt><dd class="is-total">${money(t.total)}</dd>`;
+    <dt class="gm-totals-total">Paid</dt><dd class="gm-totals-total">${money(t.total)}</dd>`;
   $('#address').innerHTML = [order.name, ...order.address].map(escape).join('<br>');
   $('#save-email').value = order.email;
   $('#thanks').focus();

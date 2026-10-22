@@ -208,6 +208,66 @@
   color: var(--on-ink-muted);
   font-size: var(--gm-text-sm);
 }
+/* Savings in the brand's accent. */
+.shop {
+  --gm-price-sale: var(--on-accent);
+}
+.shop-card .shop-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-xs);
+  font-size: var(--gm-text-xs);
+  font-variant-numeric: tabular-nums;
+}
+.shop-card .shop-rating .gm-rating {
+  font-size: 0.85rem;
+}
+/* On sale: a quiet flag on the picture; the price says by how much. */
+.shop-card-flag {
+  position: absolute;
+  top: var(--gm-space-md);
+  left: var(--gm-space-md);
+  --gm-badge-tone: var(--on-accent);
+  background: color-mix(in srgb, var(--on-bg) 70%, transparent);
+}
+/* The heart: above the card's link, over the picture's corner. */
+.shop-save {
+  position: absolute;
+  z-index: 1;
+  top: var(--gm-space-sm);
+  right: var(--gm-space-sm);
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  color: var(--on-ink);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    scale 0.2s;
+}
+.shop-save svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+.shop-save:hover {
+  background: color-mix(in srgb, var(--on-bg) 85%, transparent);
+}
+.shop-save:active {
+  scale: 0.92;
+}
+.shop-save[aria-pressed='true'] svg {
+  fill: var(--on-accent);
+  stroke: var(--on-accent);
+}
+.shop-save:focus-visible {
+  outline: 0;
+  box-shadow: var(--gm-focus);
+}
 .shop-card .shop-price {
   color: var(--on-ink);
   font-variant-numeric: tabular-nums;
@@ -290,31 +350,6 @@
 .app-empty p {
   margin: 0 0 var(--gm-space-sm);
   color: var(--on-ink-muted);
-}
-
-/* Totals: a row per line, the last one the total, bold. */
-.cart-totals {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--gm-space-sm) 0;
-  margin: 0;
-  font-size: var(--gm-text-sm);
-}
-.cart-totals dt {
-  color: var(--on-ink-muted);
-}
-.cart-totals dd {
-  margin: 0;
-  padding-left: var(--gm-space-lg);
-  font-variant-numeric: tabular-nums;
-  text-align: end;
-}
-.cart-totals .is-total {
-  padding-top: var(--gm-space-sm);
-  border-top: 1px solid var(--on-line);
-  color: var(--on-ink);
-  font-size: var(--gm-text-md);
-  font-weight: 600;
 }
 
 .shop-foot {

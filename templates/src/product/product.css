@@ -1,14 +1,10 @@
 /*
  * A product: its pictures on one side, everything to choose and buy on the other. The finish
  * changes the pictures and says how many are left; the main button is the only primary one.
+ * Under them, what people said.
  */
 .pd-crumbs {
   margin-bottom: var(--gm-space-xl);
-  color: var(--on-ink-muted);
-  font-size: var(--gm-text-sm);
-}
-.pd-crumbs a {
-  color: var(--on-ink-muted);
 }
 .pd {
   display: grid;
@@ -17,56 +13,9 @@
   align-items: start;
 }
 .pd-gallery {
+  --gm-gallery-fill: #121019;
   position: sticky;
   top: 6rem;
-  display: grid;
-  gap: var(--gm-space-md);
-}
-.pd-main {
-  display: block;
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  border-radius: 28px;
-  background: #121019;
-  cursor: zoom-in;
-}
-.pd-main img,
-#large-image {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-.pd-main:focus-visible {
-  outline: 0;
-  box-shadow: var(--gm-focus);
-}
-.pd-thumbs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--gm-space-sm);
-}
-.pd-thumbs button {
-  padding: 0;
-  overflow: hidden;
-  border: 0;
-  border-radius: 14px;
-  background: #121019;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-}
-.pd-thumbs button[aria-pressed='true'] {
-  opacity: 1;
-  box-shadow: 0 0 0 2px var(--on-ink);
-}
-.pd-thumbs button:hover {
-  opacity: 1;
-}
-.pd-thumbs img {
-  display: block;
-  width: 100%;
-  height: auto;
 }
 
 .pd-kind {
@@ -77,10 +26,23 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+.pd-rating {
+  margin: var(--gm-space-xs) 0 0;
+  font-size: var(--gm-text-sm);
+}
+.pd-rating a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  color: var(--on-ink-muted);
+  text-decoration: none;
+}
+.pd-rating a:hover {
+  color: var(--on-ink);
+}
 .pd-price {
   margin: var(--gm-space-sm) 0 var(--gm-space-lg);
   font-size: var(--gm-text-xl);
-  font-variant-numeric: tabular-nums;
 }
 .pd-blurb {
   margin: 0 0 var(--gm-space-xl);
@@ -90,13 +52,6 @@
 .pd-buy {
   display: grid;
   gap: var(--gm-space-md);
-  padding-bottom: var(--gm-space-xl);
-  border-bottom: 1px solid var(--on-line);
-}
-.pd-finishes {
-  margin: 0;
-  padding: 0;
-  border: 0;
 }
 .pd-finishes legend {
   margin-bottom: var(--gm-space-sm);
@@ -105,10 +60,6 @@
 }
 .pd-finishes legend strong {
   color: var(--on-ink);
-}
-.pd-finishes .shop-swatch {
-  width: 2rem;
-  height: 2rem;
 }
 .pd-stock {
   min-height: 1.5em;
@@ -123,50 +74,181 @@
   flex: 1;
   min-height: 2.9rem;
 }
+.pd-save {
+  flex: none;
+  width: 2.9rem;
+  height: 2.9rem;
+}
+.pd-save svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.pd-save[aria-pressed='true'] svg {
+  fill: var(--on-accent);
+  stroke: var(--on-accent);
+}
 .pd-ship {
   margin: 0;
   color: var(--on-ink-muted);
   font-size: var(--gm-text-xs);
 }
-.pd-more {
-  border-bottom: 1px solid var(--on-line);
+.pd-notify {
+  display: grid;
+  gap: var(--gm-space-sm);
+  margin-top: var(--gm-space-md);
 }
-.pd-more summary {
-  padding: var(--gm-space-lg) 0;
+.pd-notify label {
   font-weight: 600;
-  cursor: pointer;
 }
-.pd-more p,
-.pd-more dl {
-  margin: 0 0 var(--gm-space-lg);
+.pd-notify-row {
+  display: flex;
+  gap: var(--gm-space-sm);
+}
+.pd-notify-row .gm-input {
+  flex: 1;
+  min-width: 0;
+}
+.pd-notify .is-ok {
   color: var(--on-ink-muted);
 }
-.pd-more dl {
+.pd-more {
+  margin-top: var(--gm-space-xl);
+  border-top: 1px solid var(--on-line);
+}
+.pd-specs {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--gm-space-sm) var(--gm-space-xl);
   font-size: var(--gm-text-sm);
 }
-.pd-more dt {
+.pd-specs dt {
   color: var(--on-ink);
 }
-.pd-more dd {
+.pd-specs dd {
   margin: 0;
 }
-/* The large picture: as wide as the screen allows. */
-#large > .gm-dialog-panel {
-  width: min(52rem, calc(100vw - 2rem));
+
+/* Reviews: the summary beside the list, stacked on phones. */
+.pd-reviews > header .gm-chip {
+  flex: none;
 }
-#large-image {
-  border-radius: 18px;
+.pd-reviews-grid {
+  display: grid;
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+  gap: var(--gm-space-3xl);
+  align-items: start;
+}
+.pd-summary {
+  position: sticky;
+  top: 6rem;
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.pd-average {
+  display: grid;
+  gap: var(--gm-space-xs);
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.pd-average strong {
+  color: var(--on-ink);
+  font: 500 var(--gm-text-4xl) / 1 var(--on-font-display);
+}
+.pd-average .gm-rating {
+  font-size: 1.1rem;
+}
+.pd-spread {
+  display: grid;
+  gap: var(--gm-space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--gm-text-xs);
+  font-variant-numeric: tabular-nums;
+}
+.pd-spread li {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  color: var(--on-ink-muted);
+}
+.pd-spread li span:last-child {
+  text-align: end;
+}
+.pd-reviews-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+  margin-bottom: var(--gm-space-md);
+}
+.pd-reviews-tools p {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.pd-review-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pd-review {
+  display: grid;
+  gap: var(--gm-space-xs);
+  padding: var(--gm-space-lg) 0;
+  border-top: 1px solid var(--on-line);
+}
+.pd-review h3 {
+  margin: var(--gm-space-xs) 0 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.pd-review p {
+  margin: 0;
+}
+.pd-review-stars {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+}
+.pd-review-by {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+.pd-verified {
+  color: var(--on-accent);
+}
+.pd-review-form {
+  display: grid;
+  gap: var(--gm-space-md);
+  margin-top: var(--gm-space-md);
+}
+.pd-review-form .gm-field-error:empty {
+  display: none;
+}
+.pd-optional {
+  color: var(--on-ink-muted);
+  font-weight: 400;
+}
+.pd-review-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gm-space-sm);
+  margin-top: var(--gm-space-sm);
 }
 
 @media (max-width: 52rem) {
-  .pd {
+  .pd,
+  .pd-reviews-grid {
     grid-template-columns: 1fr;
     gap: var(--gm-space-xl);
   }
-  .pd-gallery {
+  .pd-gallery,
+  .pd-summary {
     position: static;
   }
 }

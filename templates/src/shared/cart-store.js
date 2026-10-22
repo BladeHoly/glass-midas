@@ -56,6 +56,74 @@ export function onCart(fn) {
   };
 }
 
+/**
+ * Saved for later: pieces kept for another day, in this browser like the cart, each with the finish
+ * it was saved in. Replace with your wishlist API; keep the same shape.
+ * @typedef {{ product: string, finish: string, at: string }} SavedPiece
+ */
+const SAVED = 'ondine-saved';
+const savedListeners = new Set();
+
+/** @returns {SavedPiece[]} */
+export function readSaved() {
+  try {
+    return JSON.parse(localStorage.getItem(SAVED) ?? '[]');
+  } catch {
+    return [];
+  }
+}
+
+/** @param {SavedPiece[]} list */
+function writeSaved(list) {
+  try {
+    localStorage.setItem(SAVED, JSON.stringify(list));
+  } catch {}
+  for (const fn of savedListeners) fn(list);
+}
+
+export const isSaved = (id) => readSaved().some((s) => s.product === id);
+
+/** Saves a piece, or forgets it if it was saved. Resolves to whether it's saved now. */
+export function toggleSaved(id, finish) {
+  const list = readSaved();
+  const saved = list.some((s) => s.product === id);
+  writeSaved(
+    saved
+      ? list.filter((s) => s.product !== id)
+      : [{ product: id, finish, at: new Date().toISOString() }, ...list],
+  );
+  return !saved;
+}
+
+/** Changes the finish a saved piece is kept in. */
+export const setSavedFinish = (id, finish) =>
+  writeSaved(readSaved().map((s) => (s.product === id ? { ...s, finish } : s)));
+
+/** Calls `fn` with the saved pieces whenever they change, here or in another tab. */
+export function onSaved(fn) {
+  savedListeners.add(fn);
+  const storage = (e) => e.key === SAVED && fn(readSaved());
+  addEventListener('storage', storage);
+  return () => {
+    savedListeners.delete(fn);
+    removeEventListener('storage', storage);
+  };
+}
+
+/** Asks to be told when a sold-out finish is back. A stand-in: resolves after a moment. */
+export async function notifyWhenBack(id, finish, email) {
+  await wait(500);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
+    throw new Error('Enter an email address like name@example.com.');
+  return { product: id, finish, email };
+}
+
+/** Sends a review. A stand-in: it would wait for a check before showing. */
+export async function sendReview(review) {
+  await wait(700);
+  return { ...review, id: `new-${Date.now()}` };
+}
+
 export const FREE_SHIPPING = 150;
 
 /** Discount codes the stand-in knows: the rate off the subtotal. */

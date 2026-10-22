@@ -4,16 +4,20 @@ import {
   addToCart,
   image,
   onCart,
+  onSaved,
   readCart,
+  readSaved,
   removeFromCart,
   setQuantity,
+  toggleSaved,
   totals,
 } from '../shared/cart-store.js';
-import { money, pageUrl, product } from '../shared/data.js';
+import { money, pageUrl, product, stock } from '../shared/data.js';
 import { escape, shopShell } from '../shared/shop.js';
 
-// The cart: every piece with its quantity, removable with an undo, and every cost before
-// checkout, including how far it is to free shipping.
+// The cart: every piece with its quantity, removable with an undo or saved for later, and every
+// cost before checkout, including how far it is to free shipping. Under it, what was saved, one
+// click from coming back.
 
 const $ = (s) => document.querySelector(s);
 
@@ -38,6 +42,7 @@ function render(lines) {
             <p>${escape(p.kind)} · ${l.finish} · ${money(p.price)}</p>
             <div class="cart-line-controls">
               <gm-quantity><input type="number" min="1" max="9" value="${l.quantity}" aria-label="${escape(p.name)} in ${l.finish}, quantity"></gm-quantity>
+              <button class="gm-chip gm-chip-plain" type="button" data-action="later">Save for later</button>
               <button class="gm-chip gm-chip-plain" type="button" data-action="remove">Remove</button>
             </div>
           </div>
@@ -68,7 +73,7 @@ function render(lines) {
     <dt>Subtotal</dt><dd>${money(t.subtotal)}</dd>
     <dt>Shipping</dt><dd>${t.shipping ? money(t.shipping) : 'Free'}</dd>
     <dt>Estimated tax</dt><dd>${money(t.tax)}</dd>
-    <dt class="is-total">Total</dt><dd class="is-total">${money(t.total)}</dd>`;
+    <dt class="gm-totals-total">Total</dt><dd class="gm-totals-total">${money(t.total)}</dd>`;
 }
 
 $('#lines').addEventListener('change', (e) => {
@@ -78,18 +83,52 @@ $('#lines').addEventListener('change', (e) => {
   setQuantity(row.dataset.product, row.dataset.finish, quantity);
 });
 
-// Removing is one click, and so is undoing it.
+// Removing is one click, and so is undoing it. Saving for later moves the piece below.
 $('#lines').addEventListener('click', (e) => {
-  if (!e.target.closest('[data-action="remove"]')) return;
+  const action = e.target.closest('[data-action]')?.dataset.action;
+  if (action !== 'remove' && action !== 'later') return;
   const row = e.target.closest('.cart-line');
   const { product: id, finish } = row.dataset;
   const line = readCart().find((l) => l.product === id && l.finish === finish);
   removeFromCart(id, finish);
+  if (action === 'later') {
+    if (!readSaved().some((s) => s.product === id)) toggleSaved(id, finish);
+    toast(`${product(id).name} is saved for later`);
+    return;
+  }
   toast(`${product(id).name} in ${finish} removed`, {
     action: { label: 'Undo', onClick: () => addToCart(id, finish, line.quantity) },
   });
 });
 
+function renderSaved(list) {
+  $('#saved').hidden = !list.length;
+  $('#saved-list').innerHTML = list
+    .slice(0, 4)
+    .map((s) => {
+      const p = product(s.product);
+      return `<li data-product="${s.product}" data-finish="${s.finish}">
+        <img src="${image(s.product, s.finish)}" alt="" width="64" height="64">
+        <span><a href="${pageUrl('product', `id=${s.product}&finish=${s.finish.toLowerCase()}`)}">${escape(p.name)}</a><small>${s.finish} · ${money(p.price)}</small></span>
+        ${
+          stock[s.product][s.finish]
+            ? '<button class="gm-chip" type="button" data-action="back">Move to cart</button>'
+            : '<span class="gm-badge" data-tone="danger">Sold out</span>'
+        }
+      </li>`;
+    })
+    .join('');
+}
+$('#saved-list').addEventListener('click', (e) => {
+  if (!e.target.closest('[data-action="back"]')) return;
+  const { product: id, finish } = e.target.closest('li').dataset;
+  addToCart(id, finish);
+  toggleSaved(id, finish);
+  toast(`${product(id).name} is back in your cart`);
+});
+
 shopShell();
 render(readCart());
 onCart(render);
+renderSaved(readSaved());
+onSaved(renderSaved);

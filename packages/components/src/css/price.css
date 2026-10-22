@@ -64,7 +64,7 @@
   }
   :where(.gm-totals > .gm-totals-total) {
     padding-top: var(--gm-space-sm, 8px);
-    border-top: 1px solid var(--gm-chip-fill-on, rgb(255 255 255 / 0.22));
+    border-top: 1px solid color-mix(in srgb, var(--gm-ink) 20%, transparent);
     color: var(--gm-ink);
     font-size: var(--gm-text-md, 1rem);
     font-weight: 600;

@@ -184,7 +184,7 @@ export function CheckoutPage() {
       <p className="co-code-message" id="code-message" aria-live="polite">
         {codeMessage}
       </p>
-      <dl className="cart-totals">
+      <dl className="gm-totals">
         <dt>Subtotal</dt>
         <dd>{money(t.subtotal)}</dd>
         {t.discount > 0 && (
@@ -197,8 +197,8 @@ export function CheckoutPage() {
         <dd>{t.shipping ? money(t.shipping) : 'Free'}</dd>
         <dt>Tax</dt>
         <dd>{money(t.tax)}</dd>
-        <dt className="is-total">Total</dt>
-        <dd className="is-total">{money(t.total)}</dd>
+        <dt className="gm-totals-total">Total</dt>
+        <dd className="gm-totals-total">{money(t.total)}</dd>
       </dl>
     </aside>
   );
@@ -330,8 +330,8 @@ export function CheckoutPage() {
                   </GlassSelect>
                 </div>
               </div>
-              <div className="co-methods" role="radiogroup" aria-label="Delivery speed">
-                <label className="co-method">
+              <div className="gm-options" role="radiogroup" aria-label="Delivery speed">
+                <label className="gm-option">
                   <input
                     type="radio"
                     className="gm-check"
@@ -348,7 +348,7 @@ export function CheckoutPage() {
                     {totals(lines, { code }).shipping ? '$12.00' : 'Free'}
                   </span>
                 </label>
-                <label className="co-method">
+                <label className="gm-option">
                   <input
                     type="radio"
                     className="gm-check"

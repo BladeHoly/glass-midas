@@ -25,6 +25,7 @@ import { CartPage } from '../../../templates/src/cart/CartPage';
 import { CheckoutPage } from '../../../templates/src/checkout/CheckoutPage';
 import { OrderConfirmation } from '../../../templates/src/confirmation/OrderConfirmation';
 import { ComparePieces } from '../../../templates/src/compare/ComparePieces';
+import { SavedPieces } from '../../../templates/src/wishlist/SavedPieces';
 import { CollectionGrid } from '../../../templates/src/collection/CollectionGrid';
 import { ProductPage } from '../../../templates/src/product/ProductPage';
 import { StoreHome } from '../../../templates/src/storefront/StoreHome';
@@ -60,6 +61,7 @@ const templates = {
   checkout: CheckoutPage,
   confirmation: OrderConfirmation,
   compare: ComparePieces,
+  wishlist: SavedPieces,
 };
 const Template = templates[(params.get('t') ?? 'sign-in') as keyof typeof templates] ?? SignIn;
 createRoot(document.getElementById('root')!).render(<Template />);

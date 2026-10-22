@@ -86,6 +86,25 @@
                 <circle cx="12" cy="8" r="4" />
                 <path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" /></svg
             ></a>
+            <a
+              class="gm-chip gm-chip-plain gm-chip-round"
+              href="wishlist.html"
+              data-saved-link
+              aria-label="Saved"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"
+                /></svg
+              ><span class="shop-count" aria-hidden="true"></span
+            ></a>
             <button
               class="gm-chip gm-chip-plain gm-chip-round"
               type="button"
@@ -258,13 +277,13 @@
                   </gm-select>
                 </div>
               </div>
-              <div class="co-methods" role="radiogroup" aria-label="Delivery speed" id="methods">
-                <label class="co-method">
+              <div class="gm-options" role="radiogroup" aria-label="Delivery speed" id="methods">
+                <label class="gm-option">
                   <input type="radio" class="gm-check" name="method" value="standard" checked />
                   <span><strong>Standard</strong><small>3 to 5 working days</small></span>
                   <span class="co-method-price" id="standard-price"></span>
                 </label>
-                <label class="co-method">
+                <label class="gm-option">
                   <input type="radio" class="gm-check" name="method" value="express" />
                   <span
                     ><strong>Express</strong><small>Next working day, ordered by 3 pm</small></span
@@ -348,7 +367,7 @@
               <button class="gm-chip" type="submit">Apply</button>
             </form>
             <p class="co-code-message" id="code-message" aria-live="polite"></p>
-            <dl class="cart-totals" id="totals"></dl>
+            <dl class="gm-totals" id="totals"></dl>
           </aside>
         </div>
       </main>

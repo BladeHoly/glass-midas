@@ -15,7 +15,7 @@
     justify-items: center;
     gap: var(--gm-space-xs, 4px);
     padding: var(--gm-space-xl, 24px) var(--gm-space-lg, 16px);
-    border: 1.5px dashed var(--gm-chip-fill-on, rgb(255 255 255 / 0.22));
+    border: 1.5px dashed color-mix(in srgb, var(--gm-ink) 20%, transparent);
     border-radius: var(--gm-radius-md, 18px);
     background: var(--gm-chip-fill, rgb(255 255 255 / 0.1));
     color: var(--gm-ink);

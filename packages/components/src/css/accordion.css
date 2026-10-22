@@ -10,7 +10,7 @@
     interpolate-size: allow-keywords;
   }
   :where(.gm-accordion > details) {
-    border-bottom: 1px solid var(--gm-chip-fill-on, rgb(255 255 255 / 0.22));
+    border-bottom: 1px solid color-mix(in srgb, var(--gm-ink) 20%, transparent);
   }
   :where(.gm-accordion > details:last-child) {
     border-bottom: 0;
