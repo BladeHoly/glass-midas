@@ -1,0 +1,304 @@
+/* One order for the team: the states and next action on top, the work on the left, who and
+   where on the right. */
+.mo-crumbs {
+  margin-bottom: var(--gm-space-lg);
+}
+.mo-loading {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.mo-skeleton {
+  height: 12rem;
+  border-radius: 22px;
+}
+.mo-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+  margin-bottom: var(--gm-space-lg);
+}
+.mo-states {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gm-space-xs);
+  margin: 0;
+}
+.mo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-sm);
+}
+.mo-actions .gm-chip-round svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.mo-danger {
+  color: var(--gm-status-danger);
+}
+
+.mo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(16rem, 1fr);
+  gap: var(--gm-space-lg);
+  align-items: start;
+}
+.mo-main,
+.mo-side {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.mo-card {
+  display: grid;
+  gap: var(--gm-space-md);
+  padding: var(--gm-space-lg) var(--gm-space-xl);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.mo-card h2 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.mo-card p,
+.mo-card address {
+  margin: 0;
+  font-style: normal;
+}
+.mo-card address {
+  line-height: 1.6;
+}
+.mo-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+}
+.mo-card-head p {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.mo-small {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.mo-mono {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  letter-spacing: 0.04em;
+}
+
+/* The pieces: a row each, ticked off as they're packed. */
+.mo-lines {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mo-line {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--gm-space-md);
+  padding: var(--gm-space-sm) 0;
+  border-top: 1px solid var(--on-line);
+}
+.mo-line:first-child {
+  border-top: 0;
+}
+.mo-line:not(:has(.gm-check)) {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+}
+.mo-line img {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 10px;
+  background: #121019;
+}
+.mo-line.is-packed img,
+.mo-line.is-packed .mo-line-name a {
+  opacity: 0.55;
+}
+.mo-line.is-packed .mo-line-name a {
+  text-decoration: line-through;
+}
+.mo-line-name {
+  display: grid;
+}
+.mo-line-name a {
+  font-weight: 600;
+  text-decoration: none;
+}
+.mo-line small,
+.mo-line-qty small {
+  display: block;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+.mo-line-qty,
+.mo-line-total {
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+.mo-line-total {
+  font-weight: 600;
+}
+.mo-shipment {
+  display: grid;
+  gap: var(--gm-space-2xs);
+  padding-top: var(--gm-space-md);
+  border-top: 1px solid var(--on-line);
+}
+
+.mo-note {
+  display: grid;
+  gap: var(--gm-space-sm);
+}
+.mo-note .gm-chip {
+  justify-self: end;
+}
+.mo-note .gm-field-error:empty {
+  display: none;
+}
+
+.mo-customer {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--gm-space-xs) var(--gm-space-md);
+  align-items: center;
+}
+.mo-customer p:first-of-type {
+  display: grid;
+}
+.mo-customer a {
+  overflow: hidden;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+  text-overflow: ellipsis;
+}
+.mo-customer .mo-small {
+  grid-column: 1 / -1;
+}
+.mo-checks {
+  display: grid;
+  gap: var(--gm-space-2xs);
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+
+/* The drawers' forms. */
+.mo-form {
+  display: grid;
+  gap: var(--gm-space-md);
+  margin-top: var(--gm-space-md);
+}
+.mo-form .gm-field-error:empty {
+  display: none;
+}
+.mo-switch {
+  justify-content: space-between;
+}
+.mo-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--gm-space-sm);
+  margin-top: var(--gm-space-sm);
+}
+.mo-refund-lines {
+  display: grid;
+  gap: var(--gm-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mo-refund-lines li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gm-space-sm);
+}
+.mo-refund-lines img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 8px;
+  background: #121019;
+}
+.mo-refund-lines span {
+  display: grid;
+  font-weight: 600;
+}
+.mo-refund-lines small {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+  font-weight: 400;
+}
+
+@media (max-width: 60rem) {
+  .mo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 36rem) {
+  .mo-card {
+    padding: var(--gm-space-lg);
+  }
+  /* On a phone: the name and total on top, the quantity under the name, no picture. */
+  .mo-line {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'check name total'
+      'check qty qty';
+    row-gap: var(--gm-space-2xs);
+  }
+  .mo-line:not(:has(.gm-check)) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'name total'
+      'qty qty';
+  }
+  .mo-line .gm-check {
+    grid-area: check;
+  }
+  .mo-line-name {
+    grid-area: name;
+  }
+  .mo-line-total {
+    grid-area: total;
+  }
+  .mo-line-qty {
+    grid-area: qty;
+    color: var(--on-ink-muted);
+    font-size: var(--gm-text-sm);
+    text-align: start;
+  }
+  .mo-line img {
+    display: none;
+  }
+}
+
+@media print {
+  .on-art,
+  .app-side,
+  .app-actions,
+  .mo-crumbs,
+  .mo-bar,
+  .mo-note,
+  .mo-card:has(#totals),
+  .mo-card:has(#history),
+  .mo-card:has(.mo-checks),
+  #copy-address {
+    display: none !important;
+  }
+  .mo-grid {
+    grid-template-columns: 1fr;
+  }
+  .mo-card {
+    background: none;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}

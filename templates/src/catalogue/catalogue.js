@@ -1,6 +1,6 @@
 import { toast } from '@glass-midas/components';
 import { shellSearch } from '../shared/app.js';
-import { collections, money } from '../shared/data.js';
+import { collections, money, pageUrl } from '../shared/data.js';
 import { listCatalogue, setStock } from '../shared/store.js';
 
 // Products: grouped by collection, each opening into its finishes, where stock can be changed in
@@ -75,7 +75,7 @@ function productRows(p) {
       <td><span class="cat-product">
         <button class="cat-expand" type="button" aria-expanded="${expanded}" aria-controls="${p.finishes.map((f) => `v-${p.id}-${f.name}`).join(' ')}" data-product="${p.id}" aria-label="${escape(p.name)}'s finishes">${chevron}</button>
         <span class="cat-figure" aria-hidden="true"><span class="on-sigil" style="--sigil: url('art/sigil-${p.id}.svg')"></span></span>
-        <span>${escape(p.name)}<small>${escape(p.kind)}</small></span>
+        <span><a href="${pageUrl('edit-product', `id=${p.id}`)}">${escape(p.name)}</a><small>${escape(p.kind)}</small></span>
       </span></td>
       <td class="gm-num">${money(p.price)}</td>
       <td><span class="cat-swatches" role="img" aria-label="${p.finishes.map((f) => f.name).join(', ')}">${p.finishes

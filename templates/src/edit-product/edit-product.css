@@ -1,0 +1,288 @@
+/* Editing a product: the fields in cards, the main ones left, where it lives right, and a bar
+   that floats up when there's something to save. */
+.ep-crumbs {
+  margin-bottom: var(--gm-space-lg);
+}
+.ep-loading {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.ep-skeleton {
+  height: 16rem;
+  border-radius: 22px;
+}
+.ep {
+  padding-bottom: 6rem;
+}
+.ep-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(17rem, 1fr);
+  gap: var(--gm-space-lg);
+  align-items: start;
+}
+.ep-main,
+.ep-side {
+  display: grid;
+  gap: var(--gm-space-lg);
+}
+.ep-card {
+  display: grid;
+  gap: var(--gm-space-md);
+  padding: var(--gm-space-lg) var(--gm-space-xl);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.ep-card h2 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.ep-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--gm-space-sm);
+}
+.ep-small,
+.ep-optional {
+  margin: 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+  font-weight: 400;
+}
+.ep-card .gm-field-error:empty {
+  display: none;
+}
+.ep-count {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+.ep-count.is-over {
+  color: var(--gm-status-danger);
+}
+.ep-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--gm-space-md);
+}
+.ep-narrow {
+  max-width: 12rem;
+}
+.ep-switch {
+  justify-content: space-between;
+}
+.ep-margin:empty {
+  display: none;
+}
+
+/* The summary of what needs fixing: first in the form, in the danger tone. */
+.ep-summary {
+  margin-bottom: var(--gm-space-lg);
+  padding: var(--gm-space-lg) var(--gm-space-xl);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--gm-status-danger) 14%, var(--on-bg));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gm-status-danger) 50%, transparent);
+}
+.ep-summary:focus {
+  outline: 0;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--gm-status-danger) 50%, transparent),
+    var(--gm-focus);
+}
+.ep-summary h2 {
+  margin: 0 0 var(--gm-space-sm);
+  font-size: var(--gm-text-md);
+}
+.ep-summary ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+/* Pictures: a row of squares, the first one the main. */
+.ep-pictures {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: var(--gm-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ep-pictures li {
+  position: relative;
+}
+.ep-pictures img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  background: #121019;
+  object-fit: cover;
+}
+.ep-pictures .gm-badge {
+  position: absolute;
+  bottom: var(--gm-space-xs);
+  left: var(--gm-space-xs);
+  background: color-mix(in srgb, var(--on-bg) 80%, transparent);
+}
+.ep-pictures .gm-chip {
+  position: absolute;
+  top: var(--gm-space-xs);
+  right: var(--gm-space-xs);
+  width: 1.9rem;
+  min-height: 1.9rem;
+  padding: 0;
+  background: color-mix(in srgb, var(--on-bg) 80%, transparent);
+}
+.ep-pictures svg,
+.ep-finishes .gm-chip-round svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+/* Finishes: inputs in the cells. */
+.ep-finishes td {
+  vertical-align: top;
+}
+.ep-finishes .gm-input {
+  min-width: 6rem;
+  min-height: 2.25rem;
+}
+.ep-sku {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: var(--gm-text-sm);
+}
+.ep-color {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+}
+.ep-color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+.ep-color::-webkit-color-swatch {
+  border: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.2);
+}
+.ep-color::-moz-color-swatch {
+  border: 0;
+  border-radius: 50%;
+}
+.ep-color:focus-visible {
+  outline: 0;
+  box-shadow: var(--gm-focus);
+}
+.ep-finishes + .gm-field-error + .gm-chip,
+.ep-card > #add-finish {
+  justify-self: start;
+}
+
+/* Tags: chips with their own ×. */
+.ep-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gm-space-xs);
+  margin: 0 0 var(--gm-space-xs);
+  padding: 0;
+  list-style: none;
+}
+.ep-tag {
+  gap: var(--gm-space-2xs);
+  min-height: 1.9rem;
+  padding-right: 0.3rem;
+  font-size: var(--gm-text-sm);
+}
+.ep-tag button {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+.ep-tag button:hover {
+  background: var(--gm-chip-fill-hover);
+}
+.ep-tag button:focus-visible {
+  outline: 0;
+  box-shadow: var(--gm-focus);
+}
+.ep-tag svg {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+/* The search preview: how a result reads, in plain type. */
+.ep-snippet {
+  display: grid;
+  gap: 0.15rem;
+  padding: var(--gm-space-md);
+  border-radius: 14px;
+  background: var(--gm-chip-fill);
+  font-size: var(--gm-text-sm);
+}
+.ep-snippet-url {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+.ep-snippet-title {
+  overflow: hidden;
+  color: var(--on-accent);
+  font-size: var(--gm-text-md);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.ep-snippet-text {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--on-ink-muted);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+/* The bar: centered over the content's foot, above everything. */
+.ep-bar {
+  position: fixed;
+  z-index: 10;
+  bottom: calc(var(--gm-space-xl) + env(safe-area-inset-bottom));
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-sm);
+  padding: var(--gm-space-xs) var(--gm-space-xs) var(--gm-space-xs) var(--gm-space-lg);
+  border-radius: 999px;
+  translate: -50% 0;
+}
+.ep-bar[hidden] {
+  display: none;
+}
+.ep-bar p {
+  margin: 0 var(--gm-space-sm) 0 0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 60rem) {
+  .ep-grid {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 40rem) {
+  .ep-card {
+    padding: var(--gm-space-lg);
+  }
+  .ep-bar {
+    bottom: calc(5.5rem + env(safe-area-inset-bottom));
+  }
+}

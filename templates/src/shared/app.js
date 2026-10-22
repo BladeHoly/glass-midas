@@ -1,4 +1,4 @@
-import { customers, orders } from './data.js';
+import { customers, orders, pageUrl } from './data.js';
 
 // The app shell's search: pages, orders by number, and customers by name, from one box.
 
@@ -18,7 +18,11 @@ export function findInApp(query) {
   const byNumber = orders
     .filter((o) => String(o.number).startsWith(q))
     .slice(0, 4)
-    .map((o) => ({ label: `Order #${o.number}`, href: '#', hint: o.customer.name }));
+    .map((o) => ({
+      label: `Order #${o.number}`,
+      href: pageUrl('manage-order', `n=${o.number}`),
+      hint: o.customer.name,
+    }));
   const people = customers
     .filter((c) => c.name.toLowerCase().includes(q) || c.email.includes(q))
     .slice(0, 4)

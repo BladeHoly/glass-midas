@@ -1,5 +1,5 @@
 import { toast } from '@glass-midas/components';
-import { STATUS, day, initials, money, product } from '../shared/data.js';
+import { STATUS, day, initials, money, pageUrl, product } from '../shared/data.js';
 import { listOrders, setStatus } from '../shared/store.js';
 import { shellSearch } from '../shared/app.js';
 
@@ -34,7 +34,7 @@ const row = (o) => {
   const more = o.lines.length > 1 ? ` +${o.lines.length - 1}` : '';
   return `<tr>
     <td><input type="checkbox" class="gm-check" data-select value="${o.id}" aria-label="Select order ${o.number}"></td>
-    <td><a href="#">#${o.number}</a></td>
+    <td><a href="${pageUrl('manage-order', `n=${o.number}`)}">#${o.number}</a></td>
     <td data-value="${o.date}">${day(o.date)}</td>
     <td><span class="app-person"><span class="gm-avatar" data-size="sm" aria-hidden="true">${initials(o.customer.name)}</span><span>${escape(o.customer.name)}<small>${o.customer.email}</small></span></span></td>
     <td>${escape(first.name)} · ${o.lines[0].finish}${more}</td>

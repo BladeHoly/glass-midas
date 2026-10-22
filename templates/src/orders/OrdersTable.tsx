@@ -271,7 +271,7 @@ export function OrdersTable() {
                                 />
                               </td>
                               <td>
-                                <a href="#">#{o.number}</a>
+                                <a href={`manage-order.html?n=${o.number}`}>#{o.number}</a>
                               </td>
                               <td data-value={o.date}>{day(o.date)}</td>
                               <td>

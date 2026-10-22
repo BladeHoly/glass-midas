@@ -1,0 +1,32 @@
+---
+title: Manage order
+description: 'One order for the team: capture, pack, fulfil and refund in drawers, with the customer and a history to add notes to.'
+order: 51
+template: manage-order
+---
+
+One order as the team sees it. The badges say whether it's paid and shipped, and the one thing to
+do next is the main button: **Capture payment**, then **Fulfil**. The pieces are ticked off as
+they're packed. The money in and out is in [totals](/components/price/), and the customer and the
+shipping address sit beside it. The history is a [timeline](/components/steps/) the team can add
+notes to.
+
+<Template name="manage-order" />
+
+## Try it
+
+- Order `1900` is waiting: capture the payment, tick the piece as packed, then fulfil it with a
+  tracking number. Try `x` first to see it refused.
+- Refund one piece from the drawer: the amount is worked out before anything moves, and it
+  never goes past what's left.
+- Leave a note; it joins the history with your name.
+- **More** prints a packing slip (the pieces and the address, nothing else) or cancels the order,
+  which refunds what was paid.
+
+## Details that matter
+
+- **Fulfilling says who's told,** with a switch to email the customer the tracking link.
+- **A refund names its amount on its button** ("Refund $691.20"), and the order's badge follows:
+  partly refunded, or refunded.
+- **Cancelling says where the money goes:** a hold released, or a refund.
+- **Every order number in the app's search** and the orders table opens this page.

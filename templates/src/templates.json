@@ -313,5 +313,52 @@
       "account-store.js"
     ],
     "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "edit-product",
+    "title": "Edit product",
+    "group": "Admin",
+    "description": "Every field of a product: pictures, finishes with SKUs and stock, price and margin, status, tags and the search preview, saved together.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "app.css",
+      "app.js",
+      "data.js",
+      "store.js",
+      "AppKit.tsx",
+      "admin-store.js"
+    ],
+    "art": [
+      "sigil.svg",
+      "tide-dark.webp",
+      "tide-light.webp",
+      "sigil-tide.svg",
+      "sigil-ripple.svg",
+      "sigil-choir.svg",
+      "sigil-ember.svg",
+      "sigil-orbit.svg",
+      "sigil-lantern.svg",
+      "sigil-thread.svg",
+      "sigil-vesper.svg",
+      "products/"
+    ]
+  },
+  {
+    "name": "manage-order",
+    "title": "Manage order",
+    "group": "Admin",
+    "description": "One order for the team: capture, pack, fulfil and refund in drawers, with the customer and a history to add notes to.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "app.css",
+      "app.js",
+      "data.js",
+      "store.js",
+      "AppKit.tsx",
+      "admin-store.js"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
   }
 ]
