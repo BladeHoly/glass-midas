@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Checkout · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="shop.css" />
+    <link rel="stylesheet" href="checkout.css" />
+    <!-- The script imports the components by name (for toast()); this says where they come from. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@glass-midas/components": "https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+        }
+      }
+    </script>
+    <script type="module" src="checkout.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-tide" aria-hidden="true"></div>
+    <div class="shop">
+      <a class="app-skip" href="#main">Skip to content</a>
+
+      <!-- The bar: the one glass that stays, floating over the page. -->
+      <header class="shop-top shop-wrap">
+        <gm-surface class="shop-bar" material="frost" radius="999">
+          <a class="on-brand" href="storefront.html"
+            ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+          >
+          <nav class="shop-links" aria-label="Collections">
+            <a class="gm-chip gm-chip-plain" href="collection.html?c=listen">Listen</a>
+            <a class="gm-chip gm-chip-plain" href="collection.html?c=room">Room</a>
+            <a class="gm-chip gm-chip-plain" href="collection.html?c=ritual">Ritual</a>
+          </nav>
+          <form class="shop-search" action="collection.html" role="search">
+            <input
+              class="gm-input"
+              type="search"
+              name="q"
+              placeholder="Search pieces"
+              aria-label="Search pieces"
+            />
+          </form>
+          <div class="shop-actions">
+            <button
+              class="gm-chip gm-chip-plain gm-chip-round shop-menu-button"
+              type="button"
+              popovertarget="shop-menu"
+              aria-label="Menu"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4 7h16M4 12h16M4 17h16" />
+              </svg>
+            </button>
+            <a class="gm-chip gm-chip-plain gm-chip-round" href="#" aria-label="Account"
+              ><svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" /></svg
+            ></a>
+            <button
+              class="gm-chip gm-chip-plain gm-chip-round"
+              type="button"
+              popovertarget="mini-cart"
+              data-cart-button
+              aria-label="Cart"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" />
+                <path d="M9 8V6.5a3 3 0 0 1 6 0V8" /></svg
+              ><span class="shop-count" aria-hidden="true"></span>
+            </button>
+          </div>
+        </gm-surface>
+      </header>
+
+      <gm-menu id="shop-menu" aria-label="Collections">
+        <a href="collection.html?c=listen">Listen</a>
+        <a href="collection.html?c=room">Room</a>
+        <a href="collection.html?c=ritual">Ritual</a>
+        <hr />
+        <a href="collection.html">All pieces</a>
+      </gm-menu>
+
+      <!-- The mini cart: what's in it and what it costs, without leaving the page. -->
+      <gm-popover id="mini-cart" class="shop-cart" aria-label="Cart">
+        <h2>Your cart</h2>
+        <div id="mini-cart-empty">
+          <p class="shop-cart-empty">Nothing here yet.</p>
+          <a class="gm-chip" href="collection.html">Browse the pieces</a>
+        </div>
+        <div id="mini-cart-full" hidden>
+          <ul class="shop-cart-lines" id="mini-cart-lines"></ul>
+          <p class="shop-cart-total"><span>Subtotal</span><span id="mini-cart-subtotal"></span></p>
+          <p class="shop-cart-note" id="mini-cart-note"></p>
+          <div class="shop-cart-actions">
+            <a class="gm-chip gm-chip-primary" href="checkout.html">Check out</a>
+            <a class="gm-chip" href="cart.html">View cart</a>
+          </div>
+        </div>
+      </gm-popover>
+
+      <main id="main" class="shop-main shop-wrap">
+        <div class="co">
+          <!-- On a phone the summary folds up above the form, its total always in view. -->
+          <details class="co-summary-toggle" id="summary-toggle">
+            <summary><span>Order summary</span><strong id="toggle-total"></strong></summary>
+          </details>
+
+          <form class="co-form" id="form" novalidate>
+            <h1 class="on-display">Checkout</h1>
+            <div class="co-alert" id="alert" role="alert" tabindex="-1" hidden></div>
+
+            <section class="co-express" aria-label="Express checkout">
+              <button class="gm-chip co-wallet" type="button" data-action="wallet">
+                Pay with your device's wallet
+              </button>
+              <p class="co-or">or pay by card</p>
+            </section>
+
+            <fieldset class="co-section">
+              <legend>Contact</legend>
+              <div class="gm-field">
+                <label for="email">Email</label>
+                <input
+                  id="email"
+                  class="gm-input"
+                  type="email"
+                  name="email"
+                  autocomplete="email"
+                  inputmode="email"
+                  required
+                  aria-describedby="email-error email-hint"
+                />
+                <p class="gm-field-error" id="email-error"></p>
+                <p class="gm-field-hint" id="email-hint">
+                  For the receipt and the tracking link. <a href="sign-in.html">Sign in</a> instead.
+                </p>
+              </div>
+              <label class="gm-check-label">
+                <input type="checkbox" class="gm-check" name="news" />
+                <span>Tell me about new pieces</span>
+              </label>
+            </fieldset>
+
+            <fieldset class="co-section">
+              <legend>Delivery</legend>
+              <div class="co-grid">
+                <div class="gm-field co-wide">
+                  <label for="name">Full name</label>
+                  <input
+                    id="name"
+                    class="gm-input"
+                    name="name"
+                    autocomplete="shipping name"
+                    required
+                    aria-describedby="name-error"
+                  />
+                  <p class="gm-field-error" id="name-error"></p>
+                </div>
+                <div class="gm-field co-wide">
+                  <label for="address">Address</label>
+                  <input
+                    id="address"
+                    class="gm-input"
+                    name="address"
+                    autocomplete="shipping address-line1"
+                    required
+                    aria-describedby="address-error"
+                  />
+                  <p class="gm-field-error" id="address-error"></p>
+                </div>
+                <div class="gm-field co-wide">
+                  <label for="address2"
+                    >Apartment, floor <span class="co-optional">(optional)</span></label
+                  >
+                  <input
+                    id="address2"
+                    class="gm-input"
+                    name="address2"
+                    autocomplete="shipping address-line2"
+                  />
+                </div>
+                <div class="gm-field">
+                  <label for="city">City</label>
+                  <input
+                    id="city"
+                    class="gm-input"
+                    name="city"
+                    autocomplete="shipping address-level2"
+                    required
+                    aria-describedby="city-error"
+                  />
+                  <p class="gm-field-error" id="city-error"></p>
+                </div>
+                <div class="gm-field">
+                  <label for="postal">Postal code</label>
+                  <input
+                    id="postal"
+                    class="gm-input"
+                    name="postal"
+                    autocomplete="shipping postal-code"
+                    required
+                    aria-describedby="postal-error"
+                  />
+                  <p class="gm-field-error" id="postal-error"></p>
+                </div>
+                <div class="gm-field co-wide">
+                  <label for="country">Country</label>
+                  <gm-select>
+                    <select id="country" name="country" autocomplete="shipping country" required>
+                      <option value="PT">Portugal</option>
+                      <option value="ES">Spain</option>
+                      <option value="FR">France</option>
+                      <option value="DE">Germany</option>
+                      <option value="GB">United Kingdom</option>
+                      <option value="US" selected>United States</option>
+                      <option value="CA">Canada</option>
+                      <option value="AR">Argentina</option>
+                      <option value="JP">Japan</option>
+                    </select>
+                  </gm-select>
+                </div>
+              </div>
+              <div class="co-methods" role="radiogroup" aria-label="Delivery speed" id="methods">
+                <label class="co-method">
+                  <input type="radio" class="gm-check" name="method" value="standard" checked />
+                  <span><strong>Standard</strong><small>3 to 5 working days</small></span>
+                  <span class="co-method-price" id="standard-price"></span>
+                </label>
+                <label class="co-method">
+                  <input type="radio" class="gm-check" name="method" value="express" />
+                  <span
+                    ><strong>Express</strong><small>Next working day, ordered by 3 pm</small></span
+                  >
+                  <span class="co-method-price">$24.00</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="co-section">
+              <legend>Payment</legend>
+              <div class="co-grid">
+                <div class="gm-field co-wide">
+                  <label for="card">Card number</label>
+                  <input
+                    id="card"
+                    class="gm-input"
+                    name="card"
+                    autocomplete="cc-number"
+                    inputmode="numeric"
+                    placeholder="1234 1234 1234 1234"
+                    required
+                    aria-describedby="card-error"
+                  />
+                  <p class="gm-field-error" id="card-error"></p>
+                </div>
+                <div class="gm-field">
+                  <label for="expiry">Expiry</label>
+                  <input
+                    id="expiry"
+                    class="gm-input"
+                    name="expiry"
+                    autocomplete="cc-exp"
+                    inputmode="numeric"
+                    placeholder="MM / YY"
+                    required
+                    aria-describedby="expiry-error"
+                  />
+                  <p class="gm-field-error" id="expiry-error"></p>
+                </div>
+                <div class="gm-field">
+                  <label for="cvc">Security code</label>
+                  <input
+                    id="cvc"
+                    class="gm-input"
+                    name="cvc"
+                    autocomplete="cc-csc"
+                    inputmode="numeric"
+                    placeholder="3 digits on the back"
+                    required
+                    aria-describedby="cvc-error"
+                  />
+                  <p class="gm-field-error" id="cvc-error"></p>
+                </div>
+              </div>
+              <label class="gm-check-label">
+                <input type="checkbox" class="gm-check" name="billing" checked />
+                <span>Bill to the delivery address</span>
+              </label>
+            </fieldset>
+
+            <button class="gm-chip gm-chip-primary co-pay" type="submit" id="pay"></button>
+            <p class="co-note">
+              Your card is charged when the order ships. You can cancel until then.
+            </p>
+          </form>
+
+          <aside class="co-summary" id="summary" aria-labelledby="co-summary-title">
+            <h2 id="co-summary-title">Your order</h2>
+            <ul class="shop-cart-lines" id="lines"></ul>
+            <form class="co-code" id="code-form">
+              <label for="code" class="on-sr-only">Discount code</label>
+              <input
+                id="code"
+                class="gm-input"
+                name="code"
+                placeholder="Discount code"
+                autocomplete="off"
+                aria-describedby="code-message"
+              />
+              <button class="gm-chip" type="submit">Apply</button>
+            </form>
+            <p class="co-code-message" id="code-message" aria-live="polite"></p>
+            <dl class="cart-totals" id="totals"></dl>
+          </aside>
+        </div>
+      </main>
+
+      <footer class="shop-foot">
+        <div class="shop-wrap">
+          <div class="shop-foot-grid">
+            <div>
+              <a class="on-brand" href="storefront.html"
+                ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+              >
+              <p>Audio pieces, each tuned to its own figure.</p>
+            </div>
+            <div>
+              <h2>Shop</h2>
+              <ul>
+                <li><a href="collection.html?c=listen">Listen</a></li>
+                <li><a href="collection.html?c=room">Room</a></li>
+                <li><a href="collection.html?c=ritual">Ritual</a></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Help</h2>
+              <ul>
+                <li><a href="#">Shipping</a></li>
+                <li><a href="#">Returns</a></li>
+                <li><a href="#">Warranty</a></li>
+              </ul>
+            </div>
+            <div>
+              <h2>Ondine</h2>
+              <ul>
+                <li><a href="#">The studio</a></li>
+                <li><a href="#">Journal</a></li>
+                <li><a href="#">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+          <p class="shop-small">Free shipping over $150. 60 days to return anything.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

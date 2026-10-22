@@ -10,7 +10,7 @@ import {
   type KeyboardEvent,
 } from 'react';
 import { ProductCard, ShopShell } from '../shared/ShopKit';
-import { addToCart, extra, image } from '../shared/cart.js';
+import { addToCart, extra, image } from '../shared/cart-store.js';
 import { collections, money, products, stock, type Finish } from '../shared/data.js';
 
 // A product: pictures that follow the finish and open large, the finish as a radio group that

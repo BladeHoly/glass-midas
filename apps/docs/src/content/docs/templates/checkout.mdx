@@ -1,0 +1,28 @@
+---
+title: Checkout
+description: One page, as a guest, express first, then contact, delivery and payment, with a summary that folds on a phone.
+order: 34
+template: checkout
+---
+
+Checkout on one page, in the order things are needed: an express wallet first, then contact,
+delivery and payment, with the order and its total beside them. You can check out as a guest, with
+signing in only offered. Every field asks for what browsers and password managers can fill.
+
+<Template name="checkout" />
+
+## Try it
+
+- Press **Pay** with nothing filled in: a list of what to fix comes up first, each item a link to
+  its field.
+- Pay with the card `4000 0000 0000 0002`: it's declined, the way a real one would be. Any other
+  card goes through to the [confirmation](/templates/confirmation/).
+- Apply the code `RESONANCE` for 10% off; choose express delivery and watch the total on the button.
+
+## Details that matter
+
+- **Guest by default.** Forced sign-up is one of the biggest reasons people leave a checkout.
+- **The total on the button is what you pay,** with tax and shipping, and changes with every choice.
+- **`autocomplete` on every field** (`email`, `shipping address-line1`, `cc-number`, `cc-exp`…), so
+  most of the form fills itself. The card number groups itself as it's typed.
+- **On a phone the summary folds up** to one line with the total, above the form.

@@ -68,9 +68,22 @@ const PREVIEW_SCRIPT = `<script>
       if (theme) document.documentElement.dataset.theme = theme;
       if (tier) for (const el of document.querySelectorAll('[material], gm-surface, gm-button, gm-dialog, gm-popover, gm-menu, gm-nav, gm-search, gm-segmented, gm-tabs, gm-tip, gm-toast')) el.setAttribute('tier', tier);
     };
-    apply({ theme: params.get('theme'), tier: params.get('tier') });
-    addEventListener('message', (e) => e.origin === location.origin && apply(e.data || {}));
-    addEventListener('DOMContentLoaded', () => apply({ tier: params.get('tier') }));
+    // A page reached by a script's link keeps the theme the docs set on the first one.
+    let theme = params.get('theme');
+    try {
+      if (theme) sessionStorage.setItem('preview-theme', theme);
+      else theme = sessionStorage.getItem('preview-theme');
+    } catch {}
+    const tier = params.get('tier');
+    apply({ theme, tier });
+    addEventListener('message', (e) => {
+      if (e.origin !== location.origin) return;
+      try {
+        if (e.data?.theme) sessionStorage.setItem('preview-theme', e.data.theme);
+      } catch {}
+      apply(e.data || {});
+    });
+    addEventListener('DOMContentLoaded', () => apply({ tier }));
   })();
 </script>`;
 
@@ -110,10 +123,15 @@ for (const t of templates) {
     // The brand links home; in a preview that would leave the frame.
     .replace(/href="\/"/g, 'href="#"')
     // Links to other templates go to their previews.
-    .replace(/href="([\w-]+)\.html"/g, (m, n) => (names.has(n) ? `href="../${n}/preview.html"` : m))
+    .replace(/(href|action)="([\w-]+)\.html/g, (m, attr, n) =>
+      names.has(n) ? `${attr}="../${n}/preview.html` : m,
+    )
     .replace('</head>', `${PREVIEW_SCRIPT}\n  </head>`)
     // Pictures the scripts draw come from the shared art folder, not one beside the page.
-    .replace('<html lang="en">', '<html lang="en" data-art="../shared/art/">');
+    .replace(
+      '<html lang="en">',
+      '<html lang="en" data-art="../shared/art/" data-pages="../{name}/preview.html">',
+    );
   write(`${DIST}/${t.name}/preview.html`, html);
 
   manifest.push({

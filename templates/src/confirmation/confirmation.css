@@ -1,0 +1,145 @@
+/* The order's confirmation: thanks, what happens next, what was ordered and where it goes. */
+.cf {
+  display: grid;
+  gap: var(--gm-space-2xl);
+}
+.cf-head {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+.cf-head h1:focus {
+  outline: 0;
+}
+.cf-head p {
+  max-width: 36rem;
+  margin: var(--gm-space-sm) 0 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-lg);
+}
+.cf-sigil {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: var(--gm-space-lg);
+  color: var(--on-accent);
+}
+.cf-head .cf-number {
+  margin: 0 0 var(--gm-space-xs);
+  color: var(--on-accent);
+  font-size: var(--gm-text-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* What happens next, as a track: the steps done filled in. */
+.cf-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.cf-steps li {
+  position: relative;
+  display: grid;
+  gap: var(--gm-space-2xs);
+  padding-top: var(--gm-space-xl);
+  font-size: var(--gm-text-sm);
+}
+.cf-steps li::before {
+  content: '';
+  position: absolute;
+  top: 0.35rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--on-line);
+}
+.cf-steps li::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  background: var(--on-bg);
+  box-shadow: inset 0 0 0 2px var(--on-ink-muted);
+}
+.cf-steps li.is-done::before {
+  background: var(--on-accent);
+}
+.cf-steps li.is-done::after {
+  background: var(--on-accent);
+  box-shadow: none;
+}
+.cf-steps span {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+
+.cf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gm-space-lg);
+  align-items: start;
+}
+.cf-card {
+  display: grid;
+  gap: var(--gm-space-md);
+  padding: var(--gm-space-xl);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.cf-card h2 {
+  margin: 0;
+  font: 500 var(--gm-text-xl) / 1.2 var(--on-font-display);
+}
+.cf-card h2:not(:first-child) {
+  margin-top: var(--gm-space-md);
+}
+.cf-card p {
+  margin: 0;
+}
+.cf-small {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.cf-save {
+  display: grid;
+  gap: var(--gm-space-md);
+}
+.cf-save .gm-chip {
+  justify-self: start;
+}
+.cf-more {
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 52rem) {
+  .cf-grid {
+    grid-template-columns: 1fr;
+  }
+  .cf-steps {
+    grid-template-columns: 1fr;
+    gap: var(--gm-space-md);
+  }
+  .cf-steps li {
+    padding: 0 0 0 var(--gm-space-xl);
+  }
+  .cf-steps li::before {
+    top: 0;
+    bottom: calc(-1 * var(--gm-space-md));
+    left: 0.35rem;
+    right: auto;
+    width: 2px;
+    height: auto;
+  }
+  .cf-steps li:last-child::before {
+    display: none;
+  }
+}

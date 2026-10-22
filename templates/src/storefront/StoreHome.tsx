@@ -1,6 +1,6 @@
 import { GlassSurface } from '@glass-midas/react/surfaces';
 import { ProductCard, ShopShell } from '../shared/ShopKit';
-import { extra, image } from '../shared/cart.js';
+import { extra, image } from '../shared/cart-store.js';
 import { collections, products } from '../shared/data.js';
 
 // The store's home: a hero over the art with one frosted card on it, the collections, the most

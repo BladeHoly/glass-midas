@@ -58,19 +58,84 @@ export function onCart(fn) {
 
 export const FREE_SHIPPING = 150;
 
-/** What the cart costs, all of it, before checkout: no surprises there. */
-export function totals(lines) {
+/** Discount codes the stand-in knows: the rate off the subtotal. */
+const CODES = { RESONANCE: 0.1 };
+
+/**
+ * What the cart costs, all of it, before checkout: no surprises there. `method` is the delivery
+ * speed, `code` an applied discount code.
+ */
+export function totals(lines, { method = 'standard', code = '' } = {}) {
   const subtotal = lines.reduce((n, l) => n + (product(l.product)?.price ?? 0) * l.quantity, 0);
-  const shipping = !subtotal || subtotal >= FREE_SHIPPING ? 0 : 12;
-  const tax = Math.round(subtotal * 0.08 * 100) / 100;
+  const discount = Math.round(subtotal * (CODES[code] ?? 0) * 100) / 100;
+  const after = subtotal - discount;
+  const shipping = !subtotal ? 0 : method === 'express' ? 24 : after >= FREE_SHIPPING ? 0 : 12;
+  const tax = Math.round(after * 0.08 * 100) / 100;
   return {
     count: lines.reduce((n, l) => n + l.quantity, 0),
     subtotal,
+    discount,
     shipping,
     tax,
-    total: subtotal + shipping + tax,
-    toFreeShipping: subtotal && subtotal < FREE_SHIPPING ? FREE_SHIPPING - subtotal : 0,
+    total: after + shipping + tax,
+    toFreeShipping: after && after < FREE_SHIPPING ? FREE_SHIPPING - after : 0,
   };
+}
+
+const wait = (ms = 700) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Checks a discount code; resolves to its normalized name, or throws why it can't apply. */
+export async function applyCode(code) {
+  await wait(400);
+  const name = code.trim().toUpperCase();
+  if (!(name in CODES))
+    throw new Error(`“${code.trim()}” isn't a code we know. Check its spelling.`);
+  return name;
+}
+
+/**
+ * Places the order: a stand-in for your payment provider. In this demo the card 4000 0000 0000 0002
+ * is declined. The order is kept for the confirmation page, and the cart is emptied.
+ */
+export async function placeOrder(details) {
+  await wait(1200);
+  if (details.card.replace(/\D/g, '') === '4000000000000002') {
+    throw new Error('The card was declined. Try another card, or the wallet.');
+  }
+  const lines = readCart();
+  const order = {
+    number: 1901 + Math.floor(Math.random() * 90),
+    email: details.email,
+    name: details.name,
+    address: [
+      details.address,
+      details.address2,
+      `${details.city} ${details.postal}`,
+      details.country,
+    ].filter(Boolean),
+    method: details.method,
+    lines,
+    totals: totals(lines, details),
+  };
+  try {
+    sessionStorage.setItem('ondine-order', JSON.stringify(order));
+  } catch {}
+  clearCart();
+  return order;
+}
+
+/**
+ * @typedef {{ number: number, email: string, name: string, address: string[], method: string,
+ *   lines: CartLine[], totals: ReturnType<typeof totals> }} Order
+ */
+
+/** The order just placed, for the confirmation page. @returns {Order | null} */
+export function lastOrder() {
+  try {
+    return JSON.parse(sessionStorage.getItem('ondine-order') ?? 'null');
+  } catch {
+    return null;
+  }
 }
 
 // Where the art folder is: beside the page, unless <html data-art="…"> says otherwise.
