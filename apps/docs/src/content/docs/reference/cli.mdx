@@ -45,6 +45,8 @@ yarn add -D @glass-midas/cli
 | `glass-midas docs <name>`                       | A page as Markdown. `<name>` is a component, its element or a path.         |
 | `glass-midas find <words>`                      | Pages that mention every word: by name and description first, then by text. |
 | `glass-midas setup [html\|react\|astro]`        | How to install and load glass-midas in this project. Works offline.         |
+| `glass-midas template`                          | The [templates](/templates/overview/), by group.                            |
+| `glass-midas template <name>`                   | Copies a template into `./<name>`, and says how to run it.                  |
 
 `list` and `find` take `--json` for scripts and agents. `docs` accepts `search`, `gm-search`,
 `Search` and `components/search` alike; an unknown name suggests close ones.
@@ -52,10 +54,16 @@ yarn add -D @glass-midas/cli
 `setup` picks the package manager from the project's lockfile, and the kind of project from its
 dependencies when you don't name one.
 
+`template <name>` copies a template's page, script, React twin, the shared kit it uses and its
+art. `--html` leaves out the React files, `--react` leaves out the page and its script. `--out
+
+<dir>` picks the folder. It won't overwrite a file that's already there unless you add `--force`.
+
 ```sh
 glass-midas docs gm-tabs        # the tabs page, attributes and all
 glass-midas find frost          # every page that covers frost glass
 glass-midas setup react         # install, load once, use
+glass-midas template checkout --react --out src/checkout
 ```
 
 ## For agents
