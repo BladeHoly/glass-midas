@@ -1,5 +1,17 @@
 # @glass-midas/components
 
+## 0.4.0
+
+### Minor Changes
+
+- 4b3c954: `gm-quantity`: a number with a button either side to take one off or add one, on the native number input, stopping at its limits. React: `GlassQuantity` in `/forms`.
+- 0b245f0: Stats and meters, CSS only: `.gm-stat` (a number, how it moved with an arrow and a good or bad color, and an optional sparkline) and `.gm-meter` (a share on a track of the same color, with status tones).
+- 0449d81: Data pieces: `gm-table` (a native table that sorts, selects rows with a select-all, comes in three densities, pins its first column and becomes cards on a phone), and the CSS-only badges (`.gm-badge`), avatars (`.gm-avatar`), skeletons (`.gm-skeleton`) and pagination (`.gm-pagination`).
+
+### Patch Changes
+
+- 2a3d517: Tabs: a row of tabs wider than its box scrolls sideways instead of widening the page.
+
 ## 0.3.0
 
 ### Minor Changes

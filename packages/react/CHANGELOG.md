@@ -1,5 +1,20 @@
 # @glass-midas/react
 
+## 0.4.0
+
+### Minor Changes
+
+- 4b3c954: `gm-quantity`: a number with a button either side to take one off or add one, on the native number input, stopping at its limits. React: `GlassQuantity` in `/forms`.
+- 0449d81: `@glass-midas/react/data`, with `GlassTable`: `onSort` leaves the rows to React, `onSelectionChange` reports the checked rows.
+
+### Patch Changes
+
+- Updated dependencies [4b3c954]
+- Updated dependencies [0b245f0]
+- Updated dependencies [0449d81]
+- Updated dependencies [2a3d517]
+  - @glass-midas/components@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes

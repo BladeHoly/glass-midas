@@ -1,6 +1,6 @@
 # @glass-midas/components
 
-Glass Web Components from [glass-midas](https://bladeholy.github.io/glass-midas/): surface, button, navigation, search, tabs, segmented control, tip, popover and menu, dialog and sheet, toast, slider, select, one-time code, callout, code block and scrollbar, plus chips, toggles, fields, checkboxes and radios for controls inside glass. Light DOM custom elements, so they work in plain HTML and in any framework, and your CSS reaches inside them.
+Glass Web Components from [glass-midas](https://bladeholy.github.io/glass-midas/): surface, button, navigation, search, tabs, segmented control, tip, popover and menu, dialog and sheet, toast, slider, select, one-time code, quantity, table, callout, code block and scrollbar, plus chips, toggles, fields, checkboxes, radios, badges, avatars, skeletons, pagination, stats and meters. Light DOM custom elements, so they work in plain HTML and in any framework, and your CSS reaches inside them.
 
 ```sh
 npm install @glass-midas/core @glass-midas/components
