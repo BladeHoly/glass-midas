@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Orders · Ondine</title>
+    <link rel="icon" href="art/sigil.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/dist/styles.css"
+    />
+    <link rel="stylesheet" href="tokens.css" />
+    <link rel="stylesheet" href="ondine.css" />
+    <link rel="stylesheet" href="app.css" />
+    <!-- The script imports the components by name (for toast()); this says where they come from. -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@glass-midas/components": "https://cdn.jsdelivr.net/npm/@glass-midas/components@0.3/+esm"
+        }
+      }
+    </script>
+    <script type="module" src="orders.js"></script>
+  </head>
+  <body>
+    <div class="on-art on-art-tide" aria-hidden="true"></div>
+    <div class="app">
+      <a class="app-skip" href="#main">Skip to content</a>
+
+      <aside class="app-side">
+        <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+        <gm-nav class="app-nav" orientation="vertical" material="frost" aria-label="Main">
+          <a href="#">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="7" height="9" rx="2" />
+              <rect x="14" y="3" width="7" height="5" rx="2" />
+              <rect x="14" y="12" width="7" height="9" rx="2" />
+              <rect x="3" y="16" width="7" height="5" rx="2" />
+            </svg>
+            Overview
+          </a>
+          <a href="#" aria-current="page">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" />
+              <path d="M9 8h6M9 12h6" />
+            </svg>
+            Orders
+          </a>
+          <a href="catalogue.html">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z" />
+              <path d="m4 7.5 8 4.5 8-4.5M12 12v9" />
+            </svg>
+            Products
+          </a>
+          <a href="#">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="8" r="3.5" />
+              <path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5" />
+              <path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.8.7 3 2.5 3.5 5.2" />
+            </svg>
+            Customers
+          </a>
+        </gm-nav>
+        <div class="app-me">
+          <span class="gm-avatar" aria-hidden="true">NH</span>
+          <span>Noor Haddad<small>Studio manager</small></span>
+        </div>
+      </aside>
+
+      <div class="app-body">
+        <header class="app-top">
+          <a class="on-brand app-top-brand" href="/"
+            ><span class="on-sigil" aria-hidden="true"></span>Ondine</a
+          >
+          <div>
+            <h1>Orders</h1>
+            <p>Every order, newest first.</p>
+          </div>
+          <div class="app-actions">
+            <gm-search
+              material="frost"
+              placeholder="Search Ondine"
+              hotkey="k"
+              label="Search Ondine"
+            ></gm-search>
+          </div>
+        </header>
+
+        <main id="main" class="app-main">
+          <section class="app-panel" aria-labelledby="orders-title" id="panel">
+            <h2 id="orders-title" class="on-sr-only">Orders</h2>
+
+            <!-- While rows are checked: how many, and what to do with them. -->
+            <div class="app-bulk" id="bulk" hidden>
+              <strong id="bulk-count"></strong>
+              <button class="gm-chip" type="button" data-action="fulfil">Mark fulfilled</button>
+              <button class="gm-chip" type="button" data-action="export">Export</button>
+              <button class="gm-chip" type="button" data-action="refund">Refund</button>
+              <button class="gm-chip gm-chip-plain" type="button" data-action="clear">Clear</button>
+            </div>
+
+            <div class="app-toolbar" id="toolbar">
+              <div class="gm-input-group">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="m20 20-3.5-3.5" />
+                </svg>
+                <input
+                  class="gm-input"
+                  type="search"
+                  id="query"
+                  placeholder="Order, customer or product"
+                  aria-label="Search orders"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="app-filters" role="group" aria-label="Status" id="filters">
+                <button class="gm-chip" type="button" data-status="all" aria-pressed="true">
+                  All <span data-count="all"></span>
+                </button>
+                <button class="gm-chip" type="button" data-status="paid" aria-pressed="false">
+                  Paid <span data-count="paid"></span>
+                </button>
+                <button class="gm-chip" type="button" data-status="pending" aria-pressed="false">
+                  Pending <span data-count="pending"></span>
+                </button>
+                <button class="gm-chip" type="button" data-status="fulfilled" aria-pressed="false">
+                  Fulfilled <span data-count="fulfilled"></span>
+                </button>
+                <button class="gm-chip" type="button" data-status="refunded" aria-pressed="false">
+                  Refunded <span data-count="refunded"></span>
+                </button>
+              </div>
+              <div class="app-toolbar-end">
+                <gm-select>
+                  <select id="range" aria-label="Date range">
+                    <option value="30">Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                    <option value="365">Last 12 months</option>
+                    <option value="all" selected>All time</option>
+                  </select>
+                </gm-select>
+                <gm-segmented id="density" value="regular" label="Row height">
+                  <button value="compact" aria-label="Compact rows">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                  </button>
+                  <button value="regular" aria-label="Regular rows">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 7h16M4 12h16M4 17h16" />
+                    </svg>
+                  </button>
+                  <button value="relaxed" aria-label="Relaxed rows">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="16"
+                      height="16"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 8h16M4 16h16" />
+                    </svg>
+                  </button>
+                </gm-segmented>
+              </div>
+            </div>
+
+            <div class="app-table">
+              <gm-table id="table" stack density="regular">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        <input
+                          type="checkbox"
+                          class="gm-check"
+                          data-select-all
+                          aria-label="Select all orders on this page"
+                        />
+                      </th>
+                      <th data-sort="number">Order</th>
+                      <th data-sort="date" aria-sort="descending">Date</th>
+                      <th data-sort="customer">Customer</th>
+                      <th>Items</th>
+                      <th>Channel</th>
+                      <th>Status</th>
+                      <th data-sort="total" class="gm-num">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rows"></tbody>
+                </table>
+              </gm-table>
+            </div>
+
+            <div class="app-empty" id="empty" hidden>
+              <span class="on-sigil" aria-hidden="true"></span>
+              <h2>No orders match</h2>
+              <p>Try another search, or show every status and date.</p>
+              <button class="gm-chip" type="button" data-action="reset">Clear filters</button>
+            </div>
+            <div class="app-empty" id="error" role="alert" hidden>
+              <span class="on-sigil" aria-hidden="true"></span>
+              <h2>Orders didn't load</h2>
+              <p id="error-message"></p>
+              <button class="gm-chip gm-chip-primary" type="button" data-action="retry">
+                Try again
+              </button>
+            </div>
+
+            <footer class="app-foot" id="foot">
+              <span id="range-label" aria-live="polite"></span>
+              <nav class="gm-pagination" aria-label="Pages" id="pages"></nav>
+            </footer>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <gm-dialog id="refund" heading="Refund these orders?">
+      <p id="refund-text"></p>
+      <form method="dialog" class="dialog-actions">
+        <button class="gm-chip" value="cancel">Keep them</button>
+        <button class="gm-chip gm-chip-primary" value="refund">Refund</button>
+      </form>
+    </gm-dialog>
+  </body>
+</html>

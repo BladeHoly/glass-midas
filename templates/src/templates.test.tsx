@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import { act, type ComponentType } from 'react';
 import { createRoot } from 'react-dom/client';
 import { afterEach, describe, expect, it } from 'vitest';
+import { ProductCatalogue } from './catalogue/ProductCatalogue';
+import { OrdersTable } from './orders/OrdersTable';
 import { ResetPassword } from './reset-password/ResetPassword';
 import { SignIn } from './sign-in/SignIn';
 import { SignUp } from './sign-up/SignUp';
@@ -22,6 +24,8 @@ const react: Record<string, ComponentType> = {
   'sign-up': SignUp,
   'reset-password': ResetPassword,
   'split-sign-in': SplitSignIn,
+  orders: OrdersTable,
+  catalogue: ProductCatalogue,
 };
 
 afterEach(() => {

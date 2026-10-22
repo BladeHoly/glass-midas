@@ -78,6 +78,11 @@
   box-sizing: border-box;
 }
 
+/* Hidden means hidden, whatever display a class gives. */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   min-height: 100dvh;
@@ -144,14 +149,15 @@ button:focus-visible {
   letter-spacing: 0.04em;
   text-decoration: none;
 }
-/* The sigil, in the text's color: a mask over the current color. */
+/* The sigil, in the text's color: a mask over the current color. A product's own figure comes in
+ * through --sigil, as url('art/sigil-<id>.svg'). */
 .on-sigil {
   display: inline-block;
   flex: none;
   width: 1.75rem;
   height: 1.75rem;
   background: currentColor;
-  mask: url('art/sigil.svg') center / contain no-repeat;
+  mask: var(--sigil, url('art/sigil.svg')) center / contain no-repeat;
 }
 
 .on-display {

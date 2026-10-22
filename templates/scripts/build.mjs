@@ -7,6 +7,7 @@
 // - dist/manifest.json: every template and the files it needs, for the docs and the CLI
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
 import { tokensToCss } from '@glass-midas/core';
@@ -33,6 +34,14 @@ write(
 for (const file of fs.readdirSync('src/shared')) {
   fs.copyFileSync(`src/shared/${file}`, `${DIST}/shared/${file}`);
 }
+
+// Types for the shared JS (data, store, app), from its JSDoc: the React twins import those files,
+// and a TypeScript project without allowJs needs their .d.ts beside them.
+const sharedJs = fs.readdirSync('src/shared').filter((f) => f.endsWith('.js') && f !== 'auth.js');
+execSync(
+  `npx tsc --ignoreConfig --allowJs --declaration --emitDeclarationOnly --skipLibCheck --target es2022 --module esnext --moduleResolution bundler --lib es2022,dom --outDir ${DIST}/shared ${sharedJs.map((f) => `src/shared/${f}`).join(' ')}`,
+  { stdio: 'inherit' },
+);
 
 // This repo's components, for the previews.
 await build({
@@ -110,6 +119,18 @@ for (const t of templates) {
     files: [
       ...own.map((f) => ({ from: `${t.name}/${f}`, to: f })),
       ...t.shared.map((f) => ({ from: `shared/${f}`, to: f })),
+      // With a React twin, the types of the shared JS it imports.
+      ...(own.some((f) => f.endsWith('.tsx'))
+        ? t.shared
+            .filter(
+              (f) =>
+                fs.existsSync(`${DIST}/shared/${f.replace(/\.js$/, '.d.ts')}`) && f.endsWith('.js'),
+            )
+            .map((f) => ({
+              from: `shared/${f.replace(/\.js$/, '.d.ts')}`,
+              to: f.replace(/\.js$/, '.d.ts'),
+            }))
+        : []),
       ...t.art.map((f) => ({ from: `shared/art/${f}`, to: `art/${f}` })),
     ],
   });

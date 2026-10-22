@@ -1,0 +1,27 @@
+---
+title: Catalogue
+description: Products grouped by collection, each opening into its finishes, with stock to change in place.
+order: 11
+template: catalogue
+---
+
+The catalogue in the app shell, grouped by collection. Each product opens into its finishes, where
+stock is a field you can change in place. Low stock shows at every level: on the finish, on its
+product, and on the group.
+
+<Template name="catalogue" />
+
+## Try it
+
+- Open a product and change a finish's stock: it saves when you leave the field.
+- Turn on **Low stock**: only what needs attention stays, already open.
+- Fold a collection by its heading.
+
+## Details that matter
+
+- **A product only looks fine if every finish is:** "158 · 1 finish low" rather than a green total
+  that hides a sold-out finish.
+- **Every piece has its own figure,** drawn from the frequency it's tuned to, the same art the
+  store uses.
+- **In React, serve the `art` folder** where your app serves static files (`public/art`), since
+  the figures are referenced from inline styles.

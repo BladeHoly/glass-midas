@@ -9,6 +9,7 @@
 //   pendulums) traced over it, on the tide. For the big panels.
 import fs from 'node:fs';
 import sharp from 'sharp';
+import { products } from '../src/shared/data.js';
 import { fbm, gradientNoise, hex, mix, random } from './noise.mjs';
 
 const OUT = 'dist/shared/art';
@@ -191,6 +192,8 @@ async function main() {
       .toFile(`${OUT}/resonance-${name}.webp`);
   }
   fs.writeFileSync(`${OUT}/sigil.svg`, sigil());
+  // Each piece's own figure, from the frequency it's tuned to.
+  for (const p of products) fs.writeFileSync(`${OUT}/sigil-${p.id}.svg`, sigil(...p.figure));
   console.log(
     `art: ${fs.readdirSync(OUT).join(', ')} in ${Math.round(performance.now() - started)} ms`,
   );
