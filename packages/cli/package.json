@@ -1,6 +1,6 @@
 {
   "name": "@glass-midas/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The glass-midas docs from the terminal: list components, read any page as Markdown, find pages, set up a project, copy a template",
   "license": "MIT",
   "type": "module",

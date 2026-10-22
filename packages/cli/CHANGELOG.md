@@ -1,5 +1,11 @@
 # @glass-midas/cli
 
+## 0.2.0
+
+### Minor Changes
+
+- 0069195: `glass-midas template` lists the templates, and `glass-midas template <name>` copies one into your project (`--html` or `--react` for one version, `--out <dir>`, `--force`), then says how to run it.
+
 ## 0.1.0
 
 Initial release: `glass-midas`, the docs from the terminal for people and coding agents.
