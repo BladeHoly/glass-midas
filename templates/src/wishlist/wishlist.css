@@ -1,0 +1,133 @@
+/* Saved pieces: a card each, the picture beside what to do about it. */
+.wl-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--gm-space-lg);
+}
+.wl-head h1 {
+  margin: 0;
+}
+.wl-head p {
+  margin: var(--gm-space-sm) 0 0;
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-lg);
+}
+.wl-head {
+  margin-bottom: var(--gm-space-xl);
+}
+.wl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gm-space-sm);
+}
+.wl-actions .gm-chip {
+  gap: var(--gm-space-xs);
+}
+.wl-actions svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.wl-shared {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gm-space-md);
+  margin-bottom: var(--gm-space-xl);
+  padding: var(--gm-space-md) var(--gm-space-lg);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.wl-shared p {
+  margin: 0;
+}
+.wl-count {
+  margin: 0 0 var(--gm-space-lg);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.wl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+  gap: var(--gm-space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.wl-card {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: var(--gm-space-lg);
+  padding: var(--gm-space-md);
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--on-bg) 62%, transparent);
+  box-shadow: inset 0 0 0 0.5px var(--on-line);
+}
+.wl-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: #121019;
+}
+.wl-body {
+  display: grid;
+  align-content: start;
+  gap: var(--gm-space-xs);
+}
+.wl-body h2 {
+  margin: 0;
+  font-size: var(--gm-text-md);
+  font-weight: 600;
+}
+.wl-body h2 a {
+  text-decoration: none;
+}
+.wl-body p {
+  margin: 0;
+}
+.wl-kind {
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.wl-body .shop-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--gm-space-xs);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+.wl-body .shop-rating .gm-rating {
+  font-size: 0.85rem;
+}
+.wl-finishes {
+  margin-top: var(--gm-space-xs);
+}
+.wl-finishes legend {
+  margin-bottom: var(--gm-space-xs);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-xs);
+}
+.wl-finishes legend strong {
+  color: var(--on-ink);
+}
+.wl-stock {
+  font-size: var(--gm-text-sm);
+}
+.wl-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gm-space-sm);
+  margin-top: var(--gm-space-sm);
+}
+
+@media (max-width: 30rem) {
+  .wl-card {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: var(--gm-space-md);
+  }
+}

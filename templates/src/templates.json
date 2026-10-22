@@ -246,5 +246,21 @@
       "ShopKit.tsx"
     ],
     "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
+  },
+  {
+    "name": "wishlist",
+    "title": "Saved",
+    "group": "Store",
+    "description": "Pieces kept for later in the finish chosen, with stock, one-click buying and a link to share the list.",
+    "shared": [
+      "tokens.css",
+      "ondine.css",
+      "shop.css",
+      "shop.js",
+      "cart-store.js",
+      "data.js",
+      "ShopKit.tsx"
+    ],
+    "art": ["sigil.svg", "tide-dark.webp", "tide-light.webp", "products/"]
   }
 ]

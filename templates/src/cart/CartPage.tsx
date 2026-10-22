@@ -1,23 +1,37 @@
 import { GlassQuantity } from '@glass-midas/react/forms';
 import { toast } from '@glass-midas/react/overlays';
 import type { CSSProperties } from 'react';
-import { ShopShell, useCart } from '../shared/ShopKit';
+import { ShopShell, useCart, useSaved } from '../shared/ShopKit';
 import {
   FREE_SHIPPING,
   addToCart,
   image,
   removeFromCart,
   setQuantity,
+  toggleSaved,
   totals,
 } from '../shared/cart-store.js';
-import { money, product } from '../shared/data.js';
+import { money, product, stock } from '../shared/data.js';
 
-// The cart: every piece with its quantity, removable with an undo, and every cost before
-// checkout, including how far it is to free shipping. Load cart.css too.
+// The cart: every piece with its quantity, removable with an undo or saved for later, and every
+// cost before checkout, including how far it is to free shipping. Under it, what was saved, one
+// click from coming back. Load cart.css too.
 
 export function CartPage() {
   const lines = useCart();
+  const saved = useSaved();
   const t = totals(lines);
+
+  const later = (id: string, finish: string) => {
+    removeFromCart(id, finish);
+    if (!saved.some((s) => s.product === id)) toggleSaved(id, finish);
+    toast(`${product(id)!.name} is saved for later`);
+  };
+  const back = (id: string, finish: string) => {
+    addToCart(id, finish);
+    toggleSaved(id, finish);
+    toast(`${product(id)!.name} is back in your cart`);
+  };
 
   const remove = (id: string, finish: string, quantity: number) => {
     removeFromCart(id, finish);
@@ -68,6 +82,13 @@ export function CartPage() {
                           <button
                             className="gm-chip gm-chip-plain"
                             type="button"
+                            onClick={() => later(l.product, l.finish)}
+                          >
+                            Save for later
+                          </button>
+                          <button
+                            className="gm-chip gm-chip-plain"
+                            type="button"
                             onClick={() => remove(l.product, l.finish, l.quantity)}
                           >
                             Remove
@@ -100,15 +121,15 @@ export function CartPage() {
                   }
                 />
               </div>
-              <dl className="cart-totals">
+              <dl className="gm-totals">
                 <dt>Subtotal</dt>
                 <dd>{money(t.subtotal)}</dd>
                 <dt>Shipping</dt>
                 <dd>{t.shipping ? money(t.shipping) : 'Free'}</dd>
                 <dt>Estimated tax</dt>
                 <dd>{money(t.tax)}</dd>
-                <dt className="is-total">Total</dt>
-                <dd className="is-total">{money(t.total)}</dd>
+                <dt className="gm-totals-total">Total</dt>
+                <dd className="gm-totals-total">{money(t.total)}</dd>
               </dl>
               <a className="gm-chip gm-chip-primary" href="checkout.html">
                 Check out
@@ -119,14 +140,56 @@ export function CartPage() {
             </aside>
           </div>
         ) : (
-          <div className="app-empty">
-            <span className="on-sigil" aria-hidden="true" />
+          <div className="gm-empty">
+            <span className="on-sigil gm-empty-art" aria-hidden="true" />
             <h2>Your cart is empty</h2>
             <p>Pieces you add stay here until you check out, even if you close the page.</p>
             <a className="gm-chip gm-chip-primary" href="collection.html">
               Browse the pieces
             </a>
           </div>
+        )}
+
+        {saved.length > 0 && (
+          <section className="shop-section cart-saved" aria-labelledby="saved-title">
+            <header>
+              <h2 id="saved-title">Saved for later</h2>
+              <a className="gm-chip gm-chip-plain" href="wishlist.html">
+                See all saved
+              </a>
+            </header>
+            <ul className="cart-saved-list">
+              {saved.slice(0, 4).map((s) => {
+                const p = product(s.product)!;
+                return (
+                  <li key={s.product}>
+                    <img src={image(s.product, s.finish)} alt="" width={64} height={64} />
+                    <span>
+                      <a href={`product.html?id=${s.product}&finish=${s.finish.toLowerCase()}`}>
+                        {p.name}
+                      </a>
+                      <small>
+                        {s.finish} · {money(p.price)}
+                      </small>
+                    </span>
+                    {stock[s.product]![s.finish] ? (
+                      <button
+                        className="gm-chip"
+                        type="button"
+                        onClick={() => back(s.product, s.finish)}
+                      >
+                        Move to cart
+                      </button>
+                    ) : (
+                      <span className="gm-badge" data-tone="danger">
+                        Sold out
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
         )}
       </main>
     </ShopShell>

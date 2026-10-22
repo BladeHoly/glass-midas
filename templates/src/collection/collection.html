@@ -161,7 +161,7 @@
           <p id="lede">Everything Ondine makes.</p>
         </header>
         <div class="col-tools">
-          <div class="app-filters" role="group" aria-label="Collection" id="filters">
+          <div class="app-filters" role="group" aria-label="Collection" id="collections">
             <button class="gm-chip" type="button" data-collection="all" aria-pressed="true">
               All
             </button>
@@ -175,23 +175,94 @@
               Ritual
             </button>
           </div>
+          <button class="gm-chip col-filter-button" type="button" id="open-filters">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+              <circle cx="16" cy="7" r="2" />
+              <circle cx="10" cy="17" r="2" />
+            </svg>
+            Filters<span class="col-filter-count" id="filter-count"></span>
+          </button>
           <p class="col-count" id="count" aria-live="polite"></p>
           <gm-select class="col-sort">
             <select id="sort" aria-label="Sort by">
               <option value="featured" selected>Featured</option>
               <option value="price-asc">Price, low to high</option>
               <option value="price-desc">Price, high to low</option>
+              <option value="rating">Best rated</option>
               <option value="name">Name</option>
             </select>
           </gm-select>
         </div>
+        <!-- What's filtering the pieces now, each one to take off on its own. -->
+        <div class="col-active" id="active" role="group" aria-label="Filters on" hidden></div>
         <ul class="shop-grid" id="grid"></ul>
-        <div class="app-empty" id="empty" hidden>
-          <span class="on-sigil" aria-hidden="true"></span>
+        <div class="gm-empty" id="empty" hidden>
+          <span class="on-sigil gm-empty-art" aria-hidden="true"></span>
           <h2>Nothing matches</h2>
           <p id="empty-text">Try another word, or look at every piece.</p>
           <button class="gm-chip" type="button" data-action="reset">Show every piece</button>
         </div>
+
+        <!-- The filters: a drawer, so the pieces stay in view; nothing changes until "Show". -->
+        <gm-dialog id="filters" heading="Filters" placement="end">
+          <form class="col-filters" id="filter-form">
+            <fieldset>
+              <legend>Price</legend>
+              <p class="col-price-out" id="price-out"></p>
+              <gm-slider id="price">
+                <input
+                  type="range"
+                  name="min"
+                  min="0"
+                  max="1300"
+                  step="50"
+                  value="0"
+                  aria-label="Lowest price"
+                />
+                <input
+                  type="range"
+                  name="max"
+                  min="0"
+                  max="1300"
+                  step="50"
+                  value="1300"
+                  aria-label="Highest price"
+                />
+              </gm-slider>
+            </fieldset>
+            <fieldset>
+              <legend>Finish</legend>
+              <div class="gm-choices" id="finish-choices"></div>
+            </fieldset>
+            <fieldset class="col-switches">
+              <legend>Availability</legend>
+              <label class="gm-check-label">
+                <span>In stock now</span>
+                <input type="checkbox" class="gm-toggle" role="switch" name="stock" />
+              </label>
+              <label class="gm-check-label">
+                <span>On sale</span>
+                <input type="checkbox" class="gm-toggle" role="switch" name="sale" />
+              </label>
+            </fieldset>
+            <div class="col-filter-actions">
+              <button class="gm-chip gm-chip-plain" type="button" id="clear-filters">
+                Clear all
+              </button>
+              <button class="gm-chip gm-chip-primary" type="submit" id="apply-filters">
+                Show pieces
+              </button>
+            </div>
+          </form>
+        </gm-dialog>
       </main>
 
       <footer class="shop-foot">

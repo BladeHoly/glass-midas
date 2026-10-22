@@ -43,8 +43,8 @@
     content: '';
     position: absolute;
     top: calc(var(--gm-steps-dot) / 2 - 1px);
-    left: 0;
-    right: 0;
+    left: calc(var(--gm-steps-dot) + 3px);
+    right: 3px;
     height: 2px;
     background: var(--gm-steps-line);
   }
@@ -84,8 +84,8 @@
     padding: 0 0 0 calc(var(--gm-steps-dot) + var(--gm-space-md, 12px));
   }
   :where(.gm-steps[data-orientation='vertical'] > li:not(:last-child))::before {
-    top: calc(var(--gm-steps-dot) / 2);
-    bottom: calc(-1 * var(--gm-space-lg, 16px) - var(--gm-steps-dot) / 2);
+    top: calc(0.25em + var(--gm-steps-dot) + 3px);
+    bottom: calc(3px - var(--gm-space-lg, 16px) - 0.25em);
     left: calc(var(--gm-steps-dot) / 2 - 1px);
     right: auto;
     width: 2px;
@@ -103,8 +103,8 @@
       padding: 0 0 0 calc(var(--gm-steps-dot) + var(--gm-space-md, 12px));
     }
     :where(.gm-steps:not([data-orientation='horizontal']) > li:not(:last-child))::before {
-      top: calc(var(--gm-steps-dot) / 2);
-      bottom: calc(-1 * var(--gm-space-lg, 16px) - var(--gm-steps-dot) / 2);
+      top: calc(0.25em + var(--gm-steps-dot) + 3px);
+      bottom: calc(3px - var(--gm-space-lg, 16px) - 0.25em);
       left: calc(var(--gm-steps-dot) / 2 - 1px);
       right: auto;
       width: 2px;

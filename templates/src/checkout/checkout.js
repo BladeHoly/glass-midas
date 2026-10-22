@@ -33,7 +33,7 @@ function render() {
     ${t.discount ? `<dt>Discount (${code})</dt><dd>−${money(t.discount)}</dd>` : ''}
     <dt>Shipping</dt><dd>${t.shipping ? money(t.shipping) : 'Free'}</dd>
     <dt>Tax</dt><dd>${money(t.tax)}</dd>
-    <dt class="is-total">Total</dt><dd class="is-total">${money(t.total)}</dd>`;
+    <dt class="gm-totals-total">Total</dt><dd class="gm-totals-total">${money(t.total)}</dd>`;
   $('#standard-price').textContent = totals(lines, { code }).shipping ? '$12.00' : 'Free';
   $('#toggle-total').textContent = money(t.total);
   $('#pay').textContent = `Pay ${money(t.total)}`;

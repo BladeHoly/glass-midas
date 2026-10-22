@@ -439,6 +439,55 @@ export const reviews = (() => {
   return out;
 })();
 
+/**
+ * The pieces a shopper is looking at: a collection, a search, a price range, finishes, what's in
+ * stock or on sale, and an order. Finishes and stock go together: with a finish chosen, "in stock"
+ * means in stock in that finish.
+ * @typedef {{ c?: string, q?: string, min?: number, max?: number, finishes?: string[],
+ *   stock?: boolean, sale?: boolean, sort?: string }} PieceView
+ * @param {PieceView} view
+ */
+export function findPieces({
+  c = 'all',
+  q = '',
+  min = 0,
+  max = Infinity,
+  finishes = [],
+  stock: inStock = false,
+  sale = false,
+  sort = 'featured',
+}) {
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const sorts = {
+    featured: () => 0,
+    'price-asc': (a, b) => a.price - b.price,
+    'price-desc': (a, b) => b.price - a.price,
+    rating: (a, b) => reviews[b.id].rating.average - reviews[a.id].rating.average,
+    name: (a, b) => a.name.localeCompare(b.name),
+  };
+  return products
+    .filter((p) => c === 'all' || p.collection === c)
+    .filter((p) =>
+      words.every((w) =>
+        `${p.name} ${p.kind} ${p.finishes.map((f) => f.name).join(' ')}`.toLowerCase().includes(w),
+      ),
+    )
+    .filter((p) => p.price >= min && p.price <= max)
+    .filter((p) => !sale || !!p.was)
+    .filter((p) => {
+      const shown = finishes.length
+        ? p.finishes.filter((f) => finishes.includes(f.name))
+        : p.finishes;
+      return shown.length > 0 && (!inStock || shown.some((f) => stock[p.id][f.name] > 0));
+    })
+    .sort(sorts[sort] ?? sorts.featured);
+}
+
+/** Every finish there is, once, in catalogue order. */
+export const allFinishes = [
+  ...new Map(products.flatMap((p) => p.finishes).map((f) => [f.name, f])).values(),
+];
+
 export const money = (n) =>
   new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 

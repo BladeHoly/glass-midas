@@ -1,13 +1,14 @@
 ---
 title: Collection
-description: Every piece, a collection or a search, filtered and sorted from the address.
+description: Every piece, a collection or a search, filtered by price, finish and stock in a drawer, and sorted, all from the address.
 order: 31
 template: collection
 ---
 
-Every piece, one collection, or what a search found, in a grid. The collection, the search and the
-sort live in the page's address, so a link shares exactly this view, and Back returns to the last
-one.
+Every piece, one collection, or what a search found, in a grid. The collection chips filter at
+once; price, finish, stock and sale wait in a [drawer](/components/dialog/) until "Show", which
+says how many pieces it will show. Everything lives in the page's address, so a link shares exactly
+this view, and Back returns to the last one.
 
 <Template name="collection" />
 
@@ -16,9 +17,14 @@ one.
 - Switch collection, or sort by price: the address follows, and Back undoes it.
 - Search the bar for `walnut` or `speaker`; search for something that doesn't exist to see the
   empty state.
+- Open **Filters**: drag the price [range](/components/slider/), pick a finish, and watch the
+  button count the pieces before you apply them.
+- Take one filter off from its chip under the toolbar, or all of them at once.
 
 ## Details that matter
 
 - **The filters are a row of chips** that scrolls on a phone, and the sort is a
   [select](/components/select/) whose list matches the page.
 - **The count says how many pieces are shown,** so a filter never leaves you wondering.
+- **Every filter that's on is a chip,** and each one comes off on its own.
+- **The drawer never leads nowhere:** when nothing would match, its button says so and waits.

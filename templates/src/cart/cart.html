@@ -175,17 +175,26 @@
                 id="free-meter"
               ></span>
             </div>
-            <dl class="cart-totals" id="totals"></dl>
+            <dl class="gm-totals" id="totals"></dl>
             <a class="gm-chip gm-chip-primary" href="checkout.html">Check out</a>
             <p class="cart-note">Taxes are estimated for your area. 60 days to return anything.</p>
           </aside>
         </div>
-        <div class="app-empty" id="empty" hidden>
-          <span class="on-sigil" aria-hidden="true"></span>
+        <div class="gm-empty" id="empty" hidden>
+          <span class="on-sigil gm-empty-art" aria-hidden="true"></span>
           <h2>Your cart is empty</h2>
           <p>Pieces you add stay here until you check out, even if you close the page.</p>
           <a class="gm-chip gm-chip-primary" href="collection.html">Browse the pieces</a>
         </div>
+
+        <!-- Saved for later: one click back into the cart. -->
+        <section class="shop-section cart-saved" id="saved" aria-labelledby="saved-title" hidden>
+          <header>
+            <h2 id="saved-title">Saved for later</h2>
+            <a class="gm-chip gm-chip-plain" href="wishlist.html">See all saved</a>
+          </header>
+          <ul class="cart-saved-list" id="saved-list"></ul>
+        </section>
       </main>
 
       <footer class="shop-foot">

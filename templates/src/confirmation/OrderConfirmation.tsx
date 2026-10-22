@@ -58,22 +58,22 @@ export function OrderConfirmation() {
             <p>We've sent the receipt to {order.email}. We'll email again when it ships.</p>
           </header>
 
-          <ol className="cf-steps" aria-label="What happens next">
-            <li className="is-done">
-              <strong>Ordered</strong>
-              <span>Just now</span>
+          <ol className="gm-steps cf-steps" aria-label="What happens next">
+            <li aria-current="step">
+              Ordered
+              <small>Just now</small>
             </li>
             <li>
-              <strong>Packed</strong>
-              <span>Within 2 working days</span>
+              Packed
+              <small>Within 2 working days</small>
             </li>
             <li>
-              <strong>Shipped</strong>
-              <span>We email the tracking link</span>
+              Shipped
+              <small>We email the tracking link</small>
             </li>
             <li>
-              <strong>With you</strong>
-              <span>{order.method === 'express' ? arrival(1) : `By ${arrival(5)}`}</span>
+              With you
+              <small>{order.method === 'express' ? arrival(1) : `By ${arrival(5)}`}</small>
             </li>
           </ol>
 
@@ -97,7 +97,7 @@ export function OrderConfirmation() {
                   );
                 })}
               </ul>
-              <dl className="cart-totals">
+              <dl className="gm-totals">
                 <dt>Subtotal</dt>
                 <dd>{money(t.subtotal)}</dd>
                 {t.discount > 0 && (
@@ -110,8 +110,8 @@ export function OrderConfirmation() {
                 <dd>{t.shipping ? money(t.shipping) : 'Free'}</dd>
                 <dt>Tax</dt>
                 <dd>{money(t.tax)}</dd>
-                <dt className="is-total">Paid</dt>
-                <dd className="is-total">{money(t.total)}</dd>
+                <dt className="gm-totals-total">Paid</dt>
+                <dd className="gm-totals-total">{money(t.total)}</dd>
               </dl>
             </section>
             <section className="cf-card" aria-labelledby="where-title">
