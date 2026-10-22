@@ -28,7 +28,7 @@ const isColor = (v: string) => v.startsWith('rgb') || v.startsWith('#');
                 <code>{`--gm-${group}-${name}`}</code>
               </td>
               <td>
-                {isColor(value) && <span class="gm-swatch" style={`--swatch: ${value}`} />}
+                {isColor(value) && <span class="token-swatch" style={`--swatch: ${value}`} />}
                 <code>{value}</code>
               </td>
             </tr>

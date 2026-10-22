@@ -1,0 +1,53 @@
+---
+title: Empty state
+label: Empty
+description: Nothing here yet, said kindly, with the one thing to do about it. CSS only.
+order: 7.6
+element: .gm-empty
+attributes:
+  - name: class="gm-empty"
+    description: Centered, at a reading width. A heading, a sentence and an action.
+  - name: class="gm-empty-art"
+    description: An icon or a small drawing above the heading, in the muted ink.
+  - name: class="gm-empty-actions"
+    description: More than one action, side by side.
+---
+
+An empty state is what a list says when there's nothing in it: no orders yet, nothing saved, no
+results. It says why, kindly, and offers the one thing to do about it.
+
+<Demo
+  busy
+  height="19rem"
+  html={`<gm-surface material="frost" radius="24" style="width: min(100%, 26rem); border-radius: 24px">
+<div class="gm-empty">
+<svg class="gm-empty-art" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+<h2>Nothing saved yet</h2>
+<p>Tap the heart on any piece to keep it here for later.</p>
+<a class="gm-chip" href="#">Browse the pieces</a>
+</div>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<div class="gm-empty">
+  <svg class="gm-empty-art" aria-hidden="true">…</svg>
+  <h2>No orders yet</h2>
+  <p>When you buy something, it shows up here with its tracking.</p>
+  <a class="gm-chip" href="/shop">Start shopping</a>
+</div>
+```
+
+</CodePanel>
+
+It's in `css/empty.css`.
+
+## Best practices
+
+- **Tell empty from failed.** "No orders yet" and "We couldn't load your orders" need different
+  words and different actions (browse, or try again).
+- **For no results, say what was searched,** and offer to clear the filters.

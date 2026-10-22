@@ -108,7 +108,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a {
+/* Breadcrumbs draw their own quiet links. */
+a:where(:not(.gm-breadcrumbs a)) {
   color: var(--gold-soft);
   text-decoration-color: rgb(247 220 152 / 0.35);
   text-underline-offset: 0.2em;
@@ -339,11 +340,11 @@ gm-nav a {
   color: var(--ink);
 }
 
-.article h2 {
+.article h2:not(:is(.demo, .gm-demo) *) {
   margin: 2.75rem 0 0.75rem;
   font: 400 1.9rem/1.2 var(--font-display);
 }
-.article h3 {
+.article h3:not(:is(.demo, .gm-demo) *) {
   margin: 2rem 0 0.5rem;
   font-size: 1.1rem;
   font-weight: 600;
@@ -709,7 +710,7 @@ a.card-body:hover h3 {
   margin-inline: auto;
   font-size: 2.25rem;
 }
-.gm-swatch {
+.token-swatch {
   display: inline-block;
   width: 1em;
   height: 1em;

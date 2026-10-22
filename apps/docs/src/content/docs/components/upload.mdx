@@ -1,0 +1,96 @@
+---
+title: Upload
+description: A place to drop or choose files, and the list of them with previews, on the native file input.
+order: 7.8
+element: gm-upload
+attributes:
+  - name: (on the input) accept, multiple, name, required
+    description: As on any file input. With `multiple`, choosing more adds to the list.
+  - name: max-size
+    type: string
+    description: The largest file it takes, like "5 MB" or "500 KB".
+  - name: max-files
+    type: number
+    description: How many files it holds at most.
+  - name: label
+    type: string
+    default: '"Drop files here, or <u>choose them</u>"'
+    description: The drop zone's text, when there's nothing else inside.
+  - name: label-remove
+    type: string
+    default: '"Remove"'
+    description: Starts each remove button's name ("Remove front.jpg").
+properties:
+  - name: files
+    type: File[]
+    description: The chosen files. Setting it replaces the list and the input's files.
+events:
+  - name: gm-change
+    detail: '{ files: File[] }'
+    description: The list changed.
+  - name: gm-reject
+    detail: "{ file: File, reason: 'type' | 'size' | 'count' }"
+    description: A file was left out, and why.
+---
+
+`<gm-upload>` wraps a native `<input type="file">`: a dashed zone to drop files on or click to
+choose, which lights up while something is held over it, and the chosen files under it, each with
+a preview (for pictures), its size and a button to take it off. The input always holds the list,
+so a form sends the files as usual.
+
+A file that doesn't fit `accept`, `max-size` or `max-files` is left out, and `gm-reject` says
+which and why, so you can tell the person.
+
+<Demo
+  busy
+  height="17rem"
+  html={`<gm-surface material="frost" radius="24" style="width: min(100%, 26rem); padding: 1.2rem; border-radius: 24px">
+<label for="demo-photos" style="display: block; margin-bottom: 0.5rem; font-weight: 600">Photos of the damage</label>
+<gm-upload max-size="5 MB" max-files="4"><input id="demo-photos" type="file" accept="image/*" multiple></gm-upload>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<label for="photos">Photos</label>
+<gm-upload max-size="5 MB" max-files="6">
+  <input id="photos" name="photos" type="file" accept="image/*" multiple />
+</gm-upload>
+<p id="photos-error" class="gm-field-error" aria-live="polite"></p>
+
+<script type="module">
+  const upload = document.querySelector('gm-upload');
+  const reasons = { type: "isn't a picture", size: 'is over 5 MB', count: 'is one too many' };
+  upload.addEventListener('gm-reject', (e) => {
+    const { file, reason } = e.detail;
+    document.querySelector('#photos-error').textContent = `${file.name} ${reasons[reason]}.`;
+  });
+</script>
+```
+
+```tsx
+import { GlassUpload } from '@glass-midas/react/forms';
+
+<GlassUpload
+  maxSize="5 MB"
+  maxFiles={6}
+  onFilesChange={(e) => setPhotos(e.detail.files)}
+  onReject={(e) => setError(`${e.detail.file.name}: ${e.detail.reason}`)}
+>
+  <input name="photos" type="file" accept="image/*" multiple />
+</GlassUpload>;
+```
+
+</CodePanel>
+
+Load `css/upload.css` after the base. In React, leave the input uncontrolled and read the list
+from `onFilesChange`.
+
+## Best practices
+
+- **Say the limits up front.** The zone shows `max-size` and `max-files` under its text.
+- **Tell people what was left out,** in words, from `gm-reject`.
+- **Check again on the server.** `accept` and the limits help people; they don't protect you.

@@ -1,0 +1,95 @@
+---
+title: Gallery
+description: Pictures one at a time on a swipeable track, with thumbnails, arrows, keys and a large view.
+order: 7.7
+element: gm-gallery
+attributes:
+  - name: zoom
+    type: boolean
+    description: A click or Enter opens the picture as large as the screen allows; a click there magnifies where the pointer is.
+  - name: aria-label
+    type: string
+    description: What the pictures are of. The gallery is a region with this name.
+  - name: (on a picture) data-thumb
+    type: string
+    description: A smaller file for its thumbnail. Without it, the thumbnail uses the `src`.
+  - name: label-previous, label-next, label-thumbs, label-zoom, label-close
+    type: string
+    default: '"Previous picture", "Next picture", "Choose a picture", "Picture, large", "Close"'
+    description: The names of its buttons and groups, for screen readers.
+properties:
+  - name: index
+    type: number
+    description: The picture showing. Setting it scrolls there.
+  - name: slides
+    type: HTMLElement[]
+    description: The pictures, in order.
+events:
+  - name: gm-change
+    detail: '{ index: number }'
+    description: Another picture is showing, by swipe, arrow, thumbnail, key or code.
+methods:
+  - name: show(index, smooth = true)
+    description: Scrolls to a picture.
+---
+
+`<gm-gallery>` shows pictures one at a time on a track that snaps, so a swipe on a phone and a
+trackpad on a laptop both work. Thumbnails underneath choose; round arrows sit over the edges
+(where there's a pointer to use them); once the track has focus, the arrow keys, Home and End move
+through. It's content, not glass.
+
+With `zoom`, the picture opens large on a plain dark dialog, and a click there magnifies it where
+the pointer is. When a picture's `src` changes, say because a finish was chosen, its thumbnail
+follows.
+
+<Demo
+  height="34rem"
+  html={`<gm-gallery zoom aria-label="Pictures of Tide" style="width: min(100%, 26rem)">
+<img src="../../t/shared/art/products/tide-verdigris.svg" alt="Tide in Verdigris" width="800" height="800">
+<img src="../../t/shared/art/products/tide-verdigris-detail.svg" alt="Tide in Verdigris, close up" width="800" height="800">
+<img src="../../t/shared/art/products/tide-plate.webp" alt="Tide's figure, drawn in sand" width="800" height="800">
+<img src="../../t/shared/art/products/tide-box.svg" alt="Tide's box" width="800" height="800">
+</gm-gallery>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<gm-gallery zoom aria-label="Pictures of Tide">
+  <img src="tide-front.webp" alt="Tide in Verdigris" width="800" height="800" />
+  <img src="tide-detail.webp" alt="The ear cup, close up" width="800" height="800" />
+  <img src="tide-box.webp" alt="The box" width="800" height="800" />
+</gm-gallery>
+```
+
+```tsx
+import { GlassGallery } from '@glass-midas/react/data';
+
+<GlassGallery zoom aria-label={`Pictures of ${product.name}`}>
+  {pictures.map((p) => (
+    <img key={p.src} src={p.src} alt={p.alt} width={800} height={800} />
+  ))}
+</GlassGallery>;
+```
+
+</CodePanel>
+
+Load `css/gallery.css` after the base. The element moves the pictures onto its track; in React,
+`GlassGallery` starts over when the number of pictures changes, and a new `src` on the same ones
+is fine.
+
+## Best practices
+
+- **Give every picture its own `alt`:** the thumbnails are named after them.
+- **Three to five pictures,** each showing something new: the piece, a detail, it in use, the box.
+- **Set `width` and `height`** so the page doesn't jump while they load.
+
+## Theming
+
+| Property              | Use                                        |
+| --------------------- | ------------------------------------------ |
+| `--gm-gallery-radius` | The track's corners.                       |
+| `--gm-gallery-fill`   | Behind pictures that haven't loaded.       |
+| `--gm-gallery-ratio`  | Crop every picture to one shape, like `1`. |

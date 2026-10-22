@@ -2,20 +2,23 @@ import '@glass-midas/components/slider';
 import '@glass-midas/components/select';
 import '@glass-midas/components/otp';
 import '@glass-midas/components/quantity';
+import '@glass-midas/components/upload';
 import type {
   GmOtp,
   GmQuantity,
   GmSelect,
   GmSlider,
+  GmUpload,
   SelectChangeDetail,
+  UploadRejectDetail,
 } from '@glass-midas/components';
 import { forwardRef, useEffect, useImperativeHandle, useRef, createElement } from 'react';
-import { synced, type Base } from './wrap.js';
+import { synced, wrap, type Base } from './wrap.js';
 
 // Forms: controls for inside glass, each around a native input. Fields, checkboxes and radios
 // are CSS only (.gm-field, .gm-input, .gm-check): plain elements, no wrapper needed.
 
-/** `<gm-slider>`: put an `<input type="range">` inside. */
+/** `<gm-slider>`: put an `<input type="range">` inside, or two for a range between them. */
 export const GlassSlider = synced<GmSlider>('gm-slider');
 
 /**
@@ -52,4 +55,24 @@ export const GlassOtp = forwardRef<
  */
 export const GlassQuantity = synced<GmQuantity>('gm-quantity');
 
-export type { SelectChangeDetail };
+/**
+ * `<gm-upload>`: put an `<input type="file">` inside (leave it uncontrolled). `onFilesChange`
+ * reports the list; `onReject` each file left out, and why.
+ */
+export const GlassUpload = wrap<
+  {
+    maxSize?: string;
+    maxFiles?: number;
+    label?: string;
+    labelRemove?: string;
+    onFilesChange?: (e: CustomEvent<{ files: File[] }>) => void;
+    onReject?: (e: CustomEvent<UploadRejectDetail>) => void;
+  },
+  GmUpload
+>('gm-upload', [], { onFilesChange: 'gm-change', onReject: 'gm-reject' }, [
+  'maxSize',
+  'maxFiles',
+  'labelRemove',
+]);
+
+export type { SelectChangeDetail, UploadRejectDetail };

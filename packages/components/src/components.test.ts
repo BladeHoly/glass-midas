@@ -3,6 +3,7 @@ import {
   glassOptions,
   toast,
   type GmDialog,
+  type GmGallery,
   type GmMenu,
   type GmSearch,
   type GmSegmented,
@@ -10,8 +11,10 @@ import {
   type GmTable,
   type GmTabs,
   type GmTip,
+  type GmUpload,
   type SearchResult,
 } from './index.js';
+import { accepts, bytes } from './upload.js';
 
 const mount = <T extends HTMLElement>(html: string) => {
   // Through a template, as a browser's innerHTML does: the tree is whole before it connects.
@@ -335,6 +338,23 @@ describe('gm-slider', () => {
     input.dispatchEvent(new Event('input'));
     expect(el.style.getPropertyValue('--gm-fill')).toBe('75%');
   });
+
+  it('with two inputs, fills between them and keeps them from crossing', () => {
+    const el = mount(
+      `<gm-slider><input type="range" min="0" max="100" value="20" aria-label="From">
+        <input type="range" min="0" max="100" value="60" aria-label="To"></gm-slider>`,
+    );
+    const [low, high] = el.querySelectorAll('input');
+    expect(el.hasAttribute('data-range')).toBe(true);
+    expect(el.style.getPropertyValue('--gm-from')).toBe('20%');
+    expect(el.style.getPropertyValue('--gm-fill')).toBe('60%');
+    low!.value = '80';
+    low!.dispatchEvent(new Event('input'));
+    expect(low!.value).toBe('60');
+    high!.value = '10';
+    high!.dispatchEvent(new Event('input'));
+    expect(high!.value).toBe('60');
+  });
 });
 
 describe('gm-select', () => {
@@ -509,6 +529,103 @@ describe('gm-quantity', () => {
     expect(less!.disabled).toBe(true);
     expect(seen).toEqual(['3', '2', '1']);
     expect(less!.getAttribute('aria-label')).toBe('One less');
+  });
+});
+
+describe('gm-gallery', () => {
+  const gallery = () =>
+    mount<GmGallery>(
+      `<gm-gallery aria-label="Pictures" zoom>
+        <img src="a.webp" alt="Front"><img src="b.webp" alt="Side" data-thumb="b-small.webp"><img src="c.webp" alt="Box">
+      </gm-gallery>`,
+    );
+
+  it('puts the pictures on a track, with a thumbnail and a label for each', () => {
+    const el = gallery();
+    expect(el.getAttribute('role')).toBe('region');
+    expect(el.slides).toHaveLength(3);
+    const thumbs = [...el.querySelectorAll<HTMLButtonElement>('.gm-gallery-thumbs button')];
+    expect(thumbs.map((b) => b.getAttribute('aria-label'))).toEqual([
+      'Front (1 of 3)',
+      'Side (2 of 3)',
+      'Box (3 of 3)',
+    ]);
+    expect(thumbs[1]!.querySelector('img')!.getAttribute('src')).toBe('b-small.webp');
+    expect(thumbs[0]!.getAttribute('aria-current')).toBe('true');
+    expect(el.querySelector<HTMLButtonElement>('.gm-gallery-previous')!.disabled).toBe(true);
+  });
+
+  it('moves with the thumbnails, the arrows and the keys, and says so', () => {
+    const el = gallery();
+    const seen: number[] = [];
+    el.addEventListener('gm-change', (e) => seen.push((e as CustomEvent).detail.index));
+    el.querySelectorAll<HTMLButtonElement>('.gm-gallery-thumbs button')[2]!.click();
+    expect(el.index).toBe(2);
+    expect(el.querySelector<HTMLButtonElement>('.gm-gallery-next')!.disabled).toBe(true);
+    expect(el.slides[0]!.inert).toBe(true);
+    const track = el.querySelector('.gm-gallery-track')!;
+    track.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
+    track.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+    el.querySelector<HTMLButtonElement>('.gm-gallery-previous')!.click();
+    expect(seen).toEqual([2, 0, 1, 0]);
+  });
+
+  it('opens the picture large, and follows a new src in its thumbnail', async () => {
+    const el = gallery();
+    el.slides[1]!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    const zoom = el.querySelector('dialog.gm-gallery-zoom');
+    expect(zoom).not.toBeNull();
+    el.slides[0]!.setAttribute('src', 'a-verdigris.webp');
+    await new Promise((r) => setTimeout(r));
+    const first = el.querySelector('.gm-gallery-thumbs img')!;
+    expect(first.getAttribute('src')).toBe('a-verdigris.webp');
+  });
+});
+
+describe('gm-upload', () => {
+  const file = (name: string, size: number, type: string) =>
+    new File([new Uint8Array(size)], name, { type });
+
+  it('reads sizes and accept lists', () => {
+    expect(bytes('5 MB')).toBe(5 * 1024 * 1024);
+    expect(bytes('500kb')).toBe(500 * 1024);
+    expect(bytes(null)).toBe(Infinity);
+    expect(accepts('image/*', { name: 'a.png', type: 'image/png' })).toBe(true);
+    expect(accepts('.pdf, image/png', { name: 'a.PDF', type: 'application/pdf' })).toBe(true);
+    expect(accepts('image/*', { name: 'a.pdf', type: 'application/pdf' })).toBe(false);
+  });
+
+  it('adds to the list, leaves out what does not fit, and removes on request', () => {
+    const el = mount<GmUpload>(
+      '<gm-upload max-size="1 KB" max-files="2"><input type="file" accept="image/*" multiple></gm-upload>',
+    );
+    expect(el.querySelector('.gm-upload-zone small')!.textContent).toBe('Up to 1 KB each, 2 at most');
+    const rejected: string[] = [];
+    el.addEventListener('gm-reject', (e) => {
+      const { file, reason } = (e as CustomEvent).detail;
+      rejected.push(`${file.name}:${reason}`);
+    });
+    const changes: number[] = [];
+    el.addEventListener('gm-change', (e) => changes.push((e as CustomEvent).detail.files.length));
+    el.files = [file('a.png', 10, 'image/png')];
+    const zone = el.querySelector('.gm-upload-zone')!;
+    const drop = new Event('drop', { bubbles: true }) as Event & { dataTransfer: unknown };
+    drop.dataTransfer = {
+      files: [
+        file('b.pdf', 10, 'application/pdf'),
+        file('c.png', 4096, 'image/png'),
+        file('d.png', 10, 'image/png'),
+        file('e.png', 10, 'image/png'),
+      ],
+    };
+    zone.dispatchEvent(drop);
+    expect(el.files.map((f) => f.name)).toEqual(['a.png', 'd.png']);
+    expect(rejected).toEqual(['b.pdf:type', 'c.png:size', 'e.png:count']);
+    const remove = el.querySelectorAll<HTMLButtonElement>('.gm-upload-remove');
+    expect(remove[0]!.getAttribute('aria-label')).toBe('Remove a.png');
+    remove[0]!.click();
+    expect(el.files.map((f) => f.name)).toEqual(['d.png']);
+    expect(changes).toEqual([1, 2, 1]);
   });
 });
 

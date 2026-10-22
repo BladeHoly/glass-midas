@@ -1,0 +1,76 @@
+---
+title: Price and totals
+label: Price
+description: A price with what it was and what it saves, and the lines of a bill. CSS only.
+order: 7.1
+element: .gm-price
+attributes:
+  - name: class="gm-price"
+    description: A price on one baseline. `<data>` or `<strong>` is what it costs now; `<s>` or `<del>`, what it cost; `<small>`, words like "From" or "/ month".
+  - name: class="gm-price-off"
+    description: The saving, as a small tinted pill.
+  - name: class="gm-totals"
+    description: On a `<dl>`. Labels left, amounts lined up right.
+  - name: class="gm-totals-total"
+    description: On the last `<dt>` and `<dd>`. A hairline above and the weight.
+---
+
+A **price** says what something costs now. On sale, it also says what it cost before and how much
+that saves, all on one baseline, with the numbers in tabular figures so they line up. **Totals**
+are the lines of a bill: subtotal, discount, shipping, tax and what's paid, in a `<dl>`.
+
+<Demo
+  busy
+  height="19rem"
+  html={`<gm-surface material="frost" radius="24" style="display: grid; gap: 1.1rem; width: min(100%, 20rem); padding: 1.2rem; border-radius: 24px">
+<p class="gm-price" style="font-size: 1.375rem"><data value="349">$349.00</data><s><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%)">was </span>$449.00</s><span class="gm-price-off">−22%</span></p>
+<p class="gm-price"><small>From</small><data value="229">$229.00</data></p>
+<dl class="gm-totals">
+<dt>Subtotal</dt><dd>$678.00</dd>
+<dt>Discount, RESONANCE</dt><dd>−$67.80</dd>
+<dt>Shipping</dt><dd>Free</dd>
+<dt>Tax</dt><dd>$48.82<small>Included</small></dd>
+<dt class="gm-totals-total">Total</dt><dd class="gm-totals-total">$610.20</dd>
+</dl>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<p class="gm-price">
+  <data value="349">$349.00</data>
+  <s><span class="visually-hidden">was </span>$449.00</s>
+  <span class="gm-price-off">−22%</span>
+</p>
+
+<dl class="gm-totals">
+  <dt>Subtotal</dt>
+  <dd>$678.00</dd>
+  <dt>Shipping</dt>
+  <dd>Free</dd>
+  <dt class="gm-totals-total">Total</dt>
+  <dd class="gm-totals-total">$678.00</dd>
+</dl>
+```
+
+</CodePanel>
+
+Both are in `css/price.css`.
+
+## Best practices
+
+- **Say "was" for screen readers.** Most of them read `<s>` as plain text, so "$349 $449" would
+  sound like two prices. A hidden "was " fixes it.
+- **Show every cost before checkout:** shipping, tax and discounts in the totals, so the last step
+  holds no surprise.
+- **Write money with `Intl.NumberFormat`,** in the shopper's currency, and keep the number in
+  `<data value>` for scripts.
+
+## Theming
+
+| Property          | Use                                            |
+| ----------------- | ---------------------------------------------- |
+| `--gm-price-sale` | The tint of the saving (the accent otherwise). |

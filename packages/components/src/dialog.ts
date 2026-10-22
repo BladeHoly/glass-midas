@@ -5,7 +5,8 @@ let uid = 0;
 /**
  * `<gm-dialog id="confirm" heading="Delete this page?">…</gm-dialog>`: a modal of frosted glass on
  * the browser's `<dialog>`, which brings the top layer, the dimmed backdrop, focus trapping and
- * Escape. `placement="bottom"` makes it a sheet that rises from the bottom edge.
+ * Escape. `placement="bottom"` makes it a sheet that rises from the bottom edge; `"end"` or
+ * `"start"`, a drawer down that side.
  *
  * Open it with `show()`. Buttons inside a `<form method="dialog">` close it with their `value`;
  * so do Escape (`"cancel"`) and a click on the backdrop (`"dismiss"`). Closing fires `gm-close`

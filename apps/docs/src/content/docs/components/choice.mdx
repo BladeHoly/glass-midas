@@ -1,0 +1,119 @@
+---
+title: Swatch, choice and option
+label: Choices
+description: Native radios dressed three ways, for finishes, sizes and delivery speeds. CSS only.
+order: 7
+element: .gm-swatch
+attributes:
+  - name: class="gm-swatch"
+    description: On an `<input type="radio">` (or checkbox). A dot of `--gm-swatch`, ringed when it's checked.
+  - name: (on a swatch) data-size
+    type: '"sm" | "lg"'
+    description: 1.4rem or 2.6rem instead of 2rem.
+  - name: (on a swatch or a choice's input) data-unavailable
+    description: Sold out. Struck through but still choosable, so people can see it or ask to be told when it's back. `disabled` greys it out instead.
+  - name: class="gm-choice"
+    description: A `<label>` around a radio and its word, drawn as a chip; the input is invisible but focusable.
+  - name: class="gm-option"
+    description: A `<label>` row with a `.gm-check` radio, a title (with a `<small>` note) and, last, a price.
+  - name: class="gm-swatches", "gm-choices", "gm-options"
+    description: The group around them, usually a `<fieldset>` with a `<legend>`.
+---
+
+Three ways to choose one thing from a few, all on native radios. The browser keeps the keyboard
+(arrow keys within a group), forms and screen readers; the classes only draw them.
+
+- A **swatch** is a dot of a color, for finishes.
+- A **choice** is a chip with a word, for sizes or editions.
+- An **option** is a row with a title, a note and a price, for delivery speeds, payment methods
+  and saved addresses.
+
+The one that's on gets the rim, like every other piece that's on.
+
+<Demo
+  busy
+  height="23rem"
+  html={`<gm-surface material="frost" radius="24" style="display: grid; gap: 1.1rem; width: min(100%, 24rem); padding: 1.2rem; border-radius: 24px">
+<fieldset class="gm-swatches" aria-label="Finish">
+<input type="radio" class="gm-swatch" name="demo-finish" value="obsidian" style="--gm-swatch: #1c1b22" aria-label="Obsidian" checked>
+<input type="radio" class="gm-swatch" name="demo-finish" value="moonstone" style="--gm-swatch: #d9d6e6" aria-label="Moonstone">
+<input type="radio" class="gm-swatch" name="demo-finish" value="verdigris" style="--gm-swatch: #5fae9c" aria-label="Verdigris (sold out)" data-unavailable>
+</fieldset>
+<fieldset class="gm-choices" aria-label="Cable length">
+<label class="gm-choice"><input type="radio" name="demo-length" value="1" checked>1 m</label>
+<label class="gm-choice"><input type="radio" name="demo-length" value="2">2 m</label>
+<label class="gm-choice"><input type="radio" name="demo-length" value="5" data-unavailable>5 m</label>
+</fieldset>
+<fieldset class="gm-options" aria-label="Delivery">
+<label class="gm-option"><input type="radio" class="gm-check" name="demo-ship" value="standard" checked><span>Standard<small>3–5 working days</small></span><span>Free</span></label>
+<label class="gm-option"><input type="radio" class="gm-check" name="demo-ship" value="express"><span>Express<small>Tomorrow, if ordered by 4 pm</small></span><span>$24.00</span></label>
+</fieldset>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<fieldset class="gm-swatches">
+  <legend>Finish: <strong>Obsidian</strong></legend>
+  <input
+    type="radio"
+    class="gm-swatch"
+    name="finish"
+    value="obsidian"
+    style="--gm-swatch: #1c1b22"
+    aria-label="Obsidian"
+    checked
+  />
+  <input
+    type="radio"
+    class="gm-swatch"
+    name="finish"
+    value="verdigris"
+    style="--gm-swatch: #5fae9c"
+    aria-label="Verdigris, sold out"
+    data-unavailable
+  />
+</fieldset>
+
+<fieldset class="gm-choices">
+  <legend>Length</legend>
+  <label class="gm-choice"><input type="radio" name="length" value="1" checked />1 m</label>
+  <label class="gm-choice"><input type="radio" name="length" value="2" />2 m</label>
+</fieldset>
+
+<fieldset class="gm-options">
+  <legend>Delivery</legend>
+  <label class="gm-option">
+    <input type="radio" class="gm-check" name="method" value="standard" checked />
+    <span>Standard<small>3–5 working days</small></span>
+    <span>Free</span>
+  </label>
+</fieldset>
+```
+
+</CodePanel>
+
+All three are in `css/choice.css`; the option's radio is a [checkbox or radio](/components/check/),
+from `css/check.css`. A swatch can show a picture of the material instead of a color:
+`style="--gm-swatch: url(walnut.webp)"`.
+
+## Best practices
+
+- **Name every swatch** with `aria-label`: a color alone isn't a name. Put the chosen name in the
+  legend too, so everyone sees it.
+- **Say sold out in the name** ("Verdigris, sold out") as well as with `data-unavailable`.
+- **Let the picture and price follow** the swatch: listen for `change` on the group.
+- **Use options, not a select,** for two to five choices that differ in price or time; people
+  compare them at a glance.
+
+## Theming
+
+| Property                | Use                               |
+| ----------------------- | --------------------------------- |
+| `--gm-swatch`           | A swatch's color or picture.      |
+| `--gm-swatch-size`      | A swatch's size.                  |
+| `--gm-chip-fill`, `-on` | The fill of choices and options.  |
+| `--gm-rim`              | The rim on the one that's chosen. |

@@ -3,7 +3,8 @@
 @layer gm-components {
   /*
  * Dialog: frosted glass on a native <dialog>, over a dimmed page. It rises in as it opens; with
- * placement="bottom" it's a sheet along the bottom edge.
+ * placement="bottom" it's a sheet along the bottom edge; with "end" or "start", a drawer down a
+ * side (a cart, filters), full height and scrolling inside.
  */
   :where(gm-dialog) {
     display: contents;
@@ -40,6 +41,30 @@
     padding-bottom: calc(1.4rem + env(safe-area-inset-bottom));
     border-radius: 28px 28px 0 0;
   }
+  :where(gm-dialog:is([placement='end'], [placement='start']) > .gm-dialog-panel) {
+    width: min(26rem, calc(100vw - 2.5rem));
+    height: 100dvh;
+    max-height: none;
+    margin: 0 0 0 auto;
+    padding-top: calc(1.3rem + env(safe-area-inset-top));
+    padding-bottom: calc(1.3rem + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: 28px 0 0 28px;
+  }
+  :where(gm-dialog:is([placement='end'], [placement='start']) > .gm-dialog-panel[open]) {
+    display: flex;
+    flex-direction: column;
+  }
+  /* A drawer's buttons wait at its foot, however little is above them. */
+  :where(gm-dialog:is([placement='end'], [placement='start']) form[method='dialog']:last-child) {
+    margin-top: auto;
+    padding-top: 1.2rem;
+  }
+  :where(gm-dialog[placement='start'] > .gm-dialog-panel) {
+    margin: 0 auto 0 0;
+    border-radius: 0 28px 28px 0;
+  }
   :where(.gm-dialog-panel[open]) {
     transition:
       opacity 0.25s,
@@ -52,6 +77,17 @@
     }
     :where(gm-dialog[placement='bottom'] > .gm-dialog-panel[open]) {
       translate: 0 100%;
+    }
+    :where(gm-dialog[placement='end'] > .gm-dialog-panel[open]) {
+      translate: 100% 0;
+    }
+    :where(gm-dialog[placement='start'] > .gm-dialog-panel[open]) {
+      translate: -100% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :where(.gm-dialog-panel[open]) {
+      transition: opacity 0.2s;
     }
   }
 }

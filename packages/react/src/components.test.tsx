@@ -4,6 +4,7 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   GlassCode,
+  GlassGallery,
   GlassNav,
   GlassOtp,
   GlassSearch,
@@ -13,6 +14,7 @@ import {
   GlassTab,
   GlassTable,
   GlassTabs,
+  GlassUpload,
 } from './components.js';
 
 // React only acts synchronously inside act() when it knows it's a test.
@@ -178,6 +180,42 @@ describe('glass components for React', () => {
       box.dispatchEvent(new Event('change', { bubbles: true }));
     });
     expect(onSelectionChange).toHaveBeenLastCalledWith({ values: ['b'] });
+  });
+
+  it('starts a gallery over when the number of pictures changes, and reports moves', () => {
+    const onChange = vi.fn();
+    const Pictures = ({ srcs }: { srcs: string[] }) => (
+      <GlassGallery zoom aria-label="Pictures" onChange={onChange}>
+        {srcs.map((src) => (
+          <img key={src} src={src} alt={src} />
+        ))}
+      </GlassGallery>
+    );
+    const host = render(<Pictures srcs={['a', 'b']} />);
+    const first = host.querySelector('gm-gallery')!;
+    expect(first.hasAttribute('zoom')).toBe(true);
+    expect(first.querySelectorAll('.gm-gallery-thumbs button')).toHaveLength(2);
+    act(() => first.querySelectorAll<HTMLButtonElement>('.gm-gallery-thumbs button')[1]!.click());
+    expect((onChange.mock.calls[0]![0] as CustomEvent).detail.index).toBe(1);
+    act(() => root!.render(<Pictures srcs={['a', 'b', 'c']} />));
+    const second = host.querySelector('gm-gallery')!;
+    expect(second).not.toBe(first);
+    expect(second.querySelectorAll('.gm-gallery-thumbs button')).toHaveLength(3);
+  });
+
+  it('reports the files an upload holds', () => {
+    const onFilesChange = vi.fn();
+    const host = render(
+      <GlassUpload maxSize="1 MB" maxFiles={3} onFilesChange={onFilesChange}>
+        <input type="file" multiple />
+      </GlassUpload>,
+    );
+    const el = host.querySelector<HTMLElement & { files: File[] }>('gm-upload')!;
+    expect(el.getAttribute('max-size')).toBe('1 MB');
+    act(() => {
+      el.files = [new File(['x'], 'a.txt')];
+    });
+    expect((onFilesChange.mock.calls[0]![0] as CustomEvent).detail.files).toHaveLength(1);
   });
 
   it('leaves out false flags', () => {

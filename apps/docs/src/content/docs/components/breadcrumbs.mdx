@@ -1,0 +1,51 @@
+---
+title: Breadcrumbs
+description: Where a page sits, on one quiet line, with a chevron between the steps. CSS only.
+order: 7.5
+element: .gm-breadcrumbs
+attributes:
+  - name: class="gm-breadcrumbs"
+    description: On a `<nav aria-label="Breadcrumb">` around an `<ol>` of links.
+  - name: (on the last item) aria-current="page"
+    description: This page. It's in the ink, and shortens with an ellipsis instead of wrapping.
+---
+
+Breadcrumbs say where a page sits: the store, the collection, the piece. One line, in the muted
+ink, with a chevron between the steps; the page itself is the last one, and on a narrow screen it
+shortens rather than wrap.
+
+<Demo
+  busy
+  height="8rem"
+  html={`<gm-surface material="frost" radius="999" style="max-width: 100%; padding: 0.7rem 1.2rem; border-radius: 999px">
+<nav class="gm-breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="#">Ondine</a></li>
+<li><a href="#">Listen</a></li>
+<li><span aria-current="page">Tide, over-ear headphones</span></li>
+</ol></nav>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<nav class="gm-breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Ondine</a></li>
+    <li><a href="/listen">Listen</a></li>
+    <li><span aria-current="page">Tide</span></li>
+  </ol>
+</nav>
+```
+
+</CodePanel>
+
+It's in `css/breadcrumbs.css`. The separators are drawn by CSS, so screen readers don't read them.
+
+## Best practices
+
+- **Link every step but the last.** The page you're on isn't a link.
+- **Show the path, not the history.** Breadcrumbs follow the site's structure, whatever way
+  someone came in.
