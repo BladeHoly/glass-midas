@@ -1,13 +1,18 @@
 #!/usr/bin/env node
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, sep } from 'node:path';
 import {
   DEFAULT_SITE,
   docs,
   list,
   search,
+  nextSteps,
   setup,
+  siteBytes,
   siteFetch,
+  template,
+  templates,
+  type Flavor,
   type Framework,
   type PackageManager,
 } from './commands.js';
@@ -18,6 +23,9 @@ const HELP = `glass-midas: the glass-midas docs from the terminal, for you or yo
   glass-midas docs <name>                                A page as Markdown: search, gm-search, concepts/tiers
   glass-midas find <words> [--json]                      Pages that mention them
   glass-midas setup [html|react|astro]                   How to install and load it here
+  glass-midas template [--json]                          The templates: whole screens to start from
+  glass-midas template <name> [--html|--react]           Copy one into ./<name> (or --out <dir>);
+                     [--out <dir>] [--force]             --force overwrites files already there
 
 Docs come from ${DEFAULT_SITE} (set GLASS_MIDAS_DOCS for another).`;
 
@@ -37,9 +45,40 @@ function framework(dir: string): Framework {
   return 'html';
 }
 
+/** Copies a template's files into a folder, refusing to overwrite unless forced. */
+async function copy(name: string, flags: { flavor: Flavor; out?: string; force: boolean }) {
+  const site = process.env.GLASS_MIDAS_DOCS;
+  const { template: t, files } = await template(
+    siteFetch(site),
+    siteBytes(site),
+    name,
+    flags.flavor,
+  );
+  const dir = flags.out ?? t.name;
+  const there = files.map((f) => join(dir, f.path)).filter((p) => existsSync(p));
+  if (there.length && !flags.force)
+    throw new Error(
+      `${there.length} ${there.length === 1 ? 'file is' : 'files are'} already there, like ${relative(process.cwd(), there[0]!)}. Use --force to overwrite, or --out <dir> for another folder.`,
+    );
+  for (const f of files) {
+    const path = join(dir, f.path);
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, f.data);
+  }
+  // Shown with forward slashes on every system, like the paths in the docs.
+  const shown = (relative(process.cwd(), dir) || '.').split(sep).join('/');
+  return `${nextSteps(t, flags.flavor, shown)}\n\n${files.length} files.`;
+}
+
 async function main(argv: string[]) {
   const json = argv.includes('--json');
-  const [command, ...rest] = argv.filter((a) => a !== '--json');
+  const out = argv.indexOf('--out');
+  const outDir = out >= 0 ? argv[out + 1] : undefined;
+  if (out >= 0 && (!outDir || outDir.startsWith('--'))) throw new Error('--out needs a folder.');
+  const flags = new Set(['--json', '--html', '--react', '--force']);
+  const [command, ...rest] = argv.filter(
+    (a, i) => !flags.has(a) && a !== '--out' && !(out >= 0 && i === out + 1),
+  );
   const get = siteFetch(process.env.GLASS_MIDAS_DOCS);
   switch (command) {
     case 'list':
@@ -54,6 +93,18 @@ async function main(argv: string[]) {
       const kind = rest[0] ?? framework(process.cwd());
       if (!['html', 'react', 'astro'].includes(kind)) throw new Error(`Unknown project "${kind}".`);
       return setup(kind as Framework, packageManager(process.cwd()));
+    }
+    case 'template':
+    case 'templates': {
+      if (!rest.length) return templates(get, json);
+      if (argv.includes('--html') && argv.includes('--react'))
+        throw new Error('Choose --html or --react, or neither for both.');
+      const flavor: Flavor = argv.includes('--html')
+        ? 'html'
+        : argv.includes('--react')
+          ? 'react'
+          : 'both';
+      return copy(rest[0]!, { flavor, out: outDir, force: argv.includes('--force') });
     }
     case undefined:
     case 'help':

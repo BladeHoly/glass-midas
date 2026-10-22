@@ -1,5 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { docs, find, list, resolve, search, setup, type Fetch, type Page } from './commands.js';
+import {
+  docs,
+  find,
+  list,
+  nextSteps,
+  pick,
+  resolve,
+  resolveTemplate,
+  search,
+  setup,
+  template,
+  templates,
+  type Fetch,
+  type Page,
+  type Template,
+} from './commands.js';
 
 const pages: Page[] = [
   {
@@ -108,5 +123,77 @@ describe('setup', () => {
 
   it('shows how to load it in Astro', () => {
     expect(setup('astro', 'yarn')).toContain('<style is:inline set:html={tokensToCss()}>');
+  });
+});
+
+describe('templates', () => {
+  const cart: Template = {
+    name: 'cart',
+    title: 'Cart',
+    group: 'Store',
+    description: 'Every cost before checkout.',
+    files: [
+      { from: 'cart/cart.html', to: 'cart.html' },
+      { from: 'cart/cart.js', to: 'cart.js' },
+      { from: 'cart/cart.css', to: 'cart.css' },
+      { from: 'cart/CartPage.tsx', to: 'CartPage.tsx' },
+      { from: 'shared/shop.js', to: 'shop.js' },
+      { from: 'shared/shop.d.ts', to: 'shop.d.ts' },
+      { from: 'shared/ShopKit.tsx', to: 'ShopKit.tsx' },
+      { from: 'shared/ondine.css', to: 'ondine.css' },
+      { from: 'shared/art/sigil.svg', to: 'art/sigil.svg' },
+    ],
+  };
+  const signIn: Template = { ...cart, name: 'sign-in', title: 'Sign in', group: 'Auth', files: [] };
+  const shelf: Fetch = async (path) => {
+    if (path === 't/manifest.json') return JSON.stringify([signIn, cart]);
+    throw new Error(`404 for ${path}`);
+  };
+  const bytes = async (path: string) => new TextEncoder().encode(path);
+
+  it('lists them by group', async () => {
+    const out = await templates(shelf);
+    expect(out).toContain('## Auth');
+    expect(out).toContain('- **Cart** (`cart`): Every cost before checkout.');
+    expect(JSON.parse(await templates(shelf, true))[1]).not.toHaveProperty('files');
+  });
+
+  it('finds one by name or title', () => {
+    expect(resolveTemplate([signIn, cart], 'Sign in')?.name).toBe('sign-in');
+    expect(resolveTemplate([signIn, cart], 'cart.html')?.name).toBe('cart');
+    expect(resolveTemplate([signIn, cart], 'basket')).toBeUndefined();
+  });
+
+  it('picks the files each flavor needs', () => {
+    const names = (flavor: 'html' | 'react' | 'both') => pick(cart, flavor).map((f) => f.to);
+    expect(names('html')).toEqual([
+      'cart.html',
+      'cart.js',
+      'cart.css',
+      'shop.js',
+      'ondine.css',
+      'art/sigil.svg',
+    ]);
+    expect(names('react')).toEqual([
+      'cart.css',
+      'CartPage.tsx',
+      'shop.js',
+      'shop.d.ts',
+      'ShopKit.tsx',
+      'ondine.css',
+      'art/sigil.svg',
+    ]);
+    expect(names('both')).toHaveLength(9);
+  });
+
+  it('fetches the files from t/, and says what to do next', async () => {
+    const { template: t, files } = await template(shelf, bytes, 'cart', 'html');
+    expect(t.name).toBe('cart');
+    expect(new TextDecoder().decode(files[0]!.data)).toBe('t/cart/cart.html');
+    const next = nextSteps(t, 'both', 'cart');
+    expect(next).toContain('Open `cart/cart.html` in a browser');
+    expect(next).toContain('render `<CartPage />` from `cart/CartPage`');
+    expect(nextSteps(t, 'html', 'cart')).not.toContain('React');
+    await expect(template(shelf, bytes, 'basket')).rejects.toThrow('There are: sign-in, cart.');
   });
 });

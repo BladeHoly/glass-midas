@@ -173,3 +173,136 @@ The elements render on the server as plain markup and come alive in the browser:
   };
   return `# glass-midas in ${framework === 'html' ? 'plain HTML' : framework === 'react' ? 'React' : 'Astro'}\n\n${steps[framework]}\n`;
 }
+
+/** One file of a template: where it is under the site's `t/`, and where it goes in a project. */
+export interface TemplateFile {
+  from: string;
+  to: string;
+}
+
+/** A template, as listed in the site's `t/manifest.json`. */
+export interface Template {
+  name: string;
+  title: string;
+  group: string;
+  description: string;
+  files: TemplateFile[];
+}
+
+/** Which version of a template to copy: the plain page, the React twin, or both. */
+export type Flavor = 'html' | 'react' | 'both';
+
+const manifest = async (get: Fetch): Promise<Template[]> =>
+  JSON.parse(await get('t/manifest.json'));
+
+/** Every template, by group. */
+export async function templates(get: Fetch, json = false) {
+  const all = await manifest(get);
+  if (json)
+    return JSON.stringify(
+      all.map(({ files: _, ...t }) => t),
+      null,
+      2,
+    );
+  const groups = [...new Set(all.map((t) => t.group))];
+  return groups
+    .map(
+      (g) =>
+        `## ${g}\n\n${all
+          .filter((t) => t.group === g)
+          .map((t) => `- **${t.title}** (\`${t.name}\`): ${t.description}`)
+          .join('\n')}`,
+    )
+    .join('\n\n');
+}
+
+/** The template a name means: its name, or its title. */
+export function resolveTemplate(all: Template[], name: string) {
+  const n = name.toLowerCase().replace(/\.html$|\.tsx$/, '');
+  return all.find((t) => t.name === n) ?? all.find((t) => t.title.toLowerCase() === n);
+}
+
+/**
+ * The files to copy for a flavor. Plain HTML leaves out the React files (`.tsx`, and the `.d.ts`
+ * that type the shared scripts for them); React leaves out the template's own page and script,
+ * keeping the shared scripts its twin imports.
+ */
+export function pick(t: Template, flavor: Flavor): TemplateFile[] {
+  const own = (f: TemplateFile) => f.from.startsWith(`${t.name}/`);
+  return t.files.filter((f) => {
+    if (flavor === 'both') return true;
+    const react = f.to.endsWith('.tsx') || f.to.endsWith('.d.ts');
+    if (flavor === 'html') return !react;
+    return !(own(f) && (f.to.endsWith('.html') || f.to.endsWith('.js')));
+  });
+}
+
+/** What to do after copying, for that flavor. */
+export function nextSteps(t: Template, flavor: Flavor, dir: string) {
+  const twin = t.files.find((f) => f.from.startsWith(`${t.name}/`) && f.to.endsWith('.tsx'));
+  const component = twin?.to.replace(/\.tsx$/, '');
+  // The brand and the shell first, the template's own sheet last, as the page loads them.
+  const own = (f: TemplateFile) => Number(f.from.startsWith(`${t.name}/`));
+  const css = t.files
+    .filter((f) => f.to.endsWith('.css'))
+    .sort((a, b) => own(a) - own(b))
+    .map((f) => `${dir}/${f.to}`);
+  const html = `Open \`${dir}/${t.name}.html\` in a browser: it loads the components from jsDelivr, nothing to install.`;
+  const react = `In React, install \`@glass-midas/components\` and \`@glass-midas/react\`, load ${css
+    .map((c) => `\`${c}\``)
+    .join(
+      ', ',
+    )} once, render \`<${component} />\` from \`${dir}/${component}\`, and serve \`${dir}/art\` as your site's \`/art/\` (the public folder).`;
+  return [
+    `Copied **${t.title}** into \`${dir}\`.`,
+    '',
+    ...(flavor !== 'react' ? [`- ${html}`] : []),
+    ...(flavor !== 'html' && component ? [`- ${react}`] : []),
+    `- The brand lives in \`${dir}/ondine.css\`: change it, and the template takes yours.`,
+  ].join('\n');
+}
+
+/** Bytes from the published site, for files that aren't text (pictures). */
+export type FetchBytes = (path: string) => Promise<Uint8Array>;
+
+export function siteBytes(site = DEFAULT_SITE): FetchBytes {
+  const base = site.endsWith('/') ? site : `${site}/`;
+  return async (path) => {
+    const res = await fetch(new URL(path, base));
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${new URL(path, base)}`);
+    return new Uint8Array(await res.arrayBuffer());
+  };
+}
+
+/**
+ * Fetches a template's files for a flavor, ready to write: each one's path in the project and its
+ * bytes. Writing them is the caller's (the CLI's) job.
+ */
+export async function template(
+  get: Fetch,
+  bytes: FetchBytes,
+  name: string,
+  flavor: Flavor = 'both',
+) {
+  const all = await manifest(get);
+  const t = resolveTemplate(all, name);
+  if (!t)
+    throw new Error(`No template "${name}". There are: ${all.map((x) => x.name).join(', ')}.`);
+  // A few at a time: a template with its pictures is dozens of files.
+  const wanted = pick(t, flavor);
+  const files: { path: string; data: Uint8Array }[] = new Array(wanted.length);
+  let next = 0;
+  const worker = async () => {
+    while (next < wanted.length) {
+      const i = next++;
+      const f = wanted[i]!;
+      try {
+        files[i] = { path: f.to, data: await bytes(`t/${f.from}`) };
+      } catch (error) {
+        throw new Error(`Couldn't fetch ${f.to}: ${(error as Error).message}`);
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(6, wanted.length) }, worker));
+  return { template: t, files };
+}

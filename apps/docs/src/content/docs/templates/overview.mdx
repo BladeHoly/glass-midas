@@ -39,7 +39,15 @@ The art is drawn by code, from a seed, so nothing in it is a photo:
 
 ## Using one
 
-In HTML, copy the template's files side by side, with the `art` folder. The page loads the
+The [CLI](/reference/cli/) copies one into your project, with everything it uses:
+
+```sh
+npx @glass-midas/cli template              # what there is
+npx @glass-midas/cli template product      # into ./product, HTML and React
+npx @glass-midas/cli template cart --react --out src/cart
+```
+
+By hand: in HTML, copy the template's files side by side, with the `art` folder. The page loads the
 components from the CDN, so it runs as it is.
 
 In React, copy the `.tsx` files and the stylesheets. Load `tokens.css`, `ondine.css` and the kit's
