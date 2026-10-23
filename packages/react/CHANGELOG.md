@@ -1,5 +1,16 @@
 # @glass-midas/react
 
+## 0.6.0
+
+### Minor Changes
+
+- 8507947: `gm-table` filters by column: `data-filter` on a header adds a button with the column's values (with counts) to check one or several; `gm-filter` is cancelable for server-side data, with `data-filter-options` to list the values, and `filter()`, `clearFilters()` and `filters` drive it from code. React: `onFilter` on `GlassTable`.
+
+### Patch Changes
+
+- Updated dependencies [8507947]
+  - @glass-midas/components@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes
