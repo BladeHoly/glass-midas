@@ -3,8 +3,8 @@ import { STATUS, day, initials, money, pageUrl, product } from '../shared/data.j
 import { listOrders, setStatus } from '../shared/store.js';
 import { shellSearch } from '../shared/app.js';
 
-// Orders: search, statuses (one or several, from the chips or the column's filter), channels, a
-// date range and sorting, all together; a line saying what's filtering, with a way to clear it;
+// Orders: search, statuses (one or several, from the chips or the column's filter), channels,
+// amounts, a date range and sorting, all together; a line saying what's filtering, with a way to clear it;
 // rows to select and act on; pages of 20; and a state for loading, for nothing found, and for
 // failing.
 
@@ -22,6 +22,7 @@ const view = {
   query: '',
   status: [],
   channel: [],
+  total: [],
   range: 'all',
   sort: { key: 'date', direction: 'descending' },
   page: 1,
@@ -132,6 +133,12 @@ $('#query').addEventListener('input', (e) => {
 
 /** What's narrowing the list, as a sentence: "Paid or pending, online, last 30 days: 41 orders". */
 const RANGES = { 30: 'last 30 days', 90: 'last 90 days', 365: 'last 12 months' };
+const AMOUNTS = {
+  'under-100': 'under $100',
+  '100-500': '$100 to $500',
+  '500-1000': '$500 to $1,000',
+  'over-1000': 'over $1,000',
+};
 function drawActive(total) {
   const parts = [];
   if (view.status.length) {
@@ -140,6 +147,10 @@ function drawActive(total) {
   }
   if (view.channel.length === 1)
     parts.push(view.channel[0] === 'Online' ? 'online' : 'in the studio');
+  if (view.total.length) {
+    const bands = view.total.map((t) => AMOUNTS[t]);
+    parts.push(bands.length > 1 ? `${bands.slice(0, -1).join(', ')} or ${bands.at(-1)}` : bands[0]);
+  }
   if (RANGES[view.range]) parts.push(RANGES[view.range]);
   if (view.query.trim()) parts.push(`matching “${view.query.trim()}”`);
   $('#active').hidden = !parts.length;
@@ -180,6 +191,7 @@ table.addEventListener('gm-filter', (e) => {
   e.preventDefault();
   view.status = e.detail.filters.status ?? [];
   view.channel = e.detail.filters.channel ?? [];
+  view.total = e.detail.filters.total ?? [];
   view.page = 1;
   drawStatus();
   load();

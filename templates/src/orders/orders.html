@@ -286,7 +286,14 @@
                       >
                         Status
                       </th>
-                      <th data-sort="total" class="gm-num">Total</th>
+                      <th
+                        data-sort="total"
+                        data-filter="total"
+                        data-filter-options="under-100:Under $100,100-500:$100 to $500,500-1000:$500 to $1,000,over-1000:Over $1,000"
+                        class="gm-num"
+                      >
+                        Total
+                      </th>
                     </tr>
                   </thead>
                   <tbody id="rows"></tbody>

@@ -23,6 +23,14 @@ const wait = (ms = 450) =>
 const daysAgo = (iso) =>
   (Date.parse(`${TODAY}T12:00:00Z`) - Date.parse(`${iso}T12:00:00Z`)) / 86400000;
 
+/** Order totals in bands, for filtering by amount: [from, up to]. */
+export const TOTALS = {
+  'under-100': [0, 100],
+  '100-500': [100, 500],
+  '500-1000': [500, 1000],
+  'over-1000': [1000, Infinity],
+};
+
 export const RANGES = {
   30: 'Last 30 days',
   90: 'Last 90 days',
@@ -34,13 +42,14 @@ export const RANGES = {
  * Orders matching a search, statuses and channels (several of each; none means all), a date range,
  * in an order and a page. The counts per status follow every filter but the status one, so a
  * status chip says how many it would show.
- * @param {{ query?: string, status?: string | string[], channel?: string[], range?: string,
+ * @param {{ query?: string, status?: string | string[], channel?: string[], total?: string[], range?: string,
  *   sort?: { key: string, direction: string }, page?: number, perPage?: number }} options
  */
 export async function listOrders({
   query = '',
   status = 'all',
   channel = [],
+  total = [],
   range = 'all',
   sort,
   page = 1,
@@ -54,6 +63,8 @@ export async function listOrders({
   const matching = inRange.filter(
     (o) =>
       (!channel.length || channel.includes(o.channel)) &&
+      (!total.length ||
+        total.some((t) => o.total >= (TOTALS[t]?.[0] ?? 0) && o.total < (TOTALS[t]?.[1] ?? 0))) &&
       (!q ||
         String(o.number).includes(q) ||
         o.customer.name.toLowerCase().includes(q) ||
