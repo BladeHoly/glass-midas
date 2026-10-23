@@ -96,21 +96,59 @@ const source = `https://github.com/BladeHoly/glass-midas/blob/main/apps/docs/src
     </aside>
   </article>
   <script is:inline>
-    // Wide screens: the page's code panels move into the rail, beside the prose; narrow ones put
-    // them back where they were written. Inline, so they move before the first paint.
+    // Wide screens: every piece of code on the page moves into the rail, beside the prose, and
+    // the rail shows the code of the section being read; narrow screens put each one back where
+    // it was written. Inline, so it moves before the first paint.
     (() => {
       const rail = document.querySelector('.rail-code');
-      const panels = [...document.querySelectorAll('.code-panel[data-rail]')];
-      if (!rail || !panels.length) return;
+      const main = document.querySelector('.article-main');
+      if (!rail || !main) return;
+      // Code written loose in the page (not in a demo) becomes a panel of its own.
+      for (const code of main.querySelectorAll('gm-code')) {
+        if (code.closest('.code-panel, .demo, .demo-code, .page-tabs gm-tab:not(:first-of-type)')) continue;
+        const panel = document.createElement('div');
+        panel.className = 'code-panel';
+        panel.dataset.rail = '';
+        code.before(panel);
+        panel.append(code);
+      }
+      const panels = [...main.querySelectorAll('.code-panel[data-rail]')];
+      if (!panels.length) return;
+      // Each panel belongs to the section it was written in: the heading before it.
+      const headings = [...main.querySelectorAll('h2[id], h3[id]')];
+      const sectionOf = (el) =>
+        headings.filter((h) => h.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING).length - 1;
+      const sections = panels.map(sectionOf);
       const homes = panels.map((p) => {
         const mark = document.createComment('code-panel');
         p.before(mark);
         return mark;
       });
+      // The section being read: the last heading above the top third of the screen.
+      const show = () => {
+        const line = innerHeight / 3;
+        const reading = headings.filter((h) => h.getBoundingClientRect().top < line).length - 1;
+        // Its own code, or else the nearest code before it, or else the first.
+        let at = sections.filter((s) => s <= reading).at(-1);
+        if (at === undefined) at = sections[0];
+        panels.forEach((p, i) => p.classList.toggle('is-current', sections[i] === at));
+      };
+      let frame = 0;
+      const onScroll = () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(show);
+      };
       const wide = matchMedia('(min-width: 80rem)');
       const place = () => {
         panels.forEach((p, i) => (wide.matches ? rail.append(p) : homes[i].after(p)));
         document.documentElement.classList.toggle('has-rail-code', wide.matches);
+        if (wide.matches) {
+          show();
+          addEventListener('scroll', onScroll, { passive: true });
+        } else {
+          removeEventListener('scroll', onScroll);
+          panels.forEach((p) => p.classList.remove('is-current'));
+        }
       };
       place();
       wide.addEventListener('change', place);
