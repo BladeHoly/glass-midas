@@ -8,27 +8,54 @@ import { AppShell, EmptyState, Pagination } from '../shared/AppKit';
 import { STATUS, day, initials, money, product } from '../shared/data.js';
 import { listOrders, setStatus } from '../shared/store.js';
 
-// Orders: search, a status filter, a date range and sorting, all together; rows to select and act
-// on; pages of 20; and a state for loading, for nothing found, and for failing.
+// Orders: search, statuses (one or several, from the chips or the column's filter), channels, a
+// date range and sorting, all together; a line saying what's filtering, with a way to clear it;
+// rows to select and act on; pages of 20; and a state for loading, for nothing found, and for
+// failing.
 
 type Result = Awaited<ReturnType<typeof listOrders>>;
 type View = {
   query: string;
-  status: string;
+  status: string[];
+  channel: string[];
   range: string;
   sort: TableSortDetail;
   page: number;
 };
 
-const FILTERS = ['all', 'paid', 'pending', 'fulfilled', 'refunded'] as const;
+const FILTERS = ['all', 'paid', 'pending', 'fulfilled', 'refunded', 'cancelled'] as const;
 const START: View = {
   query: '',
-  status: 'all',
+  status: [],
+  channel: [],
   range: 'all',
   sort: { key: 'date', direction: 'descending' },
   page: 1,
 };
 const plural = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`;
+const same = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
+const RANGES: Record<string, string> = {
+  30: 'last 30 days',
+  90: 'last 90 days',
+  365: 'last 12 months',
+};
+
+/** What's narrowing the list, as a sentence: "Paid or pending, online, last 30 days". */
+function describe(view: View) {
+  const parts: string[] = [];
+  if (view.status.length) {
+    const names = view.status.map((s) => STATUS[s as keyof typeof STATUS].label.toLowerCase());
+    parts.push(
+      names.length > 1 ? `${names.slice(0, -1).join(', ')} or ${names.at(-1)}` : names[0]!,
+    );
+  }
+  if (view.channel.length === 1)
+    parts.push(view.channel[0] === 'Online' ? 'online' : 'in the studio');
+  if (RANGES[view.range]) parts.push(RANGES[view.range]!);
+  if (view.query.trim()) parts.push(`matching “${view.query.trim()}”`);
+  const sentence = parts.join(', ');
+  return sentence && `${sentence[0]!.toUpperCase()}${sentence.slice(1)}`;
+}
 
 export function OrdersTable() {
   const [view, setView] = useState<View>(START);
@@ -65,6 +92,27 @@ export function OrdersTable() {
   }, [view, reload]);
 
   const set = (change: Partial<View>) => setView((v) => ({ ...v, page: 1, ...change }));
+
+  // The Status and Channel columns' filters show what the view has, whoever changed it.
+  useEffect(() => {
+    const el = table.current;
+    if (!el) return;
+    for (const key of ['status', 'channel'] as const)
+      if (!same(el.filters[key] ?? [], view[key])) el.filter(key, view[key]);
+  }, [view.status, view.channel, result]);
+  const onFilter = ({ filters }: { filters: Record<string, string[]> }) =>
+    setView((v) => {
+      const status = filters.status ?? [];
+      const channel = filters.channel ?? [];
+      return same(v.status, status) && same(v.channel, channel)
+        ? v
+        : { ...v, status, channel, page: 1 };
+    });
+  const clearAll = () => {
+    setQuery('');
+    setView(START);
+  };
+  const active = describe(view);
   const refresh = () => setReload((n) => n + 1);
   const clear = () => table.current?.clearSelection();
 
@@ -143,14 +191,23 @@ export function OrdersTable() {
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>
-            <div className="app-filters" role="group" aria-label="Status">
+            <div className="app-filters" role="group" aria-label="Status: choose one or several">
               {FILTERS.map((s) => (
                 <button
                   key={s}
                   className="gm-chip"
                   type="button"
-                  aria-pressed={view.status === s}
-                  onClick={() => set({ status: s })}
+                  aria-pressed={s === 'all' ? !view.status.length : view.status.includes(s)}
+                  onClick={() =>
+                    set({
+                      status:
+                        s === 'all'
+                          ? []
+                          : view.status.includes(s)
+                            ? view.status.filter((x) => x !== s)
+                            : [...view.status, s],
+                    })
+                  }
                 >
                   {s === 'all' ? 'All' : STATUS[s].label}{' '}
                   <span>{result?.counts[s] ? result.counts[s].toLocaleString() : ''}</span>
@@ -205,14 +262,7 @@ export function OrdersTable() {
           <EmptyState
             title="No orders match"
             action={
-              <button
-                className="gm-chip"
-                type="button"
-                onClick={() => {
-                  setQuery('');
-                  setView(START);
-                }}
-              >
+              <button className="gm-chip" type="button" onClick={clearAll}>
                 Clear filters
               </button>
             }
@@ -221,12 +271,24 @@ export function OrdersTable() {
           </EmptyState>
         ) : (
           <>
+            {active && (
+              <p className="app-active">
+                <span>
+                  {active}
+                  {result ? `: ${plural(result.total, 'order')}` : ''}
+                </span>
+                <button className="gm-chip gm-chip-plain" type="button" onClick={clearAll}>
+                  Clear filters
+                </button>
+              </p>
+            )}
             <div className="app-table">
               <GlassTable
                 ref={table}
                 stack
                 density={density}
                 onSort={(sort) => set({ sort })}
+                onFilter={onFilter}
                 onSelectionChange={({ values }) => setSelected(values)}
               >
                 <table>
@@ -246,8 +308,15 @@ export function OrdersTable() {
                       </th>
                       <th data-sort="customer">Customer</th>
                       <th>Items</th>
-                      <th>Channel</th>
-                      <th>Status</th>
+                      <th data-filter="channel" data-filter-options="Online:Online,Studio:Studio">
+                        Channel
+                      </th>
+                      <th
+                        data-filter="status"
+                        data-filter-options="paid:Paid,pending:Pending,fulfilled:Fulfilled,refunded:Refunded,cancelled:Cancelled"
+                      >
+                        Status
+                      </th>
                       <th data-sort="total" className="gm-num">
                         Total
                       </th>

@@ -172,7 +172,12 @@
                   autocomplete="off"
                 />
               </div>
-              <div class="app-filters" role="group" aria-label="Status" id="filters">
+              <div
+                class="app-filters"
+                role="group"
+                aria-label="Status: choose one or several"
+                id="filters"
+              >
                 <button class="gm-chip" type="button" data-status="all" aria-pressed="true">
                   All <span data-count="all"></span>
                 </button>
@@ -187,6 +192,9 @@
                 </button>
                 <button class="gm-chip" type="button" data-status="refunded" aria-pressed="false">
                   Refunded <span data-count="refunded"></span>
+                </button>
+                <button class="gm-chip" type="button" data-status="cancelled" aria-pressed="false">
+                  Cancelled <span data-count="cancelled"></span>
                 </button>
               </div>
               <div class="app-toolbar-end">
@@ -245,6 +253,13 @@
               </div>
             </div>
 
+            <!-- What's narrowing the list, in words, with one way to clear it all. -->
+            <p class="app-active" id="active" hidden>
+              <span id="active-text"></span>
+              <button class="gm-chip gm-chip-plain" type="button" data-action="reset">
+                Clear filters
+              </button>
+            </p>
             <div class="app-table">
               <gm-table id="table" stack density="regular">
                 <table>
@@ -262,8 +277,15 @@
                       <th data-sort="date" aria-sort="descending">Date</th>
                       <th data-sort="customer">Customer</th>
                       <th>Items</th>
-                      <th>Channel</th>
-                      <th>Status</th>
+                      <th data-filter="channel" data-filter-options="Online:Online,Studio:Studio">
+                        Channel
+                      </th>
+                      <th
+                        data-filter="status"
+                        data-filter-options="paid:Paid,pending:Pending,fulfilled:Fulfilled,refunded:Refunded,cancelled:Cancelled"
+                      >
+                        Status
+                      </th>
                       <th data-sort="total" class="gm-num">Total</th>
                     </tr>
                   </thead>

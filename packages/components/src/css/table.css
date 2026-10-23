@@ -97,6 +97,85 @@
     flex-direction: row-reverse;
   }
 
+  /* Filterable headers: a small funnel beside the label, filled with a count when it's on. */
+  :where(.gm-table-filter) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2em;
+    margin-inline-start: 0.25em;
+    padding: 0.25em 0.35em;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: var(--gm-text-xs, 0.75rem);
+    vertical-align: middle;
+    cursor: pointer;
+  }
+  :where(.gm-table-filter svg) {
+    width: 0.95em;
+    height: 0.95em;
+    opacity: 0.55;
+  }
+  :where(.gm-table-filter:hover) {
+    color: var(--gm-ink);
+    background: var(--gm-chip-fill, rgb(255 255 255 / 0.1));
+  }
+  :where(.gm-table-filter[data-active]) {
+    background: var(--gm-chip-fill-on, rgb(255 255 255 / 0.22));
+    box-shadow: var(--gm-rim);
+    color: var(--gm-ink);
+    font-weight: 600;
+  }
+  :where(.gm-table-filter[data-active] svg) {
+    opacity: 1;
+  }
+  :where(.gm-table-filter span:empty) {
+    display: none;
+  }
+  :where(.gm-table-sort:focus-visible, .gm-table-filter:focus-visible) {
+    outline: 0;
+    box-shadow: var(--gm-focus);
+  }
+  /* The list of a column's values: content on a plain fill, under its button. */
+  :where(.gm-table-filter-menu) {
+    position: fixed;
+    inset: auto;
+    width: 15rem;
+    max-height: min(22rem, 60vh);
+    margin: 0;
+    padding: var(--gm-space-sm, 8px);
+    overflow-y: auto;
+    border: 0;
+    border-radius: var(--gm-radius-md, 18px);
+    background: var(--gm-tint-solid, rgb(24 22 34));
+    box-shadow: var(--gm-rim), var(--gm-lift);
+    color: var(--gm-ink);
+    font-size: var(--gm-text-sm, 0.875rem);
+  }
+  :where(.gm-table-filter-list) {
+    display: grid;
+  }
+  :where(.gm-table-filter-menu .gm-check-label) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    min-height: 2.25rem;
+    padding: 0 var(--gm-space-sm, 8px);
+    border-radius: var(--gm-radius-sm, 10px);
+  }
+  :where(.gm-table-filter-menu .gm-check-label:hover) {
+    background: var(--gm-chip-fill, rgb(255 255 255 / 0.1));
+  }
+  :where(.gm-table-filter-menu small) {
+    color: var(--gm-ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.gm-table-filter-menu > .gm-chip) {
+    width: 100%;
+    margin-top: var(--gm-space-xs, 4px);
+  }
+
   /* Pinned first column(s), for wide tables that scroll sideways. */
   :where(gm-table[pin] :is(th, td):first-child) {
     position: sticky;

@@ -1,6 +1,6 @@
 ---
 title: Table
-description: A native table that sorts, selects rows and becomes cards on a phone.
+description: A native table that sorts, filters by column, selects rows and becomes cards on a phone.
 order: 6.7
 element: gm-table
 attributes:
@@ -14,17 +14,27 @@ attributes:
     description: Pins the first column while the table scrolls sideways.
   - name: (on a th) data-sort="key"
     description: Makes the header a button that sorts by its column.
+  - name: (on a th) data-filter="key"
+    description: Adds a filter button to the header, with a list of the column's values to check one or several.
+  - name: (on a th) data-filter-options
+    type: string
+    description: The values to list, as "paid:Paid,pending:Pending", for data that lives on a server. Without it, the list comes from the rows, with a count for each.
   - name: (on a td) data-value
-    description: What the column sorts by, when it isn't the text ("$1,450" sorts by 1450).
+    description: What the column sorts and filters by, when it isn't the text ("$1,450" sorts by 1450).
   - name: (on checkboxes) data-select, data-select-all
     description: Row checkboxes (with a value) and the header one that checks them all.
 properties:
   - name: selected
     type: string[]
     description: The values of the checked rows.
+  - name: filters
+    type: Record<string, string[]>
+    description: The filters that are on, each column's chosen values.
 events:
   - name: gm-sort
     description: A header was clicked. `detail` is `{ key, direction }`. Cancel it to sort your own way, like a server or React state; the header still shows the order.
+  - name: gm-filter
+    description: A column's filter changed. `detail` is `{ key, values, filters }`. Cancel it to filter your own way (a server, React state); otherwise rows that don't match are hidden.
   - name: gm-selection
     description: The selection changed, by a click or because rows went away. `detail` is `{ values }`.
 methods:
@@ -32,10 +42,14 @@ methods:
     description: Sorts by a column, as a click on its header would.
   - name: clearSelection()
     description: Unchecks every row.
+  - name: filter(key, values)
+    description: Shows only rows whose column has one of the values; an empty list takes the filter off.
+  - name: clearFilters()
+    description: Takes every filter off.
 ---
 
 `<gm-table>` wraps a native `<table>`, so it reads as a table to screen readers and copies as
-one. It adds sorting, row selection and a phone layout. It isn't glass: a table is content, so it
+one. It adds sorting, filtering by column, row selection and a phone layout. It isn't glass: a table is content, so it
 sits on a plain fill inside the page, with hairlines between rows and the numbers lined up.
 
 <Demo
@@ -47,12 +61,12 @@ sits on a plain fill inside the page, with hairlines between rows and the number
 <table>
 <thead><tr>
 <th><input type="checkbox" class="gm-check" data-select-all aria-label="Select all orders"></th>
-<th data-sort="order">Order</th><th data-sort="customer">Customer</th><th>Status</th><th data-sort="total" class="gm-num">Total</th>
+<th data-sort="order">Order</th><th data-sort="customer">Customer</th><th data-filter="status">Status</th><th data-sort="total" class="gm-num">Total</th>
 </tr></thead>
 <tbody>
-<tr><td><input type="checkbox" class="gm-check" data-select value="1042" aria-label="Select order 1042"></td><td>#1042</td><td>Ada Moreau</td><td><span class="gm-badge" data-tone="success">Paid</span></td><td class="gm-num" data-value="1450">$1,450.00</td></tr>
-<tr><td><input type="checkbox" class="gm-check" data-select value="1041" aria-label="Select order 1041"></td><td>#1041</td><td>Lio Hart</td><td><span class="gm-badge" data-tone="warning">Pending</span></td><td class="gm-num" data-value="98">$98.00</td></tr>
-<tr><td><input type="checkbox" class="gm-check" data-select value="1040" aria-label="Select order 1040"></td><td>#1040</td><td>Mira Sol</td><td><span class="gm-badge" data-tone="danger">Refunded</span></td><td class="gm-num" data-value="320">$320.00</td></tr>
+<tr><td><input type="checkbox" class="gm-check" data-select value="1042" aria-label="Select order 1042"></td><td>#1042</td><td>Ada Moreau</td><td data-value="paid"><span class="gm-badge" data-tone="success">Paid</span></td><td class="gm-num" data-value="1450">$1,450.00</td></tr>
+<tr><td><input type="checkbox" class="gm-check" data-select value="1041" aria-label="Select order 1041"></td><td>#1041</td><td>Lio Hart</td><td data-value="pending"><span class="gm-badge" data-tone="warning">Pending</span></td><td class="gm-num" data-value="98">$98.00</td></tr>
+<tr><td><input type="checkbox" class="gm-check" data-select value="1040" aria-label="Select order 1040"></td><td>#1040</td><td>Mira Sol</td><td data-value="refunded"><span class="gm-badge" data-tone="danger">Refunded</span></td><td class="gm-num" data-value="320">$320.00</td></tr>
 </tbody>
 </table>
 </gm-table>
@@ -109,16 +123,51 @@ table.addEventListener('gm-selection', (e) => {
 Load `css/table.css` and, for the checkboxes, `css/check.css`. Add `class="gm-num"` to number
 columns to line them up on the right.
 
+### Filters
+
+A header with `data-filter` gets a small funnel. It opens the column's values, each with how many
+rows have it; check one or several, and the rest of the rows hide. The button shows how many are
+chosen, and **Clear** takes the filter off.
+
+When the rows live on a server, list the values in `data-filter-options`, cancel `gm-filter` and
+fetch with `detail.filters`. A row of status chips can stay in step by calling `filter()`:
+
+<CodePanel>
+
+```html
+<th data-filter="status" data-filter-options="paid:Paid,pending:Pending,refunded:Refunded">
+  Status
+</th>
+```
+
+```js
+table.addEventListener('gm-filter', (e) => {
+  e.preventDefault(); // the server filters, so the counts and pages are right
+  load({ status: e.detail.filters.status ?? [] });
+});
+// A chip that adds its status: the column's filter shows it too.
+paidChip.addEventListener('click', () => table.filter('status', [...chosen, 'paid']));
+```
+
+```tsx
+<GlassTable onFilter={({ filters }) => setStatus(filters.status ?? [])}>
+  <table>…</table>
+</GlassTable>
+```
+
+</CodePanel>
+
 ### In React
 
-`GlassTable` from `@glass-midas/react/data`. Rows are React's, so with `onSort` the table leaves
-them alone: sort your data in the handler.
+`GlassTable` from `@glass-midas/react/data`. Rows are React's, so with `onSort` or `onFilter` the
+table leaves them alone: sort and filter your data in the handler.
 
 ## Best practices
 
 - **Sorting, filtering, selection and the actions on a selection are one system.** Show how many
   rows an action affects. Ask before destructive actions, or offer undo.
 - **Pick the density for the task:** compact for scanning many rows, relaxed for reading each one.
+- **Say what's filtering:** "Paid or pending, online: 12 orders", with a way to clear it all.
 - **Say when there's nothing:** an empty table needs a sentence and a way out, like "No orders
   match. Clear the filters."
 - **Label every row checkbox** with what it selects: "Select order 1042".

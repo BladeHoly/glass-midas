@@ -127,7 +127,11 @@ const source = `https://github.com/BladeHoly/glass-midas/blob/main/apps/docs/src
       // The section being read: the last heading above the top third of the screen.
       const show = () => {
         const line = innerHeight / 3;
-        const reading = headings.filter((h) => h.getBoundingClientRect().top < line).length - 1;
+        // Headings in a hidden tab (the API one) have no box: they don't count.
+        let reading = -1;
+        headings.forEach((h, i) => {
+          if (h.getClientRects().length && h.getBoundingClientRect().top < line) reading = i;
+        });
         // Its own code, or else the nearest code before it, or else the first.
         let at = sections.filter((s) => s <= reading).at(-1);
         if (at === undefined) at = sections[0];

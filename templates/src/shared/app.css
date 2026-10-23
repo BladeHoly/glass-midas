@@ -113,6 +113,23 @@
   flex: 1 1 14rem;
   max-width: 22rem;
 }
+/* What's filtering the table, in a sentence, with the way to clear it. */
+.app-active {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gm-space-xs) var(--gm-space-sm);
+  margin: 0 0 var(--gm-space-sm);
+  color: var(--on-ink-muted);
+  font-size: var(--gm-text-sm);
+}
+.app-active[hidden] {
+  display: none;
+}
+.app-active .gm-chip {
+  min-height: 2rem;
+  font-size: var(--gm-text-sm);
+}
 .app-filters {
   display: flex;
   gap: var(--gm-space-xs);

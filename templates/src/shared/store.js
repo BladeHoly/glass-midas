@@ -31,12 +31,16 @@ export const RANGES = {
 };
 
 /**
- * @param {{ query?: string, status?: string, range?: string, sort?: { key: string, direction: string },
- *   page?: number, perPage?: number }} options
+ * Orders matching a search, statuses and channels (several of each; none means all), a date range,
+ * in an order and a page. The counts per status follow every filter but the status one, so a
+ * status chip says how many it would show.
+ * @param {{ query?: string, status?: string | string[], channel?: string[], range?: string,
+ *   sort?: { key: string, direction: string }, page?: number, perPage?: number }} options
  */
 export async function listOrders({
   query = '',
   status = 'all',
+  channel = [],
   range = 'all',
   sort,
   page = 1,
@@ -46,18 +50,20 @@ export async function listOrders({
   if (state === 'error') throw new Error('Check the connection and try again.');
   const q = query.trim().toLowerCase().replace(/^#/, '');
   const inRange = orders.filter((o) => range === 'all' || daysAgo(o.date) <= Number(range));
+  const statuses = Array.isArray(status) ? status : status === 'all' ? [] : [status];
   const matching = inRange.filter(
     (o) =>
-      !q ||
-      String(o.number).includes(q) ||
-      o.customer.name.toLowerCase().includes(q) ||
-      o.customer.email.includes(q) ||
-      o.lines.some((l) => l.product.includes(q)),
+      (!channel.length || channel.includes(o.channel)) &&
+      (!q ||
+        String(o.number).includes(q) ||
+        o.customer.name.toLowerCase().includes(q) ||
+        o.customer.email.includes(q) ||
+        o.lines.some((l) => l.product.includes(q))),
   );
   /** @type {Record<string, number>} */
   const counts = { all: matching.length };
   for (const o of matching) counts[o.status] = (counts[o.status] ?? 0) + 1;
-  const rows = matching.filter((o) => status === 'all' || o.status === status);
+  const rows = matching.filter((o) => !statuses.length || statuses.includes(o.status));
   if (sort) {
     const sign = sort.direction === 'descending' ? -1 : 1;
     /** @type {Record<string, (o: typeof orders[number]) => string | number>} */

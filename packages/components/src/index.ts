@@ -57,5 +57,5 @@ export type { TabsChangeDetail } from './tabs.js';
 export type { SegmentedChangeDetail } from './segmented.js';
 export type { MenuSelectDetail } from './menu.js';
 export type { SelectChangeDetail } from './select.js';
-export type { TableSelectionDetail, TableSortDetail } from './table.js';
+export type { TableFilterDetail, TableSelectionDetail, TableSortDetail } from './table.js';
 export type { UploadRejectDetail, UploadRejectReason } from './upload.js';
