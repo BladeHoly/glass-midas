@@ -510,6 +510,60 @@ describe('gm-table', () => {
   });
 });
 
+describe('gm-table filters', () => {
+  const table = () =>
+    mount<GmTable>(`<gm-table><table>
+      <thead><tr><th data-sort="name">Name</th><th data-filter="status">Status</th></tr></thead>
+      <tbody>
+        <tr><td>Mira</td><td data-value="paid">Paid</td></tr>
+        <tr><td>Ada</td><td data-value="pending">Pending</td></tr>
+        <tr><td>Lio</td><td data-value="paid">Paid</td></tr>
+      </tbody></table></gm-table>`);
+  const shown = (el: HTMLElement) =>
+    [...el.querySelectorAll<HTMLTableRowElement>('tbody tr')]
+      .filter((r) => !r.hidden)
+      .map((r) => r.cells[0]!.textContent);
+
+  it("lists a column's values with their counts, and hides the rows left out", () => {
+    const el = table();
+    const button = el.querySelector<HTMLButtonElement>('.gm-table-filter')!;
+    expect(button.getAttribute('aria-label')).toBe('Filter by Status');
+    button.click();
+    const options = [...el.querySelectorAll('.gm-table-filter-menu label')].map(
+      (l) => l.textContent,
+    );
+    expect(options).toEqual(['Paid2', 'Pending1']);
+    const seen: unknown[] = [];
+    el.addEventListener('gm-filter', (e) => seen.push((e as CustomEvent).detail));
+    const box = el.querySelector<HTMLInputElement>('.gm-table-filter-menu input[value="pending"]')!;
+    box.checked = true;
+    box.dispatchEvent(new Event('change', { bubbles: true }));
+    expect(shown(el)).toEqual(['Ada']);
+    expect(button.hasAttribute('data-active')).toBe(true);
+    expect(button.getAttribute('aria-label')).toBe('Filter by Status, 1 chosen');
+    expect(seen).toEqual([
+      { key: 'status', values: ['pending'], filters: { status: ['pending'] } },
+    ]);
+    el.clearFilters();
+    expect(shown(el)).toEqual(['Mira', 'Ada', 'Lio']);
+    expect(el.filters).toEqual({});
+  });
+
+  it('leaves the rows alone when the filter is canceled, for a server to filter', () => {
+    const el = table();
+    el.addEventListener('gm-filter', (e) => e.preventDefault());
+    el.filter('status', ['paid']);
+    expect(shown(el)).toEqual(['Mira', 'Ada', 'Lio']);
+    expect(el.filters).toEqual({ status: ['paid'] });
+  });
+
+  it("labels stacked cells with the header's words only", () => {
+    const el = table();
+    el.filter('status', ['paid']);
+    expect(el.querySelector('tbody td:nth-child(2)')!.getAttribute('data-label')).toBe('Status');
+  });
+});
+
 describe('gm-quantity', () => {
   it('steps the number within its limits, as typing would', () => {
     const el = mount(
