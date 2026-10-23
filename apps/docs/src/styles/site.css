@@ -248,12 +248,15 @@ gm-search kbd {
   max-width: 72rem;
 }
 
-.sidebar,
-.rail {
+.sidebar {
   position: sticky;
   top: calc(var(--topbar) + 1.5rem);
   align-self: start;
   max-height: calc(100vh - var(--topbar) - 3rem);
+}
+/* The rail runs the article's full height, so what's sticky inside it can follow the reader. */
+.rail {
+  align-self: stretch;
 }
 .sidebar gm-nav {
   max-height: inherit;
@@ -740,18 +743,27 @@ a.card-body:hover h3 {
 }
 .rail-toc {
   flex: none;
-  max-height: 32vh;
-  overflow-y: auto;
-  scrollbar-width: none;
+}
+/* With no code beside it, "On this page" stays in view; with code, the code does. */
+.rail:not(:has(.code-panel)) .rail-toc {
+  position: sticky;
+  top: calc(var(--topbar) + 1.5rem);
 }
 .rail-toc > p {
   margin-top: 0;
 }
-/* The code takes what's left of the screen's height, and scrolls inside itself. */
+/* The code for the section being read: it sticks while the prose scrolls past, the way an API
+   reference keeps its request beside its parameters. Only a panel taller than the screen
+   scrolls inside itself. */
 .rail-code {
-  min-height: 0;
+  position: sticky;
+  top: calc(var(--topbar) + 1.5rem);
+  max-height: calc(100vh - var(--topbar) - 3rem);
   overflow-y: auto;
   scrollbar-width: thin;
+}
+.rail-code .code-panel:not(.is-current) {
+  display: none;
 }
 .rail-code:empty {
   display: none;
