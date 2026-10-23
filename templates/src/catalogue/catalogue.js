@@ -4,7 +4,9 @@ import { collections, money, pageUrl } from '../shared/data.js';
 import { listCatalogue, setStock } from '../shared/store.js';
 
 // Products: grouped by collection, each opening into its finishes, where stock can be changed in
-// place. Search, a collection filter and "low stock" narrow it down; groups fold away.
+// place. Search, a collection and what's in stock (in stock, running low, sold out: one or
+// several, from the chips or the Stock column's filter) narrow it down; filtering by stock opens
+// each product on the finishes that match. Groups fold away.
 
 const LOW = 10;
 const $ = (s) => document.querySelector(s);
@@ -13,7 +15,8 @@ const table = $('#table');
 const empty = $('#empty');
 const error = $('#error');
 
-const view = { query: '', collection: 'all', low: false };
+const view = { query: '', collection: 'all', stock: [] };
+const STATES = { in: 'in stock', low: 'running low', out: 'sold out' };
 const open = new Set();
 const closedGroups = new Set();
 let catalogue = [];
@@ -21,6 +24,9 @@ let catalogue = [];
 const escape = (s) => String(s).replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 const total = (p) => Object.values(p.stock).reduce((a, b) => a + b, 0);
 const isLow = (p) => Object.values(p.stock).some((n) => n < LOW);
+/** Where one finish stands: in stock, running low, or sold out. */
+const state = (n) => (n === 0 ? 'out' : n < LOW ? 'low' : 'in');
+const shows = (n) => !view.stock.length || view.stock.includes(state(n));
 
 /** A stock count as a badge: the word says it, the color backs it up. */
 const badge = (n) =>
@@ -37,7 +43,7 @@ function matches(p) {
   const q = view.query.trim().toLowerCase();
   return (
     (view.collection === 'all' || p.collection === view.collection) &&
-    (!view.low || isLow(p)) &&
+    Object.values(p.stock).some(shows) &&
     (!q ||
       p.name.toLowerCase().includes(q) ||
       p.kind.toLowerCase().includes(q) ||
@@ -45,8 +51,39 @@ function matches(p) {
   );
 }
 
+/** What's narrowing the list, as a sentence: "Listen, running low or sold out: 4 pieces". */
+function drawActive(count) {
+  const parts = [];
+  if (view.collection !== 'all') parts.push(collections[view.collection].name);
+  if (view.stock.length) {
+    const names = view.stock.map((s) => STATES[s]);
+    parts.push(names.length > 1 ? `${names.slice(0, -1).join(', ')} or ${names.at(-1)}` : names[0]);
+  }
+  if (view.query.trim()) parts.push(`matching “${view.query.trim()}”`);
+  $('#active').hidden = !parts.length;
+  const sentence = parts.join(', ');
+  $('#active-text').textContent = parts.length
+    ? `${sentence[0].toUpperCase()}${sentence.slice(1)}: ${count} ${count === 1 ? 'piece' : 'pieces'}`
+    : '';
+}
+
+/** The stock chips: which are on, and how many finishes each would show. */
+function drawStock() {
+  const finishes = catalogue
+    .filter((p) => view.collection === 'all' || p.collection === view.collection)
+    .flatMap((p) => Object.values(p.stock));
+  for (const chip of $('#stock-filters').children) {
+    const s = chip.dataset.stockState;
+    chip.setAttribute('aria-pressed', String(view.stock.includes(s)));
+    const n = finishes.filter((x) => state(x) === s).length;
+    chip.querySelector('span').textContent = n ? String(n) : '';
+  }
+}
+
 function render() {
   const shown = catalogue.filter(matches);
+  drawActive(shown.length);
+  drawStock();
   for (const body of table.querySelectorAll('tbody')) body.remove();
   empty.hidden = !!shown.length;
   table.hidden = !shown.length;
@@ -66,8 +103,8 @@ function render() {
 }
 
 function productRows(p) {
-  // Low stock opens a product, so what needs attention is in view.
-  const expanded = open.has(p.id) || (view.low && isLow(p));
+  // Filtering by stock opens a product on the finishes that match, so they're in view.
+  const expanded = open.has(p.id) || view.stock.length > 0;
   const sum = total(p);
   // A product reads as fine only if every finish is.
   const lowCount = Object.values(p.stock).filter((n) => n < LOW).length;
@@ -88,7 +125,9 @@ function productRows(p) {
     </tr>
     ${p.finishes
       .map(
-        (f) => `<tr class="cat-variant" id="v-${p.id}-${f.name}"${expanded ? '' : ' hidden'}>
+        (
+          f,
+        ) => `<tr class="cat-variant" id="v-${p.id}-${f.name}"${expanded && shows(p.stock[f.name]) ? '' : ' hidden'}>
       <td data-label="Finish"><span class="cat-swatch" style="--swatch:${f.color}"></span>${f.name}</td>
       <td data-label=""></td><td data-label=""></td>
       <td data-label="Stock"><label class="cat-stock">
@@ -152,7 +191,9 @@ table.addEventListener('click', (e) => {
   const opening = expand.getAttribute('aria-expanded') !== 'true';
   opening ? open.add(id) : open.delete(id);
   expand.setAttribute('aria-expanded', String(opening));
-  for (const row of table.querySelectorAll(`.cat-variant[id^="v-${id}-"]`)) row.hidden = !opening;
+  // Opening shows the finishes the stock filter lets through.
+  for (const row of table.querySelectorAll(`.cat-variant[id^="v-${id}-"]`))
+    row.hidden = !opening || !shows(Number(row.querySelector('[data-stock]').value));
 });
 
 // Stock saves when the field is left, or on Enter.
@@ -165,6 +206,7 @@ table.addEventListener('change', async (e) => {
   await setStock(p.id, input.dataset.finish, count);
   p.stock[input.dataset.finish] = count;
   input.nextElementSibling.outerHTML = badge(count);
+  drawStock();
   toast(`${p.name} in ${input.dataset.finish}: ${count} in stock`);
 });
 
@@ -185,8 +227,22 @@ $('#filters').addEventListener('click', (e) => {
   render();
 });
 
-$('#low').addEventListener('change', (e) => {
-  view.low = e.target.checked;
+// A stock chip adds its state, or takes it off; the column's filter does the work, so both stay
+// in step.
+$('#stock-filters').addEventListener('click', (e) => {
+  const chip = e.target.closest('[data-stock-state]');
+  if (!chip) return;
+  const s = chip.dataset.stockState;
+  table.filter(
+    'stock',
+    view.stock.includes(s) ? view.stock.filter((x) => x !== s) : [...view.stock, s],
+  );
+});
+
+// The rows are grouped and built here, so the template filters them, not the table.
+table.addEventListener('gm-filter', (e) => {
+  e.preventDefault();
+  view.stock = e.detail.filters.stock ?? [];
   render();
 });
 
@@ -198,14 +254,16 @@ $('#expand-all').addEventListener('click', (e) => {
   render();
 });
 
-$('[data-action="reset"]').addEventListener('click', () => {
-  Object.assign(view, { query: '', collection: 'all', low: false });
-  $('#query').value = '';
-  $('#low').checked = false;
-  for (const c of $('#filters').children)
-    c.setAttribute('aria-pressed', String(c.dataset.collection === 'all'));
-  render();
-});
+// Clear filters, above the table and in the empty state.
+for (const button of document.querySelectorAll('[data-action="reset"]'))
+  button.addEventListener('click', () => {
+    Object.assign(view, { query: '', collection: 'all' });
+    $('#query').value = '';
+    for (const c of $('#filters').children)
+      c.setAttribute('aria-pressed', String(c.dataset.collection === 'all'));
+    if (view.stock.length) table.clearFilters();
+    else render();
+  });
 $('[data-action="retry"]').addEventListener('click', load);
 
 shellSearch(document.querySelector('.app-actions gm-search'));

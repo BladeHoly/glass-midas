@@ -551,10 +551,23 @@ describe('gm-table filters', () => {
 
   it('leaves the rows alone when the filter is canceled, for a server to filter', () => {
     const el = table();
+    // A row the page hid on its own stays hidden.
+    el.querySelector<HTMLTableRowElement>('tbody tr')!.hidden = true;
     el.addEventListener('gm-filter', (e) => e.preventDefault());
     el.filter('status', ['paid']);
-    expect(shown(el)).toEqual(['Mira', 'Ada', 'Lio']);
+    expect(shown(el)).toEqual(['Ada', 'Lio']);
     expect(el.filters).toEqual({ status: ['paid'] });
+  });
+
+  it('lists the options given, labels with commas and all', () => {
+    const el = mount<GmTable>(`<gm-table><table>
+      <thead><tr><th data-filter="total" data-filter-options="small:Under $100,big:$100 to $1,000">Total</th></tr></thead>
+      <tbody><tr><td>$50</td></tr></tbody></table></gm-table>`);
+    el.querySelector<HTMLButtonElement>('.gm-table-filter')!.click();
+    const labels = [...el.querySelectorAll('.gm-table-filter-menu label')].map(
+      (l) => l.textContent,
+    );
+    expect(labels).toEqual(['Under $100', '$100 to $1,000']);
   });
 
   it("labels stacked cells with the header's words only", () => {

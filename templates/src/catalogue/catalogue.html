@@ -179,16 +179,35 @@
                 </button>
               </div>
               <div class="app-toolbar-end">
-                <label class="gm-check-label">
-                  <input type="checkbox" class="gm-toggle" role="switch" id="low" />
-                  <span>Low stock</span>
-                </label>
+                <div
+                  class="app-filters"
+                  role="group"
+                  aria-label="Stock: choose one or several"
+                  id="stock-filters"
+                >
+                  <button class="gm-chip" type="button" data-stock-state="in" aria-pressed="false">
+                    In stock <span data-stock-count="in"></span>
+                  </button>
+                  <button class="gm-chip" type="button" data-stock-state="low" aria-pressed="false">
+                    Running low <span data-stock-count="low"></span>
+                  </button>
+                  <button class="gm-chip" type="button" data-stock-state="out" aria-pressed="false">
+                    Sold out <span data-stock-count="out"></span>
+                  </button>
+                </div>
                 <button class="gm-chip gm-chip-plain" type="button" id="expand-all">
                   Open all
                 </button>
               </div>
             </div>
 
+            <!-- What's narrowing the list, in words, with one way to clear it all. -->
+            <p class="app-active" id="active" hidden>
+              <span id="active-text"></span>
+              <button class="gm-chip gm-chip-plain" type="button" data-action="reset">
+                Clear filters
+              </button>
+            </p>
             <div class="app-table">
               <gm-table id="table" stack>
                 <table>
@@ -197,7 +216,12 @@
                       <th>Product</th>
                       <th class="gm-num">Price</th>
                       <th>Finishes</th>
-                      <th>Stock</th>
+                      <th
+                        data-filter="stock"
+                        data-filter-options="in:In stock,low:Running low,out:Sold out"
+                      >
+                        Stock
+                      </th>
                       <th class="gm-num">Sold</th>
                     </tr>
                   </thead>

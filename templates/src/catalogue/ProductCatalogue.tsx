@@ -1,18 +1,29 @@
+import type { GmTable } from '@glass-midas/components';
 import { GlassTable } from '@glass-midas/react/data';
 import { toast } from '@glass-midas/react/overlays';
-import { Fragment, useEffect, useState, type CSSProperties } from 'react';
+import { Fragment, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { AppShell, EmptyState } from '../shared/AppKit';
 import { collections, money } from '../shared/data.js';
 import { listCatalogue, setStock } from '../shared/store.js';
 
 // Products: grouped by collection, each opening into its finishes, where stock can be changed in
-// place. Search, a collection filter and "low stock" narrow it down; groups fold away.
-// Load catalogue.css too.
+// place. Search, a collection and what's in stock (in stock, running low, sold out: one or
+// several, from the chips or the Stock column's filter) narrow it down; filtering by stock opens
+// each product on the finishes that match. Groups fold away. Load catalogue.css too.
 
 type Item = Awaited<ReturnType<typeof listCatalogue>>[number];
 
 const LOW = 10;
 const isLow = (p: Item) => Object.values(p.stock).some((n) => n < LOW);
+type State = 'in' | 'low' | 'out';
+/** Where one finish stands: in stock, running low, or sold out. */
+const state = (n: number): State => (n === 0 ? 'out' : n < LOW ? 'low' : 'in');
+const STATES: [State, string][] = [
+  ['in', 'In stock'],
+  ['low', 'Running low'],
+  ['out', 'Sold out'],
+];
+const same = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
 
 function Badge({ n }: { n: number }) {
   if (n === 0)
@@ -59,7 +70,14 @@ export function ProductCatalogue() {
   const [reload, setReload] = useState(0);
   const [query, setQuery] = useState('');
   const [collection, setCollection] = useState('all');
-  const [low, setLow] = useState(false);
+  const [stockFilter, setStockFilter] = useState<string[]>([]);
+  const table = useRef<GmTable>(null);
+  const shows = (n: number) => !stockFilter.length || stockFilter.includes(state(n));
+  // The Stock column's filter shows what the chips chose, and the other way round.
+  useEffect(() => {
+    const el = table.current;
+    if (el && !same(el.filters.stock ?? [], stockFilter)) el.filter('stock', stockFilter);
+  }, [stockFilter, items]);
   const [open, setOpen] = useState<Set<string>>(new Set());
   const [folded, setFolded] = useState<Set<string>>(new Set());
 
@@ -80,13 +98,32 @@ export function ProductCatalogue() {
   const shown = (items ?? []).filter(
     (p) =>
       (collection === 'all' || p.collection === collection) &&
-      (!low || isLow(p)) &&
+      Object.values(p.stock).some(shows) &&
       (!q ||
         p.name.toLowerCase().includes(q) ||
         p.kind.toLowerCase().includes(q) ||
         p.finishes.some((f) => f.name.toLowerCase().includes(q))),
   );
   const allOpen = !!items && items.every((p) => open.has(p.id));
+  const inCollection = (items ?? [])
+    .filter((p) => collection === 'all' || p.collection === collection)
+    .flatMap((p) => Object.values(p.stock));
+  const clearAll = () => {
+    setQuery('');
+    setCollection('all');
+    setStockFilter([]);
+  };
+  // What's narrowing the list, as a sentence: "Listen, running low or sold out: 4 pieces".
+  const parts: string[] = [];
+  if (collection !== 'all') parts.push(collections[collection]!.name);
+  if (stockFilter.length) {
+    const names = stockFilter.map((s) => STATES.find(([k]) => k === s)![1].toLowerCase());
+    parts.push(
+      names.length > 1 ? `${names.slice(0, -1).join(', ')} or ${names.at(-1)}` : names[0]!,
+    );
+  }
+  if (q) parts.push(`matching “${query.trim()}”`);
+  const sentence = parts.join(', ');
 
   const saveStock = async (p: Item, finish: string, value: string) => {
     const count = Math.max(0, Math.round(Number(value) || 0));
@@ -148,16 +185,24 @@ export function ProductCatalogue() {
             ))}
           </div>
           <div className="app-toolbar-end">
-            <label className="gm-check-label">
-              <input
-                type="checkbox"
-                className="gm-toggle"
-                role="switch"
-                checked={low}
-                onChange={(e) => setLow(e.target.checked)}
-              />
-              <span>Low stock</span>
-            </label>
+            <div className="app-filters" role="group" aria-label="Stock: choose one or several">
+              {STATES.map(([s, label]) => {
+                const n = inCollection.filter((x) => state(x) === s).length;
+                return (
+                  <button
+                    key={s}
+                    className="gm-chip"
+                    type="button"
+                    aria-pressed={stockFilter.includes(s)}
+                    onClick={() =>
+                      setStockFilter((f) => (f.includes(s) ? f.filter((x) => x !== s) : [...f, s]))
+                    }
+                  >
+                    {label} <span>{n || ''}</span>
+                  </button>
+                );
+              })}
+            </div>
             <button
               className="gm-chip gm-chip-plain"
               type="button"
@@ -191,15 +236,7 @@ export function ProductCatalogue() {
           <EmptyState
             title="No products match"
             action={
-              <button
-                className="gm-chip"
-                type="button"
-                onClick={() => {
-                  setQuery('');
-                  setCollection('all');
-                  setLow(false);
-                }}
-              >
+              <button className="gm-chip" type="button" onClick={clearAll}>
                 Clear filters
               </button>
             }
@@ -208,14 +245,38 @@ export function ProductCatalogue() {
           </EmptyState>
         ) : (
           <div className="app-table">
-            <GlassTable stack>
+            {sentence && (
+              <p className="app-active">
+                <span>
+                  {sentence[0]!.toUpperCase()}
+                  {sentence.slice(1)}: {shown.length} {shown.length === 1 ? 'piece' : 'pieces'}
+                </span>
+                <button className="gm-chip gm-chip-plain" type="button" onClick={clearAll}>
+                  Clear filters
+                </button>
+              </p>
+            )}
+            <GlassTable
+              ref={table}
+              stack
+              // The rows are grouped and built here, so the filter is ours, not the table's.
+              onFilter={({ filters }) => {
+                const next = filters.stock ?? [];
+                setStockFilter((f) => (same(f, next) ? f : next));
+              }}
+            >
               <table>
                 <thead>
                   <tr>
                     <th>Product</th>
                     <th className="gm-num">Price</th>
                     <th>Finishes</th>
-                    <th>Stock</th>
+                    <th
+                      data-filter="stock"
+                      data-filter-options="in:In stock,low:Running low,out:Sold out"
+                    >
+                      Stock
+                    </th>
                     <th className="gm-num">Sold</th>
                   </tr>
                 </thead>
@@ -288,8 +349,8 @@ export function ProductCatalogue() {
                         </tr>
                         {!closed &&
                           members.map((p) => {
-                            // Low stock opens a product, so what needs attention is in view.
-                            const expanded = open.has(p.id) || (low && isLow(p));
+                            // Filtering by stock opens a product on the finishes that match.
+                            const expanded = open.has(p.id) || stockFilter.length > 0;
                             const sum = Object.values(p.stock).reduce((a, b) => a + b, 0);
                             const lowFinishes = Object.values(p.stock).filter(
                               (n) => n < LOW,
@@ -361,7 +422,7 @@ export function ProductCatalogue() {
                                     key={f.name}
                                     className="cat-variant"
                                     id={`v-${p.id}-${f.name}`}
-                                    hidden={!expanded}
+                                    hidden={!expanded || !shows(p.stock[f.name]!)}
                                   >
                                     <td data-label="Finish">
                                       <span className="cat-swatch" style={swatch(f.color)} />

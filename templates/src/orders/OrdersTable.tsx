@@ -8,8 +8,8 @@ import { AppShell, EmptyState, Pagination } from '../shared/AppKit';
 import { STATUS, day, initials, money, product } from '../shared/data.js';
 import { listOrders, setStatus } from '../shared/store.js';
 
-// Orders: search, statuses (one or several, from the chips or the column's filter), channels, a
-// date range and sorting, all together; a line saying what's filtering, with a way to clear it;
+// Orders: search, statuses (one or several, from the chips or the column's filter), channels,
+// amounts, a date range and sorting, all together; a line saying what's filtering, with a way to clear it;
 // rows to select and act on; pages of 20; and a state for loading, for nothing found, and for
 // failing.
 
@@ -18,6 +18,7 @@ type View = {
   query: string;
   status: string[];
   channel: string[];
+  total: string[];
   range: string;
   sort: TableSortDetail;
   page: number;
@@ -28,12 +29,19 @@ const START: View = {
   query: '',
   status: [],
   channel: [],
+  total: [],
   range: 'all',
   sort: { key: 'date', direction: 'descending' },
   page: 1,
 };
 const plural = (n: number, one: string) => `${n} ${one}${n === 1 ? '' : 's'}`;
 const same = (a: string[], b: string[]) => a.length === b.length && a.every((x) => b.includes(x));
+const AMOUNTS: Record<string, string> = {
+  'under-100': 'under $100',
+  '100-500': '$100 to $500',
+  '500-1000': '$500 to $1,000',
+  'over-1000': 'over $1,000',
+};
 const RANGES: Record<string, string> = {
   30: 'last 30 days',
   90: 'last 90 days',
@@ -51,6 +59,12 @@ function describe(view: View) {
   }
   if (view.channel.length === 1)
     parts.push(view.channel[0] === 'Online' ? 'online' : 'in the studio');
+  if (view.total.length) {
+    const bands = view.total.map((t) => AMOUNTS[t]!);
+    parts.push(
+      bands.length > 1 ? `${bands.slice(0, -1).join(', ')} or ${bands.at(-1)}` : bands[0]!,
+    );
+  }
   if (RANGES[view.range]) parts.push(RANGES[view.range]!);
   if (view.query.trim()) parts.push(`matching “${view.query.trim()}”`);
   const sentence = parts.join(', ');
@@ -97,16 +111,17 @@ export function OrdersTable() {
   useEffect(() => {
     const el = table.current;
     if (!el) return;
-    for (const key of ['status', 'channel'] as const)
+    for (const key of ['status', 'channel', 'total'] as const)
       if (!same(el.filters[key] ?? [], view[key])) el.filter(key, view[key]);
-  }, [view.status, view.channel, result]);
+  }, [view.status, view.channel, view.total, result]);
   const onFilter = ({ filters }: { filters: Record<string, string[]> }) =>
     setView((v) => {
       const status = filters.status ?? [];
       const channel = filters.channel ?? [];
-      return same(v.status, status) && same(v.channel, channel)
+      const total = filters.total ?? [];
+      return same(v.status, status) && same(v.channel, channel) && same(v.total, total)
         ? v
-        : { ...v, status, channel, page: 1 };
+        : { ...v, status, channel, total, page: 1 };
     });
   const clearAll = () => {
     setQuery('');
@@ -317,7 +332,12 @@ export function OrdersTable() {
                       >
                         Status
                       </th>
-                      <th data-sort="total" className="gm-num">
+                      <th
+                        data-sort="total"
+                        data-filter="total"
+                        data-filter-options="under-100:Under $100,100-500:$100 to $500,500-1000:$500 to $1,000,over-1000:Over $1,000"
+                        className="gm-num"
+                      >
                         Total
                       </th>
                     </tr>

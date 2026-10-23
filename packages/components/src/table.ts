@@ -37,7 +37,8 @@ const numeric = (s: string) => {
  *   values (a cell's `data-value`, else its text), each with how many rows have it, to check one
  *   or several. Each change fires a cancelable `gm-filter`; unless it's canceled, rows that don't
  *   match are hidden. For data that lives on a server, list the choices in
- *   `data-filter-options="paid:Paid,pending:Pending"`, cancel the event and fetch.
+ *   `data-filter-options="paid:Paid,pending:Pending"` (labels may hold commas), cancel the event
+ *   and fetch.
  * - **Density:** `density="compact"` (40px rows), `"regular"` (48px) or `"relaxed"` (56px).
  * - **Phones:** with `stack`, each row becomes a card under 40rem, each cell labeled with its
  *   column's header.
@@ -185,11 +186,21 @@ export class GmTable extends Base {
   /** Hides the rows the filters leave out, when filtering here rather than on a server. */
   #hide() {
     const rules = [...this.#filters].map(([key, values]) => [this.#column(key), values] as const);
+    // Only rows the filter hid are shown again: others may be hidden by the page, for its own
+    // reasons (a folded group, a filter it runs itself).
     for (const body of this.#bodies())
-      for (const row of [...body.children] as HTMLElement[])
-        row.hidden =
+      for (const row of [...body.children] as HTMLElement[]) {
+        const out =
           this.#local &&
           rules.some(([c, values]) => c >= 0 && !values.includes(this.#cellValue(row, c)));
+        if (out) {
+          row.hidden = true;
+          row.dataset.gmFiltered = '';
+        } else if (row.hasAttribute('data-gm-filtered')) {
+          row.hidden = false;
+          delete row.dataset.gmFiltered;
+        }
+      }
   }
 
   /** Opens a column's list of values under its button, in the top layer. */
@@ -198,7 +209,8 @@ export class GmTable extends Base {
     const column = this.#column(key);
     let options: [string, string, number | null][];
     if (th.dataset.filterOptions) {
-      options = th.dataset.filterOptions.split(',').map((o) => {
+      // Split on the commas that start a new "value:", so a label can hold one ("$1,000").
+      options = th.dataset.filterOptions.split(/,(?=[^,:]+:)/).map((o) => {
         const [value = '', label] = o.split(':');
         return [value.trim(), (label ?? value).trim(), null];
       });
