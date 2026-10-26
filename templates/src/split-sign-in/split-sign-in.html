@@ -30,7 +30,9 @@
     <div class="split">
       <!-- The panel: frosted glass over the art, docked to one side. -->
       <gm-surface class="split-panel" material="frost" radius="32">
-        <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+        <header>
+          <a class="on-brand" href="/"><span class="on-sigil" aria-hidden="true"></span>Ondine</a>
+        </header>
 
         <main class="split-main">
           <form class="auth-form auth-step" id="step-sign-in" aria-labelledby="title" novalidate>
@@ -130,12 +132,12 @@
       </gm-surface>
 
       <!-- The art, and what it is. -->
-      <figure class="split-art">
-        <figcaption>
+      <aside class="split-art" aria-label="The art">
+        <div class="split-caption">
           <span class="split-quote">Every piece carries its own resonance.</span>
           <span class="on-muted">Drawn from the frequencies each speaker was tuned to.</span>
-        </figcaption>
-      </figure>
+        </div>
+      </aside>
     </div>
   </body>
 </html>

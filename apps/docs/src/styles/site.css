@@ -15,7 +15,7 @@
   --gold-soft: #f7dc98;
   --ink: rgb(255 255 255 / 0.92);
   --ink-muted: rgb(255 255 255 / 0.62);
-  --ink-faint: rgb(255 255 255 / 0.4);
+  --ink-faint: rgb(255 255 255 / 0.5);
   --line: rgb(255 255 255 / 0.1);
   --scrim: rgb(10 10 14 / 0.72);
   --text: rgb(255 255 255 / 0.84);
@@ -59,7 +59,7 @@
   --gold-soft: #8c6208;
   --ink: rgb(24 20 14 / 0.92);
   --ink-muted: rgb(24 20 14 / 0.62);
-  --ink-faint: rgb(24 20 14 / 0.45);
+  --ink-faint: rgb(24 20 14 / 0.6);
   --line: rgb(24 20 14 / 0.1);
   --scrim: rgb(255 255 255 / 0.62);
   --text: rgb(24 20 14 / 0.84);
@@ -79,7 +79,7 @@
   --gm-chip-fill-hover: rgb(24 20 14 / 0.09);
   --gm-chip-fill-on: rgb(255 255 255 / 0.75);
   --gm-status-info: #2f63c8;
-  --gm-status-success: #13875b;
+  --gm-status-success: #0d7550;
   --gm-status-danger: #c4412d;
   --gm-ink-inverse: #fff;
 }
@@ -456,7 +456,7 @@ pre code {
   color: inherit;
   text-decoration: none;
 }
-.card h3 {
+.card h2 {
   margin: 0 0 0.4rem;
   font-size: 1.02rem;
 }
@@ -975,7 +975,7 @@ gm-nav a[aria-current] {
   word-break: break-word;
 }
 .tok-tag {
-  color: #4d9375;
+  color: #63b592;
 }
 .tok-attr {
   color: #bd976a;

@@ -56,7 +56,7 @@ const features = [
       features.map((f) => (
         <gm-surface variant="lite" radius="22" class="card">
           <a class="card-body" href={url(f.href)}>
-            <h3>{f.title}</h3>
+            <h2>{f.title}</h2>
             <p>{f.text}</p>
           </a>
         </gm-surface>
@@ -64,7 +64,7 @@ const features = [
     }
   </section>
 
-  <gm-callout type="caution" heading="Early development" class="splash-note">
-    <p>glass-midas isn't published to npm yet, and its API will change.</p>
+  <gm-callout type="caution" heading="Before 1.0" class="splash-note">
+    <p>glass-midas is on npm, but still before 1.0, so its API can change between minor versions.</p>
   </gm-callout>
 </Docs>

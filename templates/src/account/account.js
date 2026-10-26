@@ -83,7 +83,7 @@ function orderCard(o) {
   const pics = o.lines.slice(0, 4);
   return `<li class="ac-order">
     <div class="ac-order-top">
-      <h3><a href="${link}">Order #${o.number}</a></h3>
+      <h2><a href="${link}">Order #${o.number}</a></h2>
       <span class="gm-badge"${p.tone ? ` data-tone="${p.tone}"` : ''}>${p.label}</span>
       <span class="ac-order-total">${money(bill(o).total)}</span>
     </div>
@@ -268,7 +268,7 @@ function drawCards() {
           </li>`;
         })
         .join('')
-    : '<li class="gm-empty"><h3>No cards kept</h3><p>Cards you pay with can be kept for next time at checkout.</p></li>';
+    : '<li class="gm-empty"><h2>No cards kept</h2><p>Cards you pay with can be kept for next time at checkout.</p></li>';
 }
 $('#cards').addEventListener('click', async (e) => {
   const li = e.target.closest('[data-id]');
