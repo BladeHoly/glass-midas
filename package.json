@@ -13,6 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "changeset": "changeset",
+    "version-packages": "changeset version && prettier --write .",
     "release": "turbo run build && changeset publish"
   },
   "devDependencies": {
