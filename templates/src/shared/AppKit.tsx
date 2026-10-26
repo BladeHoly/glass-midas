@@ -98,7 +98,7 @@ export function AppShell({
         <a className="app-skip" href="#main">
           Skip to content
         </a>
-        <aside className="app-side">
+        <aside className="app-side" aria-label="Admin">
           <Brand />
           <GlassNav className="app-nav" orientation="vertical" material="frost" aria-label="Main">
             {NAV.map((item) => (

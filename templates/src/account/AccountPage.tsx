@@ -194,9 +194,9 @@ function Orders() {
             return (
               <li key={o.number} className="ac-order">
                 <div className="ac-order-top">
-                  <h3>
+                  <h2>
                     <a href={link}>Order #{o.number}</a>
-                  </h3>
+                  </h2>
                   <span className="gm-badge" data-tone={p.tone || undefined}>
                     {p.label}
                   </span>
@@ -546,7 +546,7 @@ function Cards() {
           })
         ) : (
           <li className="gm-empty">
-            <h3>No cards kept</h3>
+            <h2>No cards kept</h2>
             <p>Cards you pay with can be kept for next time at checkout.</p>
           </li>
         )}

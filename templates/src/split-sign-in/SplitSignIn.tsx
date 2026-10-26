@@ -54,7 +54,9 @@ export function SplitSignIn() {
       <div className="on-art on-art-resonance" aria-hidden="true" />
       <div className="split">
         <GlassSurface className="split-panel" material="frost" radius={32}>
-          <Brand />
+          <header>
+            <Brand />
+          </header>
           <main className="split-main">
             {done ? (
               <section className="auth-done" aria-labelledby="done-title">
@@ -154,12 +156,12 @@ export function SplitSignIn() {
           </footer>
         </GlassSurface>
 
-        <figure className="split-art">
-          <figcaption>
+        <aside className="split-art" aria-label="The art">
+          <div className="split-caption">
             <span className="split-quote">Every piece carries its own resonance.</span>
             <span className="on-muted">Drawn from the frequencies each speaker was tuned to.</span>
-          </figcaption>
-        </figure>
+          </div>
+        </aside>
       </div>
     </>
   );

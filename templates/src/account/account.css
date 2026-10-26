@@ -72,12 +72,12 @@
   align-items: center;
   gap: var(--gm-space-sm) var(--gm-space-md);
 }
-.ac-order-top h3 {
+.ac-order-top h2 {
   margin: 0;
   font-size: var(--gm-text-md);
   font-weight: 600;
 }
-.ac-order-top h3 a {
+.ac-order-top h2 a {
   text-decoration: none;
 }
 .ac-order-total {

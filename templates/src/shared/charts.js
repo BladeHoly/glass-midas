@@ -332,7 +332,7 @@ export function stackedColumns(
 
     const svg = el(
       'svg',
-      { viewBox: `0 0 ${width} ${height}`, width, height, class: 'chart-svg', role: 'img' },
+      { viewBox: `0 0 ${width} ${height}`, width, height, class: 'chart-svg', role: 'group' },
       null,
     );
     svg.setAttribute(
@@ -361,7 +361,7 @@ export function stackedColumns(
           { x: cx, y: height - 6, class: 'chart-axis', 'text-anchor': 'middle' },
           svg,
         ).textContent = label;
-      const column = el('g', { class: 'chart-column', tabindex: 0 }, svg);
+      const column = el('g', { class: 'chart-column', tabindex: 0, role: 'img' }, svg);
       column.setAttribute(
         'aria-label',
         `${label}: ${series.map((s) => `${s.name} ${format(s.values[i])}`).join(', ')}`,

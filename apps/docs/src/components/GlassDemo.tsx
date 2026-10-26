@@ -1,4 +1,4 @@
-import { detectTier, tokensToCss, tokenVar, type GlassTier } from '@glass-midas/core';
+import { detectTier, tokenVar, type GlassTier } from '@glass-midas/core';
 import { Glass } from '@glass-midas/react';
 import { useEffect, useRef, useState, type PointerEvent } from 'react';
 import Choice from './Choice';
@@ -76,16 +76,6 @@ const MATERIALS = [
   { label: 'Diamond', ior: 2.42 },
 ];
 
-function useTokens() {
-  useEffect(() => {
-    if (document.getElementById('gm-tokens')) return;
-    const style = document.createElement('style');
-    style.id = 'gm-tokens';
-    style.textContent = tokensToCss();
-    document.head.append(style);
-  }, []);
-}
-
 /** Lets the panel be dragged around the stage; moving glass never redraws its map. */
 function useDrag() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -154,7 +144,6 @@ export default function GlassDemo({
   initialTier,
   height = 360,
 }: Props) {
-  useTokens();
   const [detected, setDetected] = useState<GlassTier | null>(null);
   const [tier, setTier] = useState<GlassTier | 'auto'>(initialTier ?? 'auto');
   const initial = LOOKS.rim;

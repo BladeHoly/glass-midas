@@ -101,7 +101,10 @@
   :where(.gm-table-filter) {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.2em;
+    min-width: 24px;
+    min-height: 24px;
     margin-inline-start: 0.25em;
     padding: 0.25em 0.35em;
     border: 0;

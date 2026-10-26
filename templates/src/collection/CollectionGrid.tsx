@@ -193,6 +193,7 @@ export function CollectionGrid() {
             </button>
           </div>
         )}
+        <h2 className="on-sr-only">Pieces</h2>
         {shown.length ? (
           <ul className="shop-grid">
             {shown.map((p) => (

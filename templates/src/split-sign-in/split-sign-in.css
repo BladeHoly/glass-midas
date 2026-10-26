@@ -60,7 +60,7 @@
   margin: 0;
   padding: var(--gm-space-2xl);
 }
-.split-art figcaption {
+.split-caption {
   display: grid;
   gap: var(--gm-space-xs);
   max-width: 30rem;
@@ -90,7 +90,7 @@
     min-height: 34vh;
     padding: var(--gm-space-lg);
   }
-  .split-art figcaption {
+  .split-caption {
     display: none;
   }
   .split-panel {

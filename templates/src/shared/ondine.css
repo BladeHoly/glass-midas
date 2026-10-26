@@ -34,7 +34,7 @@
   --on-ink: rgb(22 18 40 / 0.94);
   --on-ink-muted: rgb(22 18 40 / 0.62);
   --on-line: rgb(22 18 40 / 0.12);
-  --on-accent: #2c8f80;
+  --on-accent: #19695d;
 
   --gm-ink-inverse: #fff;
   --gm-tint-light: rgb(255 255 255 / 0.4);
@@ -45,7 +45,7 @@
   --gm-chip-fill: rgb(22 18 40 / 0.06);
   --gm-chip-fill-hover: rgb(22 18 40 / 0.1);
   --gm-chip-fill-on: rgb(255 255 255 / 0.8);
-  --gm-status-success: #16865f;
+  --gm-status-success: #0f7350;
   --gm-status-danger: #c2412f;
 }
 
@@ -56,7 +56,7 @@
     --on-ink: rgb(22 18 40 / 0.94);
     --on-ink-muted: rgb(22 18 40 / 0.62);
     --on-line: rgb(22 18 40 / 0.12);
-    --on-accent: #2c8f80;
+    --on-accent: #19695d;
 
     --gm-ink-inverse: #fff;
     --gm-tint-light: rgb(255 255 255 / 0.4);
@@ -67,7 +67,7 @@
     --gm-chip-fill: rgb(22 18 40 / 0.06);
     --gm-chip-fill-hover: rgb(22 18 40 / 0.1);
     --gm-chip-fill-on: rgb(255 255 255 / 0.8);
-    --gm-status-success: #16865f;
+    --gm-status-success: #0f7350;
     --gm-status-danger: #c2412f;
   }
 }
