@@ -1,5 +1,11 @@
 # @glass-midas/components
 
+## 0.6.1
+
+### Patch Changes
+
+- f442b0f: `gm-table`: a column's filter button is at least 24 by 24 pixels, so it meets the WCAG 2.2 target size even beside a short header.
+
 ## 0.6.0
 
 ### Minor Changes
