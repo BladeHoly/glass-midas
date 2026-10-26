@@ -33,10 +33,12 @@ TypeScript is 7.x (native compiler); packages build with plain `tsc`, so avoid t
 ## Claude Code setup
 
 - Hooks: Prettier runs after every edit; on stop, typecheck + tests run for the packages that changed and failures come back to fix.
-- Skills: `new-component`, `glass-review` (Playwright: screenshots per tier, FPS, budgets), `release` (manual only: `/release`).
+- Skills: `new-component`, `glass-review` (Playwright: screenshots per tier, FPS, budgets), `release` (manual only: `/release`; reviews the release PR and checks npm afterwards).
 - MCP: Playwright for the browser (project `.mcp.json`). Context7 for current library docs (use it for Vite, Turborepo, Changesets, React, Vitest APIs instead of memory) is configured per user with their own API key: `npx ctx7 setup --claude`. Don't add it to `.mcp.json`; a keyless project entry would override the user's.
 - Plugins: `frontend-design`, `typescript-lsp`.
 
 ## Git
 
 Remote: `https://github.com/BladeHoly/glass-midas`. Work on branches and merge through PRs; CI must pass.
+
+Releases: `.github/workflows/release.yml` turns changesets on `main` into a `chore: release` PR; merging it publishes to npm (trusted publishing, provenance), tags and writes GitHub releases. Only the user merges that PR.
