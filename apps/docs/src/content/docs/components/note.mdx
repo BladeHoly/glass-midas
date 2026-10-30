@@ -1,0 +1,57 @@
+---
+title: Note
+label: Note
+description: An inline alert that isn't glass, for inside dialogs, surfaces and panels. CSS only.
+order: 5.05
+element: .gm-note
+attributes:
+  - name: class="gm-note"
+    description: A tinted block with a hairline rim of the same color.
+  - name: data-tone
+    type: '"info" | "success" | "warning" | "danger"'
+    description: The status color. Without it, a neutral note.
+  - name: class="gm-note-heading"
+    description: An optional bold first line.
+  - name: data-lines
+    description: Keeps the line breaks of a message as it came, a server's or a log's.
+---
+
+A [callout](/components/callout/) is glass, so it can't go inside a dialog or a surface. A note is
+the same message without the glass: a tint of its status color and a hairline of the same, so it
+reads on any fill. The words carry the meaning; the color only confirms it.
+
+<Demo
+  busy
+  height="16rem"
+  html={`<gm-surface material="frost" radius="24" style="display: block; padding: 1.1rem 1.25rem; border-radius: 24px; width: min(100%, 30rem)">
+<div style="display: grid; gap: 0.75rem">
+<p class="gm-note" data-tone="warning">The access key is as good as your password. Ondine keeps it only in the system's credential manager.</p>
+<div class="gm-note" data-tone="danger" data-lines><strong class="gm-note-heading">The server asked to slow down</strong>Too many requests (429).
+Your library is saved as far as it got; try again in a few minutes.</div>
+<p class="gm-note" data-tone="success">Your library is up to date.</p>
+</div>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<p class="gm-note" data-tone="warning">The access key is as good as your password.</p>
+
+<div class="gm-note" data-tone="danger" data-lines>
+  <strong class="gm-note-heading">The server asked to slow down</strong>
+  …a message with its own line breaks…
+</div>
+```
+
+</CodePanel>
+
+It's in `css/note.css`.
+
+## Best practices
+
+- **Callout or note?** On the page, a callout. Inside glass (a dialog, a surface) or in a panel next to
+  glass, a note.
+- **Say what to do**, not just what happened: "Saved as far as it got; try again in a few minutes."

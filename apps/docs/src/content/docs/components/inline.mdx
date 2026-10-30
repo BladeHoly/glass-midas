@@ -1,0 +1,54 @@
+---
+title: Keys, code, links and labels
+label: Inline text
+description: A key to press, a bit of code, a button that reads as a link, and a label outside a field. CSS only.
+order: 6.25
+element: .gm-kbd
+attributes:
+  - name: class="gm-kbd"
+    description: A key to press, on a <kbd>.
+  - name: class="gm-code-inline"
+    description: A bit of code in running text, on a <code>. It wraps anywhere, so a long value doesn't push its box wider.
+  - name: class="gm-link"
+    description: A <button> that reads as an inline link, for an action in the middle of a sentence.
+  - name: class="gm-label"
+    description: A label for a control outside a .gm-field (a segmented control, a quantity). A <span> inside it is muted.
+---
+
+Small pieces of running text: a key to press, a value to copy, an action in the middle of a sentence,
+and a label for a control that doesn't sit in a [field](/components/field/).
+
+<Demo
+  busy
+  height="11rem"
+  html={`<gm-surface material="frost" radius="24" style="display: block; padding: 1.1rem 1.25rem; border-radius: 24px; width: min(100%, 32rem)">
+<div style="display: grid; gap: 0.9rem; color: var(--gm-ink); line-height: 1.6">
+<p style="margin: 0">Open <button type="button" class="gm-link">your account page</button>, press <kbd class="gm-kbd">F12</kbd> and copy the value of <code class="gm-code-inline">access_key</code>.</p>
+<span class="gm-label">Pause between requests <span>(seconds)</span></span>
+</div>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<p>
+  Open <button type="button" class="gm-link">your account page</button>, press
+  <kbd class="gm-kbd">F12</kbd> and copy <code class="gm-code-inline">access_key</code>.
+</p>
+
+<span class="gm-label" id="q-label">Quality <span>(highest by default)</span></span>
+<gm-segmented aria-labelledby="q-label">…</gm-segmented>
+```
+
+</CodePanel>
+
+They're in `css/inline.css`.
+
+## Best practices
+
+- **A link goes somewhere, a button does something.** Use `gm-link` for an action that reads best
+  inside a sentence; for navigation, a real `<a>`.
+- **Point the control at its label** with `aria-labelledby` when it isn't a `<label for>`.

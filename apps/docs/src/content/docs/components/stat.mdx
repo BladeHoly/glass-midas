@@ -18,6 +18,17 @@ attributes:
   - name: (on a meter) data-tone
     type: '"success" | "warning" | "danger"'
     description: A status color, when the value means trouble.
+  - name: (on gm-stat) data-tone
+    type: '"good" | "warning" | "bad"'
+    description: Colors the value itself, for a count that means trouble (errors in red).
+  - name: class="gm-stat-grid"
+    description: Lays stats out, as many to a row as fit at --gm-stat-min (10rem), or data-columns="2" | "3" | "4".
+  - name: (on a grid or a stat) data-density="compact"
+    description: Smaller numbers and padding, for many stats in a narrow column.
+  - name: (on a meter) aria-busy="true"
+    description: Indeterminate. Work is under way and its size isn't known yet; leave aria-valuenow out meanwhile. With reduced motion it pulses instead of sliding.
+  - name: (on a meter) data-label
+    description: A short text on the track ("12 / 514"). The meter grows to hold it.
 ---
 
 A stat is one number: what it is, its value, how it moved against a period you name, and,
@@ -68,6 +79,36 @@ color. Both are content, so they're plain fills, not glass.
 </CodePanel>
 
 Both are in `css/stat.css`.
+
+### A grid of stats, and a meter that doesn't know the total yet
+
+<Demo
+  busy
+  height="15rem"
+  html={`<div style="display: grid; gap: 0.75rem; width: min(100%, 30rem)">
+<span class="gm-meter" role="progressbar" aria-label="Looking for posts" aria-busy="true"></span>
+<div class="gm-stat-grid" data-columns="3" data-density="compact">
+<article class="gm-stat" style="background: rgb(14 12 24 / 0.72)"><p class="gm-stat-label">Downloaded</p><p class="gm-stat-value">214</p></article>
+<article class="gm-stat" style="background: rgb(14 12 24 / 0.72)"><p class="gm-stat-label">Skipped</p><p class="gm-stat-value">12</p></article>
+<article class="gm-stat" data-tone="bad" style="background: rgb(14 12 24 / 0.72)"><p class="gm-stat-label">Errors</p><p class="gm-stat-value">3</p></article>
+</div>
+</div>`}
+/>
+
+<CodePanel>
+
+```html
+<span class="gm-meter" role="progressbar" aria-label="Looking for posts" aria-busy="true"></span>
+
+<div class="gm-stat-grid" data-columns="3" data-density="compact">
+  <article class="gm-stat" data-tone="bad">
+    <p class="gm-stat-label">Errors</p>
+    <p class="gm-stat-value">3</p>
+  </article>
+</div>
+```
+
+</CodePanel>
 
 ## Best practices
 

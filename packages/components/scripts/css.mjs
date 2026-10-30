@@ -36,6 +36,13 @@ const SHEETS = [
   'search',
   'scrollbar',
   'tip',
+  'panel',
+  'note',
+  'media',
+  'log',
+  'inline',
+  // A theme, not a component: last, and outside the layers (see the sheet).
+  'os-backdrop',
 ];
 
 const found = fs.readdirSync('src/css').map((f) => f.replace(/\.css$/, ''));

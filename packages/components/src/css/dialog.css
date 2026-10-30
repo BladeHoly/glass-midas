@@ -9,8 +9,9 @@
   :where(gm-dialog) {
     display: contents;
   }
+  /* --gm-dialog-width sets how wide it is (a longer form); it never outgrows the screen. */
   :where(.gm-dialog-panel) {
-    width: min(28rem, calc(100vw - 2rem));
+    width: min(var(--gm-dialog-width, 28rem), calc(100vw - 2rem));
     max-width: none;
     padding: 1.3rem 1.4rem;
     border: 0;
@@ -36,13 +37,13 @@
     margin-top: 1.2rem;
   }
   :where(gm-dialog[placement='bottom'] > .gm-dialog-panel) {
-    width: min(40rem, 100vw);
+    width: min(var(--gm-dialog-width, 40rem), 100vw);
     margin: auto auto 0;
     padding-bottom: calc(1.4rem + env(safe-area-inset-bottom));
     border-radius: 28px 28px 0 0;
   }
   :where(gm-dialog:is([placement='end'], [placement='start']) > .gm-dialog-panel) {
-    width: min(26rem, calc(100vw - 2.5rem));
+    width: min(var(--gm-dialog-width, 26rem), calc(100vw - 2.5rem));
     height: 100dvh;
     max-height: none;
     margin: 0 0 0 auto;

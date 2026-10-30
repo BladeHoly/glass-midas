@@ -1,0 +1,63 @@
+---
+title: Log
+label: Log
+description: An activity feed, one line per event, with a tone and a time on each. CSS only.
+order: 7.9
+element: .gm-log
+attributes:
+  - name: class="gm-log"
+    description: A scrolling monospace list, up to --gm-log-height (16rem by default).
+  - name: (on a line) data-tone
+    type: '"info" | "success" | "warning" | "danger" | "muted"'
+    description: The line's color.
+  - name: <time> in a line
+    description: Shown first, muted, with digits that line up.
+---
+
+A log is what an app has been doing: one line per event, newest at the bottom, in a monospace font so
+times and counts line up. Each line can carry a tone and a time.
+
+<Demo
+  busy
+  height="14rem"
+  html={`<gm-surface material="frost" radius="24" style="display: block; padding: 1.1rem 1.25rem; border-radius: 24px; width: min(100%, 34rem)">
+<ol class="gm-log" aria-live="polite" style="--gm-log-height: 10rem">
+<li data-tone="info"><time>12:04:02</time>Library: 12 albums to sync.</li>
+<li><time>12:04:05</time>Album Tide: 9 tracks</li>
+<li data-tone="success"><time>12:04:06</time>Track 1 saved (FLAC, 24-bit)</li>
+<li data-tone="muted"><time>12:04:12</time>Track 4 already up to date</li>
+<li data-tone="warning"><time>12:04:20</time>Track 7 saved at a lower bitrate</li>
+<li data-tone="danger"><time>12:04:31</time>The server answered 429. Saved as far as it got.</li>
+</ol>
+</gm-surface>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<ol class="gm-log" aria-live="polite">
+  <li data-tone="success"><time>12:04:06</time>Track 1 saved</li>
+</ol>
+```
+
+```js
+// Keep the newest line in view, unless the reader has scrolled up to read.
+function add(log, li) {
+  const atEnd = log.scrollTop + log.clientHeight >= log.scrollHeight - 4;
+  log.append(li);
+  while (log.childElementCount > 400) log.firstElementChild.remove();
+  if (atEnd) log.scrollTop = log.scrollHeight;
+}
+```
+
+</CodePanel>
+
+It's in `css/log.css`.
+
+## Best practices
+
+- **Follow the newest line only while the reader is at the bottom**: jumping away from what they're
+  reading is worse than not following.
+- **Keep a cap** on the lines kept, so a long run doesn't grow the page forever.

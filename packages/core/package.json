@@ -12,7 +12,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./tokens.css": "./dist/tokens.css"
   },
   "files": [
     "dist"
@@ -26,7 +27,7 @@
     "dist/index.js": 4096
   },
   "scripts": {
-    "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json",
+    "build": "node ../../scripts/clean.mjs && tsc -p tsconfig.build.json && node scripts/tokens-css.mjs",
     "dev": "tsc -p tsconfig.build.json --watch",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",

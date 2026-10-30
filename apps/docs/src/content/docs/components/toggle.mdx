@@ -10,6 +10,10 @@ attributes:
     description: Tells screen readers it's a switch rather than a checkbox. Add it.
   - name: checked, disabled, name, value
     description: As on any checkbox; it takes part in forms.
+  - name: class="gm-toggle-row"
+    description: A whole setting on one row, its name and a line about it with the switch at the end. The row is the label, so it toggles anywhere it's pressed.
+  - name: class="gm-toggle-row-text"
+    description: The name (<strong>) and its line (<small>) inside a row.
 ---
 
 A toggle switches one setting on or off. It's the native checkbox with a class, so forms,
@@ -34,6 +38,36 @@ accent when it's on, and a white knob that stretches while it's held.
 <label>
   Wi-Fi
   <input type="checkbox" class="gm-toggle" role="switch" checked />
+</label>
+```
+
+</CodePanel>
+
+### A setting row
+
+For a list of settings, a row holds the name, a line about it and the switch at the end. The whole
+row is the `<label>`, so it toggles anywhere it's pressed.
+
+<Demo
+  busy
+  height="10rem"
+  html={`<gm-surface material="frost" radius="24" style="display: block; padding: 1.1rem 1.25rem; border-radius: 24px; width: min(100%, 26rem)">
+<div style="display: grid; gap: 1rem; color: var(--gm-ink)">
+<label class="gm-toggle-row"><span class="gm-toggle-row-text"><strong>Resume where it stopped</strong><small>Picks up an interrupted download.</small></span><input type="checkbox" class="gm-toggle" role="switch" checked></label>
+<label class="gm-toggle-row"><span class="gm-toggle-row-text"><strong>Only new posts</strong><small>Stops at what's already downloaded.</small></span><input type="checkbox" class="gm-toggle" role="switch"></label>
+</div>
+</gm-surface>`}
+/>
+
+<CodePanel>
+
+```html
+<label class="gm-toggle-row">
+  <span class="gm-toggle-row-text">
+    <strong>Resume where it stopped</strong>
+    <small>Picks up an interrupted download.</small>
+  </span>
+  <input type="checkbox" class="gm-toggle" role="switch" />
 </label>
 ```
 
