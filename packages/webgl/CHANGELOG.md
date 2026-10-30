@@ -1,5 +1,12 @@
 # @glass-midas/webgl
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [04453fc]
+  - @glass-midas/core@0.3.0
+
 ## 0.1.2
 
 ### Patch Changes
