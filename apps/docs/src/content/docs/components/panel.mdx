@@ -1,0 +1,67 @@
+---
+title: Panel
+label: Panel
+description: A translucent container that may hold glass, for where a gm-surface can't go. CSS only.
+order: 1.5
+element: .gm-panel
+attributes:
+  - name: class="gm-panel"
+    description: A plain translucent block with a hairline rim and a lift. Not glass, so glass can sit inside it.
+  - name: class="gm-panel-header"
+    description: A row with the panel's heading on the left and its actions on the right.
+  - name: class="gm-panel-actions"
+    description: The chips or badges at the end of the header.
+  - name: --gm-panel-fill
+    description: The fill. Dark and dense by default, so text reads over any page; the os-backdrop theme lightens it, and a light theme sets its own.
+  - name: --gm-panel-rim
+    description: The hairline around it.
+---
+
+Glass can't sit inside glass: a surface's `backdrop-filter` hides the page from any glass inside it.
+So a block that holds a segmented control, a select or a quantity can't be a `gm-surface`. A panel
+is that block: a translucent fill with a hairline rim, so what's inside can still be glass.
+
+<Demo
+  busy
+  height="15rem"
+  html={`<section class="gm-panel" aria-labelledby="p-h" style="width: min(100%, 26rem)">
+<header class="gm-panel-header"><h2 id="p-h">Options</h2><div class="gm-panel-actions"><span class="gm-badge" data-tone="success">Saved</span></div></header>
+<gm-segmented aria-label="Quality" value="max"><button value="max">Highest</button><button value="app">As in the app</button></gm-segmented>
+<label class="gm-toggle-row"><span class="gm-toggle-row-text"><strong>Resume</strong><small>Picks up an interrupted download.</small></span><input type="checkbox" class="gm-toggle" role="switch" checked></label>
+</section>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<section class="gm-panel" aria-labelledby="options">
+  <header class="gm-panel-header">
+    <h2 id="options">Options</h2>
+    <div class="gm-panel-actions">
+      <button class="gm-chip gm-chip-plain">Reset</button>
+    </div>
+  </header>
+  <gm-segmented aria-label="Quality" value="max">…</gm-segmented>
+</section>
+```
+
+```css
+/* A light theme: a lighter fill and a darker hairline. */
+:root[data-theme='light'] {
+  --gm-panel-fill: rgb(255 255 255 / 0.55);
+  --gm-panel-rim: inset 0 0 0 0.5px rgb(24 20 14 / 0.14);
+}
+```
+
+</CodePanel>
+
+It's in `css/panel.css`.
+
+## Best practices
+
+- **Surface or panel?** If nothing inside is glass, use a `gm-surface`: it's the real thing. Reach for
+  a panel when it holds glass (a segmented control, a select, a quantity, a dialog's trigger is fine
+  either way).
+- **One heading per panel**, in the header, so the page reads as a list of named blocks.

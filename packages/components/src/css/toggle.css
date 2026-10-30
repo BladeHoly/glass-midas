@@ -48,4 +48,34 @@
     opacity: 0.5;
     cursor: default;
   }
+
+  /*
+   * Toggle row: one setting, its name and a line about it, with the switch at the end; the whole
+   * row is the label, so it toggles anywhere it's pressed.
+   * <label class="gm-toggle-row"><span class="gm-toggle-row-text"><strong>Resume</strong>
+   * <small>Picks up an interrupted download.</small></span>
+   * <input type="checkbox" class="gm-toggle" role="switch"></label>
+   */
+  :where(.gm-toggle-row) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gm-space-lg, 16px);
+    color: var(--gm-ink);
+    cursor: pointer;
+  }
+  :where(.gm-toggle-row-text) {
+    display: grid;
+    gap: var(--gm-space-2xs, 2px);
+    min-width: 0;
+  }
+  :where(.gm-toggle-row-text > strong) {
+    font-size: var(--gm-text-sm, 0.875rem);
+    font-weight: 600;
+  }
+  :where(.gm-toggle-row-text > small) {
+    color: var(--gm-ink-muted);
+    font-size: var(--gm-text-xs, 0.75rem);
+    line-height: 1.4;
+  }
 }

@@ -1,0 +1,59 @@
+---
+title: Media grid
+label: Media grid
+description: Many thumbnails at a steady size, with labels in their corners and a status ring. CSS only.
+order: 7.85
+element: .gm-media-grid
+attributes:
+  - name: class="gm-media-grid"
+    description: A grid with as many tiles to a row as fit at --gm-media-min (150px by default).
+  - name: class="gm-media-tile"
+    description: A button or link holding an <img> or <video>, cropped to fill, that zooms a little on hover and focus.
+  - name: (on a tile) data-ratio
+    type: '"3/4" | "1/1" | "4/5" | "16/9"'
+    description: Its shape. 3/4 by default.
+  - name: (on a tile) data-tone
+    type: '"success" | "warning" | "danger"'
+    description: A status ring around it.
+  - name: (inside a tile) data-corner
+    type: '"top-start" | "top-end" | "bottom-start" | "bottom-end"'
+    description: Puts a badge or a small label in that corner, on a frosted pill.
+---
+
+[Gallery](/components/gallery/) shows one picture at a time, for a product. A media grid shows many:
+a downloader's results, a folder, an album. Tiles keep their shape, labels sit in their corners on a
+frosted pill so they read over any picture, and a ring marks the ones that need a look.
+
+<Demo
+  busy
+  height="17rem"
+  html={`<div class="gm-media-grid" style="--gm-media-min: 120px; width: min(100%, 34rem)">
+<button class="gm-media-tile" aria-label="Open photo 1"><img src="../../t/shared/art/products/choir-ash.svg" alt=""><span class="gm-badge" data-corner="bottom-start">2400×3200</span></button>
+<button class="gm-media-tile" aria-label="Open photo 2"><img src="../../t/shared/art/products/ember-ember.svg" alt=""><span data-corner="top-end">#2</span><span class="gm-badge" data-corner="bottom-start">2400×3200</span></button>
+<button class="gm-media-tile" data-tone="warning" aria-label="Open photo 3, below the highest size"><img src="../../t/shared/art/products/lantern-brass.svg" alt=""><span class="gm-badge" data-tone="warning" data-corner="bottom-start">1080×1440</span></button>
+<button class="gm-media-tile" aria-label="Open photo 4"><img src="../../t/shared/art/products/choir-walnut.svg" alt=""><span class="gm-badge" data-corner="bottom-start">2400×3200</span></button>
+</div>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<div class="gm-media-grid" style="--gm-media-min: 150px" aria-label="Downloaded photos">
+  <button class="gm-media-tile" data-ratio="3/4" aria-label="Open photo 1, 2400 by 3200">
+    <img src="…" alt="" />
+    <span data-corner="top-end">#2</span>
+    <span class="gm-badge" data-corner="bottom-start">2400×3200</span>
+  </button>
+</div>
+```
+
+</CodePanel>
+
+It's in `css/media.css`. How many tiles to keep (the last 60, say) is up to the page.
+
+## Best practices
+
+- **Name each tile** with `aria-label`: the picture's own `alt` can stay empty when the label says it.
+- **Keep the ring for what needs a look**, a lower size or an error, not for decoration.

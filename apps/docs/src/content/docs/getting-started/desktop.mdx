@@ -1,0 +1,82 @@
+---
+title: Desktop apps
+description: glass-midas in a desktop webview (WebView2, Electron, Tauri), offline, under a strict CSP, over the system's own backdrop.
+order: 3
+---
+
+The components work in a desktop app's webview the same as on the web: WebView2 (Windows), Electron
+and Tauri are Chromium or WebKit, and in WebView2 and Electron the `refract` tier is detected and
+works. Four things are different from a website.
+
+## Offline, from your own files
+
+Copy the built packages into the app (`dist/` of `@glass-midas/core` and
+`@glass-midas/components`) and point the bare import at them with an import map. ES modules don't
+load from `file://`, so serve the folder from a local HTTP origin (`http://127.0.0.1:<port>`), as
+the app's own server or the webview's virtual host mapping.
+
+<CodePanel>
+
+```html
+<script type="importmap">
+  { "imports": { "@glass-midas/core": "./vendor/glass-midas/core/index.js" } }
+</script>
+<link rel="stylesheet" href="vendor/glass-midas/core/tokens.css" />
+<link rel="stylesheet" href="vendor/glass-midas/components/styles.css" />
+<script type="module" src="app.js"></script>
+```
+
+</CodePanel>
+
+## A strict Content Security Policy
+
+A local page can forbid every remote origin. Three directives need a note:
+
+- **`script-src`**: an inline import map needs its hash, `'sha256-…'`, or keep it in a file.
+- **`style-src`**: load the tokens from `@glass-midas/core/tokens.css` with a `<link>` rather than
+  injecting `tokensToCss()`, and `'self'` is enough. Injecting needs `'unsafe-inline'`.
+- **`img-src`**: refraction maps are made in the page, so allow `data:` and `blob:`.
+
+<CodePanel>
+
+```html
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'sha256-<import map hash>'; style-src 'self'; img-src 'self' data: blob:; object-src 'none'; base-uri 'none'"
+/>
+```
+
+</CodePanel>
+
+The components themselves set a few inline styles on their own elements (a surface's
+`backdrop-filter`, a meter's `--value`); those are style attributes set from script, which
+`style-src 'self'` allows.
+
+## A transparent window over the system's backdrop
+
+A frameless, transparent window over Windows Acrylic or Mica, or macOS vibrancy, shows the desktop
+behind the page. Glass can only bend what's in the page, not the desktop, so there it reads by its
+tint. The `os-backdrop` theme sets denser tints, a firmer rim, a heavier lift and light ink:
+
+<CodePanel>
+
+```html
+<html data-gm-theme="os-backdrop"></html>
+```
+
+</CodePanel>
+
+It's in `css/os-backdrop.css` (and in `styles.css`). For large surfaces, use `variant="lite"`: the
+blur tier, cheaper and steadier over a backdrop the page can't see.
+
+## Containers, notes and settings
+
+Desktop screens are panels of controls more than pages of content, and glass can't sit inside glass.
+The pieces for that:
+
+- **[Panel](/components/panel/)**: a translucent container that may hold glass (a segmented control,
+  a select), where a `gm-surface` can't go.
+- **[Note](/components/note/)**: an alert that isn't glass, for inside a dialog or a panel.
+- **[Toggle row](/components/toggle/)**, **[stat grid](/components/stat/)**,
+  **[media grid](/components/media/)** and **[log](/components/log/)**: a settings list, a run's
+  numbers, its results and what it's been doing.
