@@ -5,6 +5,11 @@ export interface ToastOptions {
   action?: { label: string; onClick: () => void };
   /** How long it shows, in ms; 0 keeps it until dismissed. */
   duration?: number;
+  /**
+   * Toasts with the same key don't stack: a new one updates the one on screen (its message and
+   * action) and starts its time again. For things that add up, like «3 files saved».
+   */
+  key?: string;
 }
 
 /**
@@ -43,6 +48,14 @@ export class GmToast extends GlassElement {
     if (ms > 0) this.#timer = setTimeout(() => this.dismiss(), ms);
   }
 
+  /** Changes its message and starts its time again (`toast()` does it for a repeated `key`). */
+  update(message: string, duration = Number(this.getAttribute('duration') ?? 4000)) {
+    const text = this.querySelector(':scope > span');
+    if (text) text.textContent = message;
+    this.setAttribute('duration', String(duration));
+    this.#start(duration);
+  }
+
   /** Fades it out and removes it. */
   dismiss() {
     if (this.hasAttribute('leaving')) return;
@@ -64,27 +77,41 @@ export function toast(message: string, options: ToastOptions = {}): GmToast {
     region.setAttribute('aria-live', 'polite');
     document.body.append(region);
   }
+  if (options.key) {
+    const same = [...region.querySelectorAll<GmToast>('gm-toast:not([leaving])')].find(
+      (t) => t.dataset.key === options.key,
+    );
+    if (same) {
+      same.querySelector(':scope > button.gm-chip')?.remove();
+      addAction(same, options.action);
+      same.update(message, options.duration ?? 4000);
+      return same;
+    }
+  }
   const el = document.createElement('gm-toast') as GmToast;
+  if (options.key) el.dataset.key = options.key;
   el.setAttribute('duration', String(options.duration ?? 4000));
   const text = document.createElement('span');
   text.textContent = message;
   el.append(text);
-  const action = options.action;
-  if (action) {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'gm-chip';
-    button.textContent = action.label;
-    button.addEventListener('click', () => {
-      action.onClick();
-      el.dismiss();
-    });
-    el.append(button);
-  }
+  addAction(el, options.action);
   region.append(el);
   const shown = region.querySelectorAll<GmToast>('gm-toast:not([leaving])');
   if (shown.length > 3) shown[0]!.dismiss();
   return el;
+}
+
+function addAction(el: GmToast, action: ToastOptions['action']) {
+  if (!action) return;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'gm-chip';
+  button.textContent = action.label;
+  button.addEventListener('click', () => {
+    action.onClick();
+    el.dismiss();
+  });
+  el.append(button);
 }
 
 define('gm-toast', GmToast);
