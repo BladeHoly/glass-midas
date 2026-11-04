@@ -1,5 +1,11 @@
 # @glass-midas/core
 
+## 0.3.1
+
+### Patch Changes
+
+- 644fb59: A refracting surface whose shape changes a lot while it resizes (a sidebar folding, a window maximized) is only frosted until its exact map is drawn, instead of stretching the old one into arcs around its rim.
+
 ## 0.3.0
 
 ### Minor Changes
