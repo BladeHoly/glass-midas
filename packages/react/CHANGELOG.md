@@ -1,5 +1,14 @@
 # @glass-midas/react
 
+## 0.6.2
+
+### Patch Changes
+
+- Updated dependencies [644fb59]
+- Updated dependencies [644fb59]
+  - @glass-midas/components@0.8.0
+  - @glass-midas/core@0.3.1
+
 ## 0.6.1
 
 ### Patch Changes
