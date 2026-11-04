@@ -1,5 +1,11 @@
 # @glass-midas/components
 
+## 0.8.1
+
+### Patch Changes
+
+- ca6d11d: Toasts show over a modal `gm-dialog`: their region is a manual popover in the top layer, raised again when a toast appears while a modal is open (a toast fired from inside a dialog was hidden behind it).
+
 ## 0.8.0
 
 ### Minor Changes
