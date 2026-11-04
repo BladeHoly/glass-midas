@@ -50,6 +50,8 @@ const maps = new Map<string, { url: string; scale: number }>();
 // While a surface keeps changing size (an animation, a window drag), its last map is
 // stretched to fit and the exact one is drawn once the size holds this long.
 const SETTLE_MS = 140;
+// Stretching works for small moves; past this much (either side) the map is not stretched.
+const STRETCH_LIMIT = 0.15;
 
 function mapFor(width: number, height: number, optics: LensOptics) {
   const density = Math.min(devicePixelRatio || 1, 2);
@@ -88,6 +90,7 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
   let observer: ResizeObserver | undefined;
   let drawn = ''; // optics and size of the map in the filter
   let shape = ''; // the same without the size
+  let drawnSize: [number, number] = [0, 0];
   let settle: ReturnType<typeof setTimeout> | undefined;
 
   el.dataset.glassTier = tier;
@@ -124,9 +127,18 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
     clearTimeout(settle);
     if (resizing && svg && nextShape === shape) {
       // Only the size moved: stretch the current map now, draw the exact one when it settles.
-      for (const node of svg.querySelectorAll('filter, feImage')) {
-        node.setAttribute('width', `${width}`);
-        node.setAttribute('height', `${height}`);
+      // A big change of shape (a sidebar folding, a window maximized) would bend a stretched
+      // rim into arcs, so until then that glass is only frosted.
+      const [w0, h0] = drawnSize;
+      const reshaped =
+        Math.abs(width / w0 - 1) > STRETCH_LIMIT || Math.abs(height / h0 - 1) > STRETCH_LIMIT;
+      if (reshaped) {
+        setBackdrop(el, `blur(${options.blur ?? 'var(--gm-blur-md, 16px)'})`);
+      } else {
+        for (const node of svg.querySelectorAll('filter, feImage')) {
+          node.setAttribute('width', `${width}`);
+          node.setAttribute('height', `${height}`);
+        }
       }
       settle = setTimeout(() => render(), SETTLE_MS);
       return;
@@ -175,6 +187,7 @@ export function createGlass(el: HTMLElement, initial: GlassOptions = {}): GlassH
       `<feComposite in="line" in2="lit"/>` +
       `</filter>`;
     drawn = next;
+    drawnSize = [width, height];
     shape = nextShape;
     // Frost first, then bend: the rim light added by the filter stays crisp.
     setBackdrop(el, `${tail} url(#${id})`);

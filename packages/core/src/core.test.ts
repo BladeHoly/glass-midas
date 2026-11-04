@@ -86,5 +86,42 @@ describe('createGlass', () => {
       expect(scales(document.getElementById(filter.id)!)).toHaveLength(1);
       glass.destroy();
     });
+
+    it('frosts instead of stretching the rim when the shape changes a lot', () => {
+      vi.useFakeTimers();
+      let resized = () => {};
+      vi.stubGlobal(
+        'ResizeObserver',
+        class {
+          constructor(cb: () => void) {
+            resized = cb;
+          }
+          observe() {}
+          disconnect() {}
+        },
+      );
+      const el = document.createElement('div');
+      let size = [200, 80];
+      Object.defineProperties(el, {
+        offsetWidth: { get: () => size[0] },
+        offsetHeight: { get: () => size[1] },
+      });
+      document.body.append(el);
+      const glass = createGlass(el, { tier: 'refract' });
+      const backdrop = () => el.style.getPropertyValue('backdrop-filter');
+      // a small move: the map is stretched, still refracting
+      size = [210, 80];
+      resized();
+      expect(backdrop()).toContain('url(#');
+      // a big one: frost only, until the exact map is drawn
+      size = [600, 80];
+      resized();
+      expect(backdrop()).not.toContain('url(#');
+      vi.advanceTimersByTime(200);
+      expect(backdrop()).toContain('url(#');
+      glass.destroy();
+      vi.unstubAllGlobals();
+      vi.useRealTimers();
+    });
   });
 });
