@@ -1,0 +1,71 @@
+---
+title: Action bar
+label: Action bar
+description: What can be done with the items chosen in a list, in the place of its filters. CSS only.
+order: 7.95
+element: .gm-actionbar
+attributes:
+  - name: class="gm-actionbar"
+    description: A sticky pill with the count and the actions. Hide it with the hidden attribute.
+  - name: class="gm-actionbar-count"
+    description: How many are chosen, with digits that don't jump.
+  - name: class="gm-actionbar-actions"
+    description: The chips, at the end.
+---
+
+When someone starts choosing items in a list (photos to tag, songs to queue), the action bar
+takes the place of the list's filters: same spot, same pill shape, the count first and what can
+be done with them after. It sticks to the top while the list scrolls, dense enough that the list
+doesn't show through. It's not glass: it lives inside the surface that holds the list.
+
+<Demo
+  height="9rem"
+  html={`<div class="gm-panel" style="width: min(100%, 40rem)">
+<div class="gm-actionbar">
+<strong class="gm-actionbar-count">3 chosen</strong>
+<div class="gm-actionbar-actions">
+<button class="gm-chip gm-chip-plain">♥ Favorite</button>
+<button class="gm-chip gm-chip-plain">Tag…</button>
+<button class="gm-chip gm-chip-plain danger">Delete</button>
+<button class="gm-chip gm-chip-primary">Done</button>
+</div>
+</div>
+</div>`}
+/>
+
+## Usage
+
+<CodePanel>
+
+```html
+<div class="gm-actionbar" hidden>
+  <strong class="gm-actionbar-count">0 chosen</strong>
+  <div class="gm-actionbar-actions">
+    <button class="gm-chip gm-chip-plain">Tag…</button>
+    <button class="gm-chip gm-chip-plain gm-chip-round" popovertarget="more" aria-label="More">
+      ⋯
+    </button>
+    <gm-menu id="more"><button>Convert…</button></gm-menu>
+    <button class="gm-chip gm-chip-primary">Done</button>
+  </div>
+</div>
+```
+
+```css
+/* while choosing, the bar takes the filters' place */
+.choosing .filters {
+  display: none;
+}
+```
+
+</CodePanel>
+
+It's in `css/actionbar.css`. `--gm-actionbar-fill` and `--gm-actionbar-rim` change its fill and rim.
+
+## Best practices
+
+- **In the filters' place**, not stacked under them: the list keeps its height and the bar reads
+  as a mode of the same row.
+- **The main actions in sight, the rest in a [menu](/components/menu/)** under ⋯: three or four
+  chips, not ten.
+- **One way out**: a primary «Done» at the end, and Escape.

@@ -41,6 +41,7 @@ const SHEETS = [
   'media',
   'log',
   'inline',
+  'actionbar',
   // A theme, not a component: last, and outside the layers (see the sheet).
   'os-backdrop',
 ];

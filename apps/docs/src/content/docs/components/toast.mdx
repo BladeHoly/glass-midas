@@ -19,7 +19,9 @@ events:
 methods:
   - name: dismiss()
     description: Fades it out and removes it.
-  - name: 'toast(message, { action, duration })'
+  - name: update(message, duration?)
+    description: Changes the message and starts its time again.
+  - name: 'toast(message, { action, duration, key })'
     description: Shows one at the bottom center and returns it. A function exported by the package.
 ---
 
@@ -62,6 +64,17 @@ toast('Page deleted', {
 </CodePanel>
 
 Toasts stack at the bottom center, newest last, three at most: a fourth pushes the oldest out.
+With a `key`, they don't stack: a toast whose key is already on screen updates that one (its
+message and action) and starts its time again. Use it for things that add up while they happen:
+
+```ts
+let saved = 0;
+function onSaved() {
+  saved += 1;
+  toast(`${saved} saved`, { key: 'saved' }); // one toast, counting, not one per file
+}
+```
+
 Their region is announced politely to screen readers, so the message is read without
 interrupting.
 
@@ -73,5 +86,7 @@ interrupting.
 ## Best practices
 
 - **A few words**, about something the person just did.
+- **One toast for a stream of the same thing**: give them a `key` instead of stacking a dozen
+  «1 file saved».
 - **An action only when it's useful right now**, like Undo; anything important needs a
   [dialog](/components/dialog/) instead, since a toast can go unnoticed.

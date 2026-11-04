@@ -292,6 +292,34 @@ describe('gm-menu', () => {
   });
 });
 
+describe('gm-menu with changing items', () => {
+  const items = (el: HTMLElement) => [...el.querySelectorAll<HTMLElement>('[role="menuitem"]')];
+
+  it('picks up items added, removed or hidden later, and labels are not items', async () => {
+    const el = mount<GmMenu>(
+      '<gm-menu><span class="gm-menu-label">Put on</span><button value="1">Screen 1</button></gm-menu>',
+    );
+    expect(items(el)).toHaveLength(1);
+    expect(el.querySelector('.gm-menu-label')!.getAttribute('role')).toBe('presentation');
+    const two = document.createElement('button');
+    two.value = '2';
+    two.textContent = 'Screen 2';
+    el.append(two);
+    await Promise.resolve(); // the observer runs after this task
+    expect(items(el).map((i) => i.getAttribute('value'))).toEqual(['1', '2']);
+    const picked: string[] = [];
+    el.addEventListener('gm-select', (e) => {
+      picked.push((e as CustomEvent).detail.value);
+      e.preventDefault();
+    });
+    two.click();
+    expect(picked).toEqual(['2']);
+    two.hidden = true;
+    el.refresh(); // by hand too
+    expect(el.querySelectorAll('[role="menuitem"]:not([hidden])')).toHaveLength(1);
+  });
+});
+
 describe('gm-dialog', () => {
   const dialog = () =>
     mount<GmDialog>(
@@ -307,6 +335,10 @@ describe('gm-dialog', () => {
     expect(panel.getAttribute('aria-labelledby')).toBe(heading.id);
     expect(panel.querySelector('p')!.textContent).toBe('It can’t be undone.');
     expect(panel.getAttribute('data-glass-tier')).toBeTruthy();
+  });
+
+  it('is lite glass by default, refraction only when asked', () => {
+    expect((customElements.get('gm-dialog') as unknown as { lite: boolean }).lite).toBe(true);
   });
 
   it('reports why it closed in gm-close', () => {
@@ -713,6 +745,20 @@ describe('toast', () => {
     expect(el.hasAttribute('leaving')).toBe(true);
     vi.advanceTimersByTime(200);
     expect(el.isConnected).toBe(false);
+  });
+
+  it('updates the toast with the same key instead of stacking another', () => {
+    vi.useFakeTimers();
+    const first = toast('1 saved', { key: 'saved', duration: 1000 });
+    vi.advanceTimersByTime(800);
+    const again = toast('2 saved', { key: 'saved', duration: 1000 });
+    expect(again).toBe(first);
+    expect(document.querySelectorAll('gm-toast')).toHaveLength(1);
+    expect(first.textContent).toBe('2 saved');
+    vi.advanceTimersByTime(800); // its time started again
+    expect(first.hasAttribute('leaving')).toBe(false);
+    toast('Other', { key: 'other' });
+    expect(document.querySelectorAll('gm-toast')).toHaveLength(2);
   });
 
   it('waits while the pointer is on it', () => {

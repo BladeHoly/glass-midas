@@ -11,9 +11,14 @@ let uid = 0;
  * Open it with `show()`. Buttons inside a `<form method="dialog">` close it with their `value`;
  * so do Escape (`"cancel"`) and a click on the backdrop (`"dismiss"`). Closing fires `gm-close`
  * with that value.
+ *
+ * Lite by default: a dialog is a big surface, and refraction over a large area costs frames
+ * whenever something changes behind or inside it (a list scrolling, images arriving). Set
+ * `variant="full"` for refraction on a small, still one.
  */
 export class GmDialog extends GlassElement {
   static glassDefaults = { radius: 24, bezel: 18, thickness: 32 };
+  static lite = true;
 
   #panel: HTMLDialogElement | undefined;
 

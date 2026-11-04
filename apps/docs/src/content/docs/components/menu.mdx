@@ -16,9 +16,13 @@ events:
   - name: gm-select
     type: 'CustomEvent<{ value, label }>'
     description: An item was picked. Cancel it to keep the menu open.
+  - name: class="gm-menu-label" (on a child)
+    description: A group's name. Not an item, the arrow keys skip it.
 methods:
   - name: open(), close()
     description: As on a popover.
+  - name: refresh()
+    description: Takes the items again. It does it by itself when items are added, removed or hidden.
 ---
 
 `<gm-menu>` is a [popover](/components/popover/) of actions: buttons and links, with a droplet
@@ -71,6 +75,31 @@ menu.addEventListener('gm-select', (e) => run(e.detail.value)); // 'rename'
 </CodePanel>
 
 Links inside follow their `href` as links do. Icons go inside items, before the text.
+
+### Items that change
+
+A menu can be built or changed after it's on the page (the screens connected now, the recent
+files): items added, removed or hidden are picked up on their own, so the arrow keys and
+`gm-select` always see what's shown. A `.gm-menu-label` names a group without being an item.
+
+<CodePanel>
+
+```html
+<gm-menu id="put-on">
+  <span class="gm-menu-label">Put as background on</span>
+</gm-menu>
+<script type="module">
+  const menu = document.getElementById('put-on');
+  for (const screen of await screens()) {
+    const item = document.createElement('button');
+    item.value = screen.id;
+    item.textContent = screen.name;
+    menu.append(item); // picked up on its own
+  }
+</script>
+```
+
+</CodePanel>
 
 ## Anatomy
 

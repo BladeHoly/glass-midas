@@ -85,6 +85,22 @@ closes it as `"cancel"`, and a click on the dimmed page as `"dismiss"`.
   content, the form of actions.
 - **`::backdrop`** dims the page behind it.
 
+## Glass
+
+A dialog is **lite** by default: it blurs what's behind it without refraction. A dialog is a big
+surface, and refraction over a large area costs frames whenever something changes behind it or
+inside it: measured in a desktop app, a dialog with a grid of arriving thumbnails scrolled at
+about 20 fps on refraction and 144 fps lite, and one over a page whose player clock ticks dropped
+5 % of its frames to 28 ms. For a small, still dialog, `variant="full"` brings refraction back.
+
+<CodePanel>
+
+```html
+<gm-dialog heading="Delete this page?" variant="full">…</gm-dialog>
+```
+
+</CodePanel>
+
 ## Theming
 
 | Property            | Use                                                                                                |
