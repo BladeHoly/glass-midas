@@ -762,40 +762,29 @@ describe('toast', () => {
   });
 
   it('puts its region in the top layer, raised over a modal opened after it', () => {
-    const shows: string[] = [];
-    const proto = HTMLElement.prototype as HTMLElement & Record<string, unknown>;
-    const had = 'showPopover' in proto;
+    document.querySelector('.gm-toasts')?.remove();
+    const region = document.createElement('div');
+    region.className = 'gm-toasts';
+    document.body.append(region);
     let open = false;
-    Object.assign(proto, {
-      showPopover() {
-        open = true;
-        shows.push('show');
-      },
-      hidePopover() {
-        open = false;
-        shows.push('hide');
-      },
+    const calls: string[] = [];
+    Object.assign(region, {
+      showPopover: () => ((open = true), calls.push('show')),
+      hidePopover: () => ((open = false), calls.push('hide')),
+      matches: (selector: string) => selector === ':popover-open' && open,
     });
-    const matches = vi.spyOn(Element.prototype, 'matches').mockImplementation(function (
-      this: Element,
-      s: string,
-    ) {
-      return s === ':popover-open' ? open : false;
-    });
-    const modal = vi.spyOn(document, 'querySelector');
+    let modal: Element | null = null;
+    const find = document.querySelector.bind(document);
+    vi.spyOn(document, 'querySelector').mockImplementation(((selector: string) =>
+      selector === 'dialog:modal' ? modal : find(selector)) as typeof document.querySelector);
     toast('One');
-    const region = document.querySelector('.gm-toasts')!;
     expect(region.getAttribute('popover')).toBe('manual');
-    modal.mockImplementation((s: string) => (s === 'dialog:modal' ? document.body : null) as never);
-    modal.mockImplementationOnce(() => region as never);
-    toast('Two');
-    expect(shows).toEqual(['show', 'hide', 'show']);
-    matches.mockRestore();
-    modal.mockRestore();
-    if (!had) {
-      delete proto.showPopover;
-      delete proto.hidePopover;
-    }
+    toast('Two'); // no modal: stays where it is
+    modal = document.createElement('dialog');
+    toast('Three'); // a modal opened since: shown again, over it
+    expect(calls).toEqual(['show', 'hide', 'show']);
+    vi.restoreAllMocks();
+    region.remove();
   });
 
   it('waits while the pointer is on it', () => {
