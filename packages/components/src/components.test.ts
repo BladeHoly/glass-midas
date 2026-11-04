@@ -761,6 +761,43 @@ describe('toast', () => {
     expect(document.querySelectorAll('gm-toast')).toHaveLength(2);
   });
 
+  it('puts its region in the top layer, raised over a modal opened after it', () => {
+    const shows: string[] = [];
+    const proto = HTMLElement.prototype as HTMLElement & Record<string, unknown>;
+    const had = 'showPopover' in proto;
+    let open = false;
+    Object.assign(proto, {
+      showPopover() {
+        open = true;
+        shows.push('show');
+      },
+      hidePopover() {
+        open = false;
+        shows.push('hide');
+      },
+    });
+    const matches = vi.spyOn(Element.prototype, 'matches').mockImplementation(function (
+      this: Element,
+      s: string,
+    ) {
+      return s === ':popover-open' ? open : false;
+    });
+    const modal = vi.spyOn(document, 'querySelector');
+    toast('One');
+    const region = document.querySelector('.gm-toasts')!;
+    expect(region.getAttribute('popover')).toBe('manual');
+    modal.mockImplementation((s: string) => (s === 'dialog:modal' ? document.body : null) as never);
+    modal.mockImplementationOnce(() => region as never);
+    toast('Two');
+    expect(shows).toEqual(['show', 'hide', 'show']);
+    matches.mockRestore();
+    modal.mockRestore();
+    if (!had) {
+      delete proto.showPopover;
+      delete proto.hidePopover;
+    }
+  });
+
   it('waits while the pointer is on it', () => {
     vi.useFakeTimers();
     const el = toast('Saved', { duration: 1000 });

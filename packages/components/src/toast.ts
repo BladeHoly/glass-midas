@@ -67,7 +67,8 @@ export class GmToast extends GlassElement {
 
 /**
  * Shows a toast at the bottom of the page, above the others (three at most), and returns it.
- * The region they stack in is announced politely to screen readers.
+ * The region they stack in is announced politely to screen readers. It's a manual popover, so it
+ * sits in the top layer like a modal `gm-dialog`, and it's raised over one that opened after it.
  */
 export function toast(message: string, options: ToastOptions = {}): GmToast {
   let region = document.querySelector<HTMLElement>('.gm-toasts');
@@ -77,6 +78,7 @@ export function toast(message: string, options: ToastOptions = {}): GmToast {
     region.setAttribute('aria-live', 'polite');
     document.body.append(region);
   }
+  raise(region);
   if (options.key) {
     const same = [...region.querySelectorAll<GmToast>('gm-toast:not([leaving])')].find(
       (t) => t.dataset.key === options.key,
@@ -99,6 +101,20 @@ export function toast(message: string, options: ToastOptions = {}): GmToast {
   const shown = region.querySelectorAll<GmToast>('gm-toast:not([leaving])');
   if (shown.length > 3) shown[0]!.dismiss();
   return el;
+}
+
+// The top layer stacks in the order things entered it: shown again, the region goes over any
+// modal opened since. Without the popover API the toasts still show, under modals.
+function raise(region: HTMLElement) {
+  if (typeof region.showPopover !== 'function') return;
+  if (!region.hasAttribute('popover')) region.setAttribute('popover', 'manual');
+  try {
+    if (region.matches(':popover-open') && document.querySelector('dialog:modal'))
+      region.hidePopover();
+    if (!region.matches(':popover-open')) region.showPopover();
+  } catch {
+    // not in the document, or the browser refused: the toast shows anyway
+  }
 }
 
 function addAction(el: GmToast, action: ToastOptions['action']) {
